@@ -1,0 +1,19 @@
+# pip install -U -r requirements.txt
+# Should occasionally run without version numbers to try upgrading
+
+# Code quality
+black==19.10b0
+flake8==3.7.9
+
+# Flask
+Flask==1.1.1
+Flask-WTF==0.14.3
+Flask-Login==0.5.0
+Flask-DebugToolbar==0.11.0
+pillow==7.0.0
+
+# Database
+flask-mongoengine==0.9.5
+
+# Visualizations
+bokeh==2.0.0
