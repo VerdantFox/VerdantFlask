@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name=viewport content="width=device-width, initial-scale=1.0">
+    {% include "core/base/favicons.html" %}
+    {% include "core/base/imports.html" %}
+    <title>
+      {% block title %}{% endblock %}
+    </title>
+  </head>
+  <body
+    {% if landing %}
+      data-spy="scroll" data-target="#main-navbar" data-offset="65"
+    {% endif %}>
+    
+    {% include "core/base/header_part_1.html" with context %}
+    {% block breadcrumb %}{% endblock %}
+    {% include "core/base/header_part_2.html" with context %}
+    {% block navbar %}{% endblock %}
+    {% include 'core/base/flash_messages.html' %}
+    {% block content %}{% endblock %}
+  </body>
+</html>

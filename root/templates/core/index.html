@@ -1,0 +1,27 @@
+{% extends "core/base.html" %}
+{% set active_page = "index" %}
+
+{% block title %}
+  Home | Verdant Fox
+{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active" aria-current="page">Home</li>
+{% endblock %}
+
+{% block navbar %}
+  {% include "core/index/navbar.html" %}
+{% endblock %}
+
+{% block content %}
+  <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+  {% include "core/index/top_image.html" %}
+  {% include "core/index/intro.html" %}
+  {% include "core/index/image_break_1.html" %}
+  {% include "core/index/projects.html" %}
+  {% include "core/index/image_break_2.html" %}
+  {% include "core/index/skills.html" %}
+  {% include "core/index/image_break_3.html" %}
+  {% include "core/index/about.html" %}
+  {% include "core/index/footer.html" %}
+{% endblock %}

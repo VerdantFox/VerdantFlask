@@ -1,0 +1,27 @@
+
+
+{% include "core/index/break.html" %}
+<section class="spacer_image lazy c-1"
+         style="background-image:
+                linear-gradient(
+                    rgba(0, 0, 0, 0.3),
+                    rgba(0, 0, 0, 0.3)
+                  ),
+                url({{ url_for('static', filename='images/fox_backgrounds/fox-playing-3-cropped.jpg') }})">
+  <div class="spacer_image_text text-center">
+    <!-- PC version -->
+    <div class="mobile-no-display">
+      <h1>"Whatever good things we build end up building us."</h1>
+      <h3>--Jim Rohn</h3>
+    </div>
+
+
+    <!-- Mobile version -->
+    <div class="mobile-only">
+      <br><br><br><br><br>
+      <h1>"Whatever good things we build <br> end up building us."</h1>
+      <h3>--Jim Rohn</h3>
+    </div>
+  </div>
+</section>
+{% include "core/index/break.html" %}

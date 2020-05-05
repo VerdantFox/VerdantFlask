@@ -1,0 +1,542 @@
+body {
+    background-color: #EBE8BE;
+    color: #202E24;
+}
+
+html {
+    font-size: 16px;
+}
+
+.dropdown-item:active {
+    background-color: #347A2A;
+}
+
+
+.border{
+    border: 2px solid black;
+}
+
+
+.transparent{
+  background: transparent;
+  background-image: none;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.spacer_image {
+    width: 100%;
+    height: 50vh;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    /*color: #EBE8BE;*/
+    /*color: #202E24;*/
+}
+
+.top_image {
+    width: 100%;
+    height: 500px;
+    /*background-attachment: local;*/
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: #EBE8BE;
+}
+
+/*section.lazy {*/
+    /*width: 100%;*/
+    /*height: 50vh;*/
+    /*display: flex;*/
+/*}*/
+
+
+.pad:before{
+    content:" ";
+    display:inline-block;
+    width:4px;
+}
+
+.errorlist {
+    color: red;
+    padding: 0;
+    list-style-type: none;
+    font-weight: bold;
+}
+
+.success {
+    color: green;
+    padding: 0;
+    list-style-type: none;
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.warning {
+    color: darkred;
+    padding: 0;
+    list-style-type: none;
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.info{
+    color: black;
+    padding: 0;
+    list-style-type: none;
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.profile-pic-div {
+    max-width: 600px;
+}
+
+#profile-img {
+    max-height: 600px;
+}
+
+.welcome-bar{
+    font-size: 1.25em;
+    z-index: 2;
+}
+
+#main-navbar{
+    z-index: 20;
+}
+
+#main-dropdown {
+    z-index: 10000;
+}
+
+
+.top-bar {
+    font-size: 1.5em;
+}
+
+.profile-list {
+    padding: 0;
+    list-style-type: none;
+    font-size: 1.4em;
+}
+
+.bio {
+    font-size: 0.8em;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.extra-padding {
+    padding: 10px;
+}
+
+.container-small {
+    max-width: 80%;
+}
+
+.container-xs {
+    max-width: 70%;
+}
+
+.about {
+    font-size: 1.1em;
+    font-weight: 500;
+}
+
+.top-row {
+    margin-bottom: 0;
+    /* without transparent border there is a margin I can't get rid of*/
+    border-bottom: 1px solid transparent;
+}
+
+.footer {
+    height: 45vh;
+    background-color: #202E24;
+    color: #EBE8BE;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.4rem;
+    line-height: 1.4rem;
+}
+
+
+/* fox image */
+#fox-top {
+    width: 180px;
+    height: 150px;
+    z-index: 1;
+    vertical-align: top;
+    /*border: 2px solid black;*/
+    top: 1%;
+    left: 55%;
+    margin-left: -90px; /* Negative half of width. */
+}
+
+/* Set color scheme here */
+text{
+    color: #202E24;
+}
+
+
+/* For testing */
+.crazy {
+    background-color: pink;
+    color: orangered;
+    border: black;
+}
+
+.card-body{
+    background-color: #feffef;
+    border: 1px solid #202E24;
+    border-radius: .3em;
+}
+
+
+/* Buttons */
+.btn-green{
+    color: #fff;
+    background-color: #347A2A;
+    border-color: #347A2A;
+}
+
+.btn-green:hover{
+    color: #fff;
+    background-color: #369b2b;
+    border-color: #369b2b;
+}
+
+/* Badges */
+.badge-green{
+    color: #fff;
+    background-color: #347A2A;
+    border-color: #347A2A;
+}
+
+.badge-green:hover{
+    color: #fff;
+    background-color: #359d2b;
+    border-color: #359d2b;
+    text-decoration: none;
+}
+
+.btn-outline-green {
+    color: #347A2A;
+    background-color: transparent;
+    background-image: none;
+    border-color: #347A2A;
+}
+
+.btn-outline-green:hover{
+    color: #fff;
+    background-color: #347A2A;
+    border-color: #347A2A;
+}
+
+
+/* Theme colors */
+.bgc-1 {
+    background-color: #EBE8BE;
+}
+
+.bgc-2 {
+    background-color: #B3C87A;
+}
+
+.bgc-3 {
+    background-color: #347A2A;
+}
+
+.bgc-4 {
+    background-color: #202E24;
+}
+
+.bgc-5 {
+    background-color: #DEFBC2;
+}
+
+.bgc-6 {
+    background-color: #90D26D;
+}
+
+.bgc-7 {
+    background-color: #459D72;
+}
+
+.bgc-8 {
+    background-color: #342B2B;
+}
+
+.c-1 {
+    color: #EBE8BE;
+}
+
+.c-2 {
+    color: #B3C87A;
+}
+
+.c-3 {
+    color: #347A2A;
+}
+
+.c-4 {
+    color: #202E24;
+}
+
+.c-5 {
+    color: #DEFBC2;
+}
+
+.c-6 {
+    color: #90D26D;
+}
+
+.c-7 {
+    color: #459D72;
+}
+
+.c-8 {
+    color: #342B2B;
+}
+
+
+.info-color {
+    color: #fff;
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+
+a{
+    color: #347A2A;
+}
+
+a:hover{
+    color: #36a52c;
+}
+
+a.remove-underline{
+    text-decoration: none
+}
+
+#breadcrumb {
+    position: relative;
+    z-index: 100;
+}
+
+.position-absolute {
+    position: absolute;
+}
+
+
+/* Pagination CSS */
+/* https://www.jquery-az.com/bootstrap-4-pagination-9-demos-custom-default-css/ */
+
+/* Pagination links not active */
+.page-link {
+  color: #202E24;
+  background-color: #D8EBEB;
+  border: 1px solid #346767;
+}
+
+/* Change pagination disabled color */
+.page-item.disabled .page-link {
+  color: #868e96;
+  cursor: auto;
+  background-color: #D8EBEB;
+  border-color: #718393;
+}
+
+/* Active item color */
+.page-item.active .page-link {
+  color: #fff;
+  background-color: #202E24;
+  border-color: #202E24;
+}
+
+/* Change pagination active hover color */
+.page-item.active .page-link:hover {
+  color: #fff;
+  background-color: #202E24;
+  border-color: #202E24;
+}
+
+/* Change pagination hover color */
+.page-link:hover {
+  color: #fff;
+  background-color: #B3C87A;
+  border-color: #202E24;
+}
+
+
+.body{
+    position: relative;
+}
+
+/* Nav Tabs CSS */
+.nav-tabs {
+    border-bottom: 1px solid #202E24;
+    /*border: 5px solid black;*/
+}
+
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    color: #fff;
+    background-color: #202E24;
+}
+
+/*.nav-pills > .active > a, .nav-pills > .active > a:hover {*/
+    /*background-color: red;*/
+/*}*/
+
+.nav-tabs .nav-link.active {
+    background-color:#EBE8BE;
+    font-weight: bold;
+    border-left: 1px solid #202E24;
+    border-top: 1px solid #202E24;
+    border-right: 1px solid #202E24;
+    border-bottom: 1px solid #EBE8BE;
+}
+
+.nav-tabs .nav-link.active a {
+    color: #202E24;
+}
+
+.nav-tabs .not-active:hover {
+    background-color:#EBE8BE;
+    color: #202E24;
+    font-weight: bold;
+    border-top-right-radius: .2rem;
+    border-top-left-radius: .2rem;
+    border-left: 1px solid #202E24;
+    border-top: 1px solid #202E24;
+    border-right: 1px solid #202E24;
+    border-bottom: 1px solid #EBE8BE;
+}
+.nav-tabs .not-active a:hover {
+    color: #202E24;
+        border-bottom: 1px solid #EBE8BE;
+}
+
+.nav-link {
+    color: #202E24;
+}
+
+#fox-icon {
+    height: 2.25rem;
+}
+
+.skill-image {
+    width: 12.5rem;
+}
+
+.big-break {
+    font-size: 10px;
+}
+
+.mobile-only {
+    display: none;
+}
+
+/*.youtube-display {*/
+    /*width: 560px;*/
+    /*height: 315px;*/
+/*}*/
+
+
+.video-responsive{
+    overflow:hidden;
+    padding-bottom:56.25%;
+    position:relative;
+    height:0;
+}
+.video-responsive iframe{
+    left:0;
+    top:0;
+    height:100%;
+    width:100%;
+    position:absolute;
+}
+
+/* Phone or tablet adjustments */
+@media only screen and (max-device-width: 720px) {
+    .mobile-no-display {
+        display: none;
+    }
+
+    .mobile-only {
+        display: inline;
+    }
+}
+
+/* phone size adjustments */
+@media only screen and (max-device-width: 480px) {
+
+    .skill-image {
+        width: 8rem;
+    }
+
+
+    .footer {
+        height: 70vh;
+        font-size: 0.9rem;
+    }
+
+
+    .top_image{
+        height: 30vh;
+    }
+
+    .top_image h1 {
+        font-size: 1.5rem;
+    }
+
+    .spacer_image {
+        height: 35vh;
+    }
+
+    .spacer_image h1 {
+        text-align: center;
+        font-size: 1.5rem;
+    }
+
+    .spacer_image h3 {
+        text-align: center;
+        font-size: 1rem;
+    }
+
+    h4 {
+        text-align: center;
+        font-size: 1px;
+    }
+
+    #main-navbar  .navbar-brand{
+        font-size: 1.25rem;
+    }
+
+    .welcome-bar{
+        font-size: 0.9rem;
+    }
+
+    #fox-icon {
+        height: 1.6rem;
+    }
+
+
+
+
+    /*h3 {*/
+        /*color: pink;*/
+    /*}*/
+
+    }

@@ -1,0 +1,22 @@
+<div class="container">
+  <div id="projects">
+    <h2 class="text-center">Projects</h2>
+    {% include "core/index/break.html" %}
+    <section class="Finance">
+      <div class="row">
+        {% include "core/index/projects/finance_description.html" %}
+        {% include "core/index/projects/finance_carousel.html" %}
+      </div>
+    </section>
+    <br>
+    <div class="row">
+      {% include "core/index/projects/games_carousel.html" %}
+      {% include "core/index/projects/games_description.html" %}
+    </div>
+    <br>
+    <div class="row">
+      {% include "core/index/projects/simple_description.html" %}
+      {% include "core/index/projects/simple_carousel.html" %}
+    </div>
+  </div>
+</div>
