@@ -17,7 +17,55 @@
                class="d-inline-block align-top rounded"
                alt="No image found"> Verdant Fox
         </a>
+
+        <ul class="navbar-nav">
+          {% if current_user.is_authenticated %}
+            <li class="nav-item dropdown">
+              <a class="dropdown-toggle nav-link" href="#"
+                  id="dropdownMenuLink" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+                Welcome, User{# {{ request.user.username }} #}
+                {#
+                {% if request.user.userprofile.profile_picture %}
+                  <img src="{{ request.user.userprofile.profile_picture.url }}"
+                        height="30rem"
+                        alt="Image not found" class="rounded"
+                        id="thumbnail-profile-img">
+                {% else %}
+                  <i class="fas fa-user"></i>
+                {% endif %}
+                #}
+              </a>
+              <div id="main-dropdown" class="dropdown-menu position-absolute" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="{{ url_for('users.profile') }}">
+                  <i class="fas fa-user"></i> View Profile
+                </a>
+                <a class="dropdown-item" href="{{ url_for('users.edit_profile') }}">
+                  <i class="fas fa-edit"></i> Update Profile
+                </a>
+                <a class="dropdown-item" href="{{ url_for('users.account_settings') }}">
+                  <i class="fas fa-cog"></i> Update Profile / Settings
+                </a>
+                <a class="dropdown-item" href="{{ url_for('users.logout') }}">
+                  <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+              </div>
+            </li>
+          {% else %}
+            <br><br>
+            <li class="nav-item">
+              <a class="nav-link mr-auto" href="{{ url_for('users.login') }}">
+                  <i class="fas fa-sign-in-alt"></i><span class="pad"></span>Login
+              </a>
+              <a class="nav-link mr-auto" href="{{ url_for('users.register') }}">
+                <i class="fas fa-user-plus"></i><span class="pad"></span>Register
+              </a>
+            </li>
+          {% endif %}
+        </ul>
       </div>
+    </nav>
+
     </nav>
       <div id="top-row-breaks" class="d-none d-md-block">
         <br><br>

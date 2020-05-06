@@ -7,7 +7,8 @@ from flask import Flask
 from flask.json import JSONEncoder
 import yaml
 
-# from root.externals import login_manager
+from root.externals import login_manager
+from root.users.views import users
 from root.externals import db
 from root.core.views import core
 from root.error_pages.handlers import error_pages
@@ -60,13 +61,14 @@ def create_app(config):
 
     # register blueprints
     app.register_blueprint(core)
+    app.register_blueprint(users)
     app.register_blueprint(error_pages)
 
     # initialize databases
     db.init_app(app)
 
     # initialize login manager
-    # login_manager.init_app(app)
-    # login_manager.login_view = "users.login"
+    login_manager.init_app(app)
+    login_manager.login_view = "users.login"
 
     return app

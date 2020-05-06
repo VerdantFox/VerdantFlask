@@ -5,7 +5,6 @@ from wtforms import ValidationError
 from flask_login import current_user
 
 from root.users.models import User
-from root.messages.models import MetaCase
 
 
 def user_exists(message=None):
@@ -33,8 +32,6 @@ def validate_new_meta_reviewer(message=None):
             raise RuntimeError("Case not submitted with reviwer form.")
         if not user:
             raise ValidationError("Reviewer could not be found.")
-        if MetaCase.objects(case=case, reviewers__reviewer_id=user.id).first():
-            raise ValidationError(message)
 
     return validation
 

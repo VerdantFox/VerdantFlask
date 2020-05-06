@@ -1,0 +1,52 @@
+{% extends "core/base.html" %}
+{% set active_page = "register" %}
+
+
+{% block content %}
+
+<div class="container">
+  <form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+      {{ form.email.label() }}
+      {{ form.email(class="form-control", placeholder=form.email.description) }}
+      {% for error in form.email.errors %}
+        <p class="error">{{ error }}</p>
+      {% endfor %}
+    </div>
+    <div class="form-group">
+      {{ form.username.label() }}
+      {{ form.username(class="form-control", placeholder=form.username.description) }}
+      {% for error in form.username.errors %}
+        <p class="error">{{ error }}</p>
+      {% endfor %}
+    </div>
+    <div class="form-group">
+      {{ form.password.label() }}
+      {{ form.password(class="form-control", placeholder=form.password.description) }}
+      {% for error in form.password.errors %}
+        <p class="error">{{ error }}</p>
+      {% endfor %}
+      <small id="passwordHelpBlock" class="form-text text-muted">
+        Your password must meet the following criteria:
+        <ul>
+          <li>Length: 8-30 characters</li>
+          <li>Contain at least 1 uppercase letter</li>
+          <li>Contain at least 1 lowercase letter</li>
+        </ul>
+      </small>
+    </div>
+    <div class="form-group">
+      {{ form.pass_confirm.label() }}
+      {{ form.pass_confirm(class="form-control", placeholder=form.pass_confirm.description) }}
+      {% for error in form.pass_confirm.errors %}
+        <p class="error">{{ error }}</p>
+      {% endfor %}
+    </div>
+    <div class="form-group">
+      {{ form.submit(class="btn btn-primary") }}
+    </div>
+  </form>
+</div>
+
+{% endblock %}
