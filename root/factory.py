@@ -7,7 +7,8 @@ from flask import Flask
 from flask.json import JSONEncoder
 import yaml
 
-from root.externals import db, login_manager
+# from root.externals import login_manager
+from root.externals import db
 from root.core.views import core
 from root.error_pages.handlers import error_pages
 
