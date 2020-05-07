@@ -1,7 +1,6 @@
 from bson import json_util, ObjectId
 from datetime import datetime
 import os
-from copy import deepcopy
 
 from flask import Flask
 from flask.json import JSONEncoder
@@ -37,26 +36,12 @@ def get_config(path, production=False):
     return config
 
 
-def expand_mongo_config(config):
-    """expand the mongo config to include multiple databases"""
-    databases = ["flask", "slack", "test"]
-    mongo_base_settings = config["MONGODB_SETTINGS"]
-    config["MONGODB_SETTINGS"] = []
-    for database in databases:
-        new_setting = deepcopy(mongo_base_settings)
-        new_setting["alias"] = f"{database}-alias"
-        new_setting["db"] = database
-        config["MONGODB_SETTINGS"].append(new_setting)
-    return config
-
-
 def create_app(config):
     # Initiate app
     app = Flask(__name__)
     app.json_encoder = MongoJsonEncoder
 
     # Update config file with MONGODB settings
-    config = expand_mongo_config(config)
     app.config.update(config)
 
     # register blueprints

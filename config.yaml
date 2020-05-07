@@ -6,7 +6,7 @@ TEST:
   DEBUG: True
   MONGODB_SETTINGS:
     authentication_source: admin
-    host: mongodb+srv://cluster0-eyv1o.mongodb.net/test?retryWrites=true&w=majority
+    host: mongodb+srv://cluster0-eyv1o.mongodb.net/flask?retryWrites=true&w=majority
     port: 27017
     username: verdantfox
     # We'll figure out a way to make this more secure later

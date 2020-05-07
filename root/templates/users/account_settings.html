@@ -1,17 +1,27 @@
 {% extends "core/base.html" %}
-{% set active_page = "account" %}
+{% set active_page = "settings" %}
+
+{% block title %}
+  Account Settings | Verdant Fox
+{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{{ url_for('core.index') }}">Home</a></li>
+  <li class="breadcrumb-item active" aria-current="page">Account Settings</li>
+{% endblock %}
+
+{% block navbar %}
+  {% include "users/navbar.html" %}
+{% endblock %}
 
 {% block content %}
 
-<div class="jumbotron text-center">
-  <div class="container">
-    <h1 >Hello <span class="user-color">{{current_user.username}}</span>!</h1>
-    <p class="lead">Adjust your account settings here</p>
-  </div>
-</div>
 <div class="container">
   <form  method="POST">
     {{ form.hidden_tag() }}
+
+    <h1>Settings</h1>
+    <br>
 
     <!-- Username -->
     <div class="form-group">
@@ -61,10 +71,120 @@
         <p class="error">{{ error }}</p>
       {% endfor %}
     </div>
-    <div class="form-group">
-      {{ form.submit(class="btn btn-primary") }}
+    <div class="text-center">
+      {{ form.submit(class="btn btn-lg btn-green") }}
     </div>
   </form>
-</div>
+  <br><br><br>
 
-{% endblock content %}
+  <div class="text-center">
+
+    <!-- Social media connections -->
+    <h2>Social media connections</h2><br>
+
+    <!-- Facebook -->
+    <h3><i class="fab fa-facebook-square"></i> Facebook</h3>
+    {% if facebook_login %}
+      <h5>Connected as
+        <a href="#" target="_blank">
+          {{ facebook_login.extra_data.id }}
+        </a>
+      </h5>
+      {% if can_disconnect %}
+        <form method="post" action="#">
+          <button class="btn btn-green" type="submit">
+            Disconnect from Facebook
+          </button>
+        </form>
+      {% else %}
+        <button class="btn btn-green" type="button" disabled>
+          Disconnect from Facebook
+        </button>
+        <p style="color: red">
+          You must <a href="#">define a password</a>
+          for your account before disconnecting from Facebook.
+        </p>
+      {% endif %}
+    {% else %}
+      <h5><a href="#">Connect to Facebook</a></h5>
+    {% endif %}
+    <br>
+
+    <!-- Twitter -->
+    <h3><i class="fab fa-twitter-square"></i> Twitter</h3>
+    {% if twitter_login %}
+      <h5>Connected as
+        <a href="#" target="_blank">
+          @{{ twitter_login.extra_data.access_token.screen_name }}
+        </a>
+      </h5>
+      {% if can_disconnect %}
+        <form method="post" action="#">
+          <button class="btn btn-green" type="submit">
+            Disconnect from Twitter
+          </button>
+        </form>
+      {% else %}
+        <button class="btn btn-green" type="button" disabled>
+          Disconnect from Twitter
+        </button>
+        <p style="color: red">
+          You must <a href="#">define a password</a>
+          for your account before disconnecting from Twitter.
+        </p>
+      {% endif %}
+    {% else %}
+      <h5><a href="#">Connect to Twitter</a></h5>
+    {% endif %}
+    <br>
+
+    <!-- GitHub -->
+    <h3><i class="fab fa-github-square"></i> GitHub</h3>
+    {% if github_login %}
+      <h5>Connected as
+        <a href="#" target="_blank">
+          {{ github_login.extra_data.login }}
+        </a>
+      </h5>
+      {% if can_disconnect %}
+        <form method="post" action="#">
+          <button class="btn btn-green" type="submit">
+            Disconnect from GitHub
+          </button>
+        </form>
+      {% else %}
+        <button class="btn btn-green" type="button" disabled>
+          Disconnect from GitHub
+        </button>
+        <p style="color: red">You must <a href="#">
+          define a password</a> for your account before disconnecting from Github.
+        </p>
+      {% endif %}
+    {% else %}
+      <h5><a href="#">Connect to GitHub</a></h5>
+    {% endif %}
+    <br><br><br>
+
+    <!-- Delete Account -->
+    <h2>Delete account?</h2>
+    <p>Warning: data stored with all applications will be irreversibly lost.</p>
+
+    <div class="form-group">
+      <form method="post">
+          <div class="text-center">
+            <input type="submit"
+                  class="btn btn-danger btn-lg"
+                onclick="return confirm(
+                  'Are you sure you want to delete ' +
+                  'account? All data associated with account will be ' +
+                  'irreversibly lost.')"
+                   name="delete-account" value="Delete account">
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+<br><br>
+
+
+{% endblock %}

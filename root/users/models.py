@@ -10,7 +10,7 @@ def load_user(user_id):
 
 
 class User(db.Document, UserMixin):
-    """Reivewer document"""
+    """User model"""
 
     username = db.StringField(
         required=True, unique=True, min_length=3, max_length=30, index=True
@@ -20,7 +20,6 @@ class User(db.Document, UserMixin):
     full_name = db.StringField(required=False, max_length=80, index=True)
 
     meta = {
-        "db_alias": "flask-alias",
         "collection": "users",
         "indexes": ["username", "email"],
     }

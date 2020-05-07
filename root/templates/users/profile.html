@@ -1,1 +1,22 @@
-PROFILE
+{% extends "core/base.html" %}
+{% set active_page = "profile" %}
+
+{% block title %}
+  Profile | Verdant Fox
+{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{{ url_for('core.index') }}">Home</a></li>
+  <li class="breadcrumb-item active" aria-current="page">Profile</li>
+{% endblock %}
+
+{% block navbar %}
+  {% include "users/navbar.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+
+</div>
+
+{% endblock %}

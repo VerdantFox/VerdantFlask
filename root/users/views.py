@@ -73,13 +73,13 @@ def logout():
 @users.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
-    return "PROFILE"
+    return render_template("users/profile.html")
 
 
 @users.route("/edit_profile", methods=["GET", "POST"])
 @login_required
 def edit_profile():
-    return "EDIT profile"
+    return render_template("users/edit_profile.html")
 
 
 @users.route("/account_settings", methods=["GET", "POST"])

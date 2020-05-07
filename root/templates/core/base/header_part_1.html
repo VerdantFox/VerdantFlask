@@ -24,27 +24,25 @@
               <a class="dropdown-toggle nav-link" href="#"
                   id="dropdownMenuLink" data-toggle="dropdown"
                   aria-haspopup="true" aria-expanded="false">
-                Welcome, User{# {{ request.user.username }} #}
-                {#
-                {% if request.user.userprofile.profile_picture %}
-                  <img src="{{ request.user.userprofile.profile_picture.url }}"
+                Welcome, {{ current_user.username }}&nbsp;
+                {% if current_user.picture %}
+                  <img src="{{ current_user.picture }}"
                         height="30rem"
                         alt="Image not found" class="rounded"
                         id="thumbnail-profile-img">
                 {% else %}
                   <i class="fas fa-user"></i>
                 {% endif %}
-                #}
               </a>
               <div id="main-dropdown" class="dropdown-menu position-absolute" aria-labelledby="navbarDropdownMenuLink">
                 <a class="dropdown-item" href="{{ url_for('users.profile') }}">
                   <i class="fas fa-user"></i> View Profile
                 </a>
                 <a class="dropdown-item" href="{{ url_for('users.edit_profile') }}">
-                  <i class="fas fa-edit"></i> Update Profile
+                  <i class="fas fa-edit"></i> Edit Profile
                 </a>
                 <a class="dropdown-item" href="{{ url_for('users.account_settings') }}">
-                  <i class="fas fa-cog"></i> Update Profile / Settings
+                  <i class="fas fa-cog"></i> Settings
                 </a>
                 <a class="dropdown-item" href="{{ url_for('users.logout') }}">
                   <i class="fas fa-sign-out-alt"></i> Logout

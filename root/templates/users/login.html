@@ -1,26 +1,54 @@
 {% extends "core/base.html" %}
 {% set active_page = "login" %}
 
+
+{% block navbar %}
+  {% include "users/navbar.html" %}
+{% endblock %}
+
 {% block content %}
-  <br>
-  <div class="container">
-    <form method="POST">
-      {{ form.hidden_tag() }}
-      <div class="form-group">
-        {{ form.username_or_email.label() }}
-        {{ form.username_or_email(class="form-control", placeholder=form.username_or_email.description) }}
-        {% for error in form.username_or_email.errors %}
-          <p class="error">{{ error }}</p>
-        {% endfor %}
-      </div>
-      <div class="form-group">
-        {{ form.password.label() }}
-        {{ form.password(class="form-control", placeholder=form.password.description) }}
-        {% for error in form.password.errors %}
-          <p class="error">{{ error }}</p>
-        {% endfor %}
-      </div>
-      {{ form.submit(class="btn btn-primary") }}
-    </form>
+<div class="container">
+
+  <h1 class="text-center">Login</h1><br>
+  <h3 class="text-center">Login through a social platform</h3>
+  <div class="social-logins text-center">
+    <a title="Facebook login" href="#"><i class="fab fa-facebook-square fa-5x"></i></a>
+    <span>&nbsp; &nbsp;</span>
+    <a title="Twitter login" href="#"><i class="fab fa-twitter-square fa-5x"></i></a>
+    <span>&nbsp; &nbsp;</span>
+    <a title="GitHub login" href="#"><i class="fab fa-github-square fa-5x"></i></a>
+    <br>
   </div>
+
+  <br><h5 class="text-center"><strong>-- OR --</strong></h5><br>
+  <h3 class="text-center">Use Traditional Login</h3>
+
+  <form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+      {{ form.username_or_email.label() }}
+      {{ form.username_or_email(class="form-control", placeholder=form.username_or_email.description) }}
+      {% for error in form.username_or_email.errors %}
+        <p class="error">{{ error }}</p>
+      {% endfor %}
+    </div>
+    <div class="form-group">
+      {{ form.password.label() }}
+      {{ form.password(class="form-control", placeholder=form.password.description) }}
+      {% for error in form.password.errors %}
+        <p class="error">{{ error }}</p>
+      {% endfor %}
+    </div>
+    <div class="text-center">
+      {{ form.submit(class="btn btn-lg btn-green") }}
+    </div>
+  </form>
+
+  <br>
+  <p class="text-center">
+    <a href="#">Forgot username or password?</a>
+  </p>
+
+</div>
+
 {% endblock %}
