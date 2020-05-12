@@ -1,5 +1,6 @@
-from flask_mongoengine import MongoEngine
+"""Globals"""
 from flask_login import LoginManager
+from flask_mongoengine import MongoEngine
 
 # Database setup
 db = MongoEngine()

@@ -1,8 +1,8 @@
-import re
 import json
+import re
 
-from wtforms import ValidationError
 from flask_login import current_user
+from wtforms import ValidationError
 
 from root.users.models import User
 

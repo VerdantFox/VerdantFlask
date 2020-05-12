@@ -1,16 +1,14 @@
-from bson import json_util, ObjectId
 from datetime import datetime
-import os
 
+from bson import ObjectId, json_util
 from flask import Flask
 from flask.json import JSONEncoder
-import yaml
 
-from root.externals import login_manager
-from root.users.views import users
-from root.externals import db
 from root.core.views import core
 from root.error_pages.handlers import error_pages
+from root.externals import db, login_manager
+from root.users.views import users
+from root.utils import extract_secret, get_secrets, set_environment_variables
 
 
 class MongoJsonEncoder(JSONEncoder):
@@ -22,32 +20,28 @@ class MongoJsonEncoder(JSONEncoder):
         return json_util.default(obj, json_util.CANONICAL_JSON_OPTIONS)
 
 
-def get_config(path, production=False):
-    """Gets a config file at the specified path and setting
-
-    production: If true use "PROD" setting, else use "TEST"
-    """
-    setting = "PROD" if production is True else "TEST"
-    config_path = os.path.abspath(os.path.join(path))
-    with open(config_path) as conf:
-        config_base = yaml.safe_load(conf)
-        config = config_base[setting]
-
-    return config
+def register_blueprints(app):
+    # Base blueprints
+    app.register_blueprint(core)
+    app.register_blueprint(users)
+    app.register_blueprint(error_pages)
 
 
-def create_app(config):
+def create_app():
+
+    secrets = get_secrets()
+    set_environment_variables(extract_secret(secrets, "ENV_VARS"))
+    config = extract_secret(secrets, "APP")
+
     # Initiate app
     app = Flask(__name__)
     app.json_encoder = MongoJsonEncoder
 
-    # Update config file with MONGODB settings
+    # Update config from file
     app.config.update(config)
 
     # register blueprints
-    app.register_blueprint(core)
-    app.register_blueprint(users)
-    app.register_blueprint(error_pages)
+    register_blueprints(app)
 
     # initialize databases
     db.init_app(app)

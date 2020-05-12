@@ -1,17 +1,15 @@
 # Form Based Imports
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import PasswordField, StringField, SubmitField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, Optional
 
 # User Based Imports
 from root.custom_form_validators import (
-    unique_user_field,
-    unique_or_current_user_field,
-    has_upper,
     has_lower,
-    matching_password,
-    required_if,
+    has_upper,
     safe_string,
+    unique_or_current_user_field,
+    unique_user_field,
 )
 
 
@@ -82,11 +80,6 @@ class UpdateUserForm(FlaskForm):
             safe_string(),
             Length(min=3, max=30),
         ],
-    )
-    old_pass = PasswordField(
-        "Current password",
-        description="Current password",
-        validators=[required_if("new_pass",), matching_password()],
     )
     new_pass = PasswordField(
         "New Password",

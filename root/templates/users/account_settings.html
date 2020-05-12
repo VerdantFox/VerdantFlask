@@ -43,13 +43,6 @@
 
     <!-- Password -->
     <div class="form-group">
-      {{ form.old_pass.label() }}
-      {{ form.old_pass(class="form-control", placeholder=form.old_pass.description) }}
-      {% for error in form.old_pass.errors %}
-        <p class="error">{{ error }}</p>
-      {% endfor %}
-    </div>
-    <div class="form-group">
       {{ form.new_pass.label() }}
       {{ form.new_pass(class="form-control", placeholder=form.new_pass.description) }}
       {% for error in form.new_pass.errors %}
@@ -84,14 +77,10 @@
 
     <!-- Facebook -->
     <h3><i class="fab fa-facebook-square"></i> Facebook</h3>
-    {% if facebook_login %}
-      <h5>Connected as
-        <a href="#" target="_blank">
-          {{ facebook_login.extra_data.id }}
-        </a>
-      </h5>
+    {% if current_user.facebook_id %}
+      <h5>Connected</h5>
       {% if can_disconnect %}
-        <form method="post" action="#">
+        <form method="post" action="{{ url_for('users.facebook_oauth_disconnect') }}">
           <button class="btn btn-green" type="submit">
             Disconnect from Facebook
           </button>
@@ -101,53 +90,45 @@
           Disconnect from Facebook
         </button>
         <p style="color: red">
-          You must <a href="#">define a password</a>
+          You must have defined an email and password
           for your account before disconnecting from Facebook.
         </p>
       {% endif %}
     {% else %}
-      <h5><a href="#">Connect to Facebook</a></h5>
+      <h5><a href="{{ url_for('users.facebook_oauth') }}">Connect to Facebook</a></h5>
     {% endif %}
     <br>
 
-    <!-- Twitter -->
-    <h3><i class="fab fa-twitter-square"></i> Twitter</h3>
-    {% if twitter_login %}
-      <h5>Connected as
-        <a href="#" target="_blank">
-          @{{ twitter_login.extra_data.access_token.screen_name }}
-        </a>
-      </h5>
+    <!-- Google -->
+    <h3><i class="fab fa-google-plus-square"></i> Google</h3>
+    {% if current_user.google_id %}
+      <h5>Connected</h5>
       {% if can_disconnect %}
-        <form method="post" action="#">
+        <form method="post" action="{{ url_for('users.google_oauth_disconnect') }}">
           <button class="btn btn-green" type="submit">
-            Disconnect from Twitter
+            Disconnect from Google
           </button>
         </form>
       {% else %}
         <button class="btn btn-green" type="button" disabled>
-          Disconnect from Twitter
+          Disconnect from Google
         </button>
         <p style="color: red">
-          You must <a href="#">define a password</a>
-          for your account before disconnecting from Twitter.
+          You must have defined an email and password
+          for your account before disconnecting from Google.
         </p>
       {% endif %}
     {% else %}
-      <h5><a href="#">Connect to Twitter</a></h5>
+      <h5><a href="{{ url_for('users.google_oauth') }}">Connect to Google</a></h5>
     {% endif %}
     <br>
 
     <!-- GitHub -->
     <h3><i class="fab fa-github-square"></i> GitHub</h3>
-    {% if github_login %}
-      <h5>Connected as
-        <a href="#" target="_blank">
-          {{ github_login.extra_data.login }}
-        </a>
-      </h5>
+    {% if current_user.github_id %}
+      <h5>Connected</h5>
       {% if can_disconnect %}
-        <form method="post" action="#">
+        <form method="post" action="{{ url_for('users.github_oauth_disconnect') }}">
           <button class="btn btn-green" type="submit">
             Disconnect from GitHub
           </button>
@@ -156,12 +137,13 @@
         <button class="btn btn-green" type="button" disabled>
           Disconnect from GitHub
         </button>
-        <p style="color: red">You must <a href="#">
-          define a password</a> for your account before disconnecting from Github.
+        <p style="color: red">
+          You must have defined an email and password
+          for your account before disconnecting from Github.
         </p>
       {% endif %}
     {% else %}
-      <h5><a href="#">Connect to GitHub</a></h5>
+      <h5><a href="{{ url_for('users.github_oauth') }}">Connect to GitHub</a></h5>
     {% endif %}
     <br><br><br>
 
@@ -170,7 +152,7 @@
     <p>Warning: data stored with all applications will be irreversibly lost.</p>
 
     <div class="form-group">
-      <form method="post">
+      <form method="post" action="{{ url_for('users.delete_account') }}">
           <div class="text-center">
             <input type="submit"
                   class="btn btn-danger btn-lg"
