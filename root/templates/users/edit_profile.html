@@ -16,7 +16,57 @@
 
 {% block content %}
 <div class="container">
+  <form  method="POST">
+    {{ form.hidden_tag() }}
 
+    {{ form.select_avatar() }}
+
+    <h1>Edit Profile</h1>
+    <br>
+
+    <!-- Username -->
+    <div class="form-group">
+      {{ form.username.label(class="form-group") }}
+      {{ form.username(class='form-control', placeholder=form.username.description) }}
+      {% for error in form.username.errors %}
+        <p class="error">{{ error }}</p>
+      {% endfor %}
+    </div>
+
+    <!-- Select avatar -->
+    <p>Select an avatar</p>
+
+    <p>-- OR --</p>
+
+    <!-- Upload Avatar -->
+    <div class="form-group">
+      {{ form.upload_avatar.label(class="form-group") }}
+      {{ form.upload_avatar(class='form-control-file', placeholder=form.upload_avatar.description) }}
+      {% for error in form.upload_avatar.errors %}
+        <p class="error">{{ error }}</p>
+      {% endfor %}
+    </div>
+    <p class="text-muted">Uploaded avatar will overwrite selected avatar.</p>
+
+    <!-- Bio -->
+    <div class="form-group">
+      {{ form.bio.label(class="form-group") }}
+      {{ form.bio(class='form-control', placeholder=form.bio.description) }}
+      {% for error in form.bio.errors %}
+        <p class="error">{{ error }}</p>
+      {% endfor %}
+    </div>
+
+    <!-- Birth Date -->
+    <div class="form-group">
+      {{ form.birth_date.label(class="form-group", ) }}
+      {{ form.birth_date(class='form-control', placeholder=form.birth_date.description) }}
+      {% for error in form.birth_date.errors %}
+        <p class="error">{{ error }}</p>
+      {% endfor %}
+    </div>
+
+  </form>
 </div>
 
 {% endblock %}

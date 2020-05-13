@@ -12,7 +12,12 @@ from flask import (
 from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.security import generate_password_hash
 
-from root.users.forms import LoginForm, RegistrationForm, UpdateUserForm
+from root.users.forms import (
+    LoginForm,
+    RegistrationForm,
+    UserProfileForm,
+    UserSettingsForm,
+)
 from root.users.models import User
 from root.users.oauth_config import authomatic
 
@@ -87,31 +92,44 @@ def profile():
 @users.route("/edit_profile", methods=["GET", "POST"])
 @login_required
 def edit_profile():
-    return render_template("users/edit_profile.html")
+    form = UserProfileForm()
+    if form.validate_on_submit():
+        # TODO Update user
+        flash("User Profile Updated", category="success")
+        return redirect(url_for("users.account_settings"))
+    elif request.method == "GET":
+        form.username.data = current_user.username
+        form.full_name.data = current_user.full_name
+        form.bio.data = current_user.bio
+        form.birth_date.data = current_user.birth_date
+
+    return render_template("users/edit_profile.html", form=form)
 
 
 @users.route("/account_settings", methods=["GET", "POST"])
 @login_required
 def account_settings():
 
-    form = UpdateUserForm()
+    form = UserSettingsForm()
     if form.validate_on_submit():
         current_user.username = form.username.data
         current_user.email = form.email.data
         fields = {
             "email": form.email.data,
-            "username": form.username.data,
         }
+        if form.timezone.data:
+            fields["timezone"] = (form.timezone.data,)
         if form.new_pass.data:
             new_hash = generate_password_hash(form.new_pass.data)
             fields["password_hash"] = new_hash
         current_user.update(**fields)
         flash("User Account Updated", category="success")
         return redirect(url_for("users.account_settings"))
-
     elif request.method == "GET":
-        form.username.data = current_user.username
         form.email.data = current_user.email
+        # Only override default if timezone set
+        if current_user.timezone:
+            form.timezone.data = current_user.timezone
 
     return render_template(
         "users/account_settings.html", form=form, can_disconnect=can_oauth_disconnect()
@@ -208,7 +226,7 @@ def oauth_generalized(oauth_client):
 
     if not result.user:
         print("AUTH FAILED")
-        return redirect(url_for(login))
+        return redirect(url_for("users.login"))
 
     # Update user to retrieve data
     result.user.update()

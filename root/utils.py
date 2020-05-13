@@ -17,7 +17,8 @@ def get_secrets():
     with open(config_path) as conf:
         secrets = yaml.safe_load(conf)
 
-    debug = os.environ.get("DEBUG")
+    # debug = os.environ.get("DEBUG")
+    debug = True
     if debug:
         secrets = extract_secret(secrets, "DEV")
     else:

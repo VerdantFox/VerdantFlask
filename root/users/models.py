@@ -9,16 +9,6 @@ def load_user(user_id):
     return User.objects(pk=user_id).first()
 
 
-class GithubToken(db.EmbeddedDocument):
-    """GithubToken embedded document"""
-
-    access_token = db.StringField(index=True)
-    token_type = db.StringField(index=True)
-    scope = db.ListField(db.StringField(), index=True)
-
-    meta = {"indexes": ["access_token", "token_type", "scope"]}
-
-
 class User(db.Document, UserMixin):
     """User model"""
 
@@ -28,6 +18,12 @@ class User(db.Document, UserMixin):
     )
     password_hash = db.StringField(required=False, index=True)
     full_name = db.StringField(required=False, max_length=80, index=True)
+    avatar_location = db.StringField(required=False, max_length=400, index=True)
+    bio = db.StringField(required=False, max_length=350, index=True)
+    birth_date = db.DateTimeField(required=False, index=True)
+    timezone = db.StringField(required=False, max_length=80, index=True)
+
+    # Oauth stuff
     github_id = db.LongField(unique=True, required=False, sparse=True, index=True)
     github_name = db.StringField(required=False, index=True)
     facebook_id = db.StringField(unique=True, required=False, sparse=True, index=True)

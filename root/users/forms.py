@@ -1,6 +1,16 @@
 # Form Based Imports
+import pytz
 from flask_wtf import FlaskForm
-from wtforms import PasswordField, StringField, SubmitField
+from wtforms import (
+    FileField,
+    HiddenField,
+    PasswordField,
+    SelectField,
+    StringField,
+    SubmitField,
+    TextAreaField,
+)
+from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, Optional
 
 # User Based Imports
@@ -11,6 +21,11 @@ from root.custom_form_validators import (
     unique_or_current_user_field,
     unique_user_field,
 )
+
+timezone_list = []
+for timezone in pytz.common_timezones:
+    timezone_list.append((timezone, timezone))
+print(timezone_list)
 
 
 class LoginForm(FlaskForm):
@@ -61,7 +76,7 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField("Register")
 
 
-class UpdateUserForm(FlaskForm):
+class UserSettingsForm(FlaskForm):
     email = StringField(
         "Email",
         description="Email",
@@ -69,16 +84,6 @@ class UpdateUserForm(FlaskForm):
             DataRequired(),
             Email(),
             unique_or_current_user_field("Email is already registered."),
-        ],
-    )
-    username = StringField(
-        "Username",
-        description="Username",
-        validators=[
-            DataRequired(),
-            unique_or_current_user_field("Username already exists."),
-            safe_string(),
-            Length(min=3, max=30),
         ],
     )
     new_pass = PasswordField(
@@ -91,4 +96,32 @@ class UpdateUserForm(FlaskForm):
         description="Confirm password",
         validators=[Optional(), EqualTo("new_pass", message="Passwords Must Match!")],
     )
+    timezone = SelectField("Timezone", choices=timezone_list, default="UTC")
+    submit = SubmitField("Update")
+
+
+class UserProfileForm(FlaskForm):
+    username = StringField(
+        "Username",
+        description="Username",
+        validators=[
+            DataRequired(),
+            unique_or_current_user_field("Username already exists."),
+            safe_string(),
+            Length(min=3, max=30),
+        ],
+    )
+    full_name = StringField(
+        "Full Name", description="John Smith", validators=[Optional(), Length(max=60)],
+    )
+    upload_avatar = FileField(
+        "Upload avatar", description="Upload avatar", validators=[Optional()]
+    )
+    select_avatar = HiddenField("Select avatar", validators=[Optional()])
+    bio = TextAreaField(
+        "Bio",
+        description="What's something intereting you'd like to share?",
+        validators=[Optional(), Length(max=300)],
+    )
+    birth_date = DateField("Birth date", validators=[Optional()])
     submit = SubmitField("Update")

@@ -23,19 +23,10 @@
     <h1>Settings</h1>
     <br>
 
-    <!-- Username -->
-    <div class="form-group">
-      {{ form.username.label(class="form-group", placeholder=form.username.description) }}
-      {{ form.username(class='form-control') }}
-      {% for error in form.username.errors %}
-        <p class="error">{{ error }}</p>
-      {% endfor %}
-    </div>
-
     <!-- Email -->
     <div class="form-group">
-      {{ form.email.label(class="form-group", placeholder=form.email.description) }}
-      {{form.email(class='form-control') }}
+      {{ form.email.label(class="form-group") }}
+      {{form.email(class='form-control', placeholder=form.email.description) }}
       {% for error in form.email.errors %}
         <p class="error">{{ error }}</p>
       {% endfor %}
@@ -64,6 +55,17 @@
         <p class="error">{{ error }}</p>
       {% endfor %}
     </div>
+
+    <!-- Timezone -->
+    <div class="form-group">
+      {{ form.timezone.label() }}
+      {{ form.timezone(class="form-control", placeholder=form.timezone.description) }}
+      {% for error in form.timezone.errors %}
+        <p class="error">{{ error }}</p>
+      {% endfor %}
+    </div>
+
+    <!-- Submit -->
     <div class="text-center">
       {{ form.submit(class="btn btn-lg btn-green") }}
     </div>
