@@ -97,12 +97,9 @@ html {
     font-size: 1.5em;
 }
 
-.avatar-div {
-    max-width: 400px;
-}
-
 #avatar-img {
     max-height: 400px;
+    max-width: 100%;
 }
 
 .welcome-bar{

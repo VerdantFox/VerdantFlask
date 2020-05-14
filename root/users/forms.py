@@ -15,8 +15,8 @@ from wtforms.validators import DataRequired, Email, EqualTo, Length, Optional
 
 # User Based Imports
 from root.custom_form_validators import (
-    has_lower,
-    has_upper,
+    has_number,
+    has_letter,
     safe_string,
     unique_or_current_user_field,
     unique_user_field,
@@ -62,7 +62,7 @@ class RegistrationForm(FlaskForm):
     password = PasswordField(
         "Password",
         description="Old password",
-        validators=[DataRequired(), Length(min=8, max=30), has_lower(), has_upper()],
+        validators=[DataRequired(), Length(min=8, max=30), has_letter(), has_number()],
     )
     pass_confirm = PasswordField(
         "Confirm password",
@@ -88,7 +88,7 @@ class UserSettingsForm(FlaskForm):
     new_pass = PasswordField(
         "New Password",
         description="New password",
-        validators=[Optional(), Length(min=8, max=30), has_lower(), has_upper()],
+        validators=[Optional(), Length(min=8, max=30), has_letter(), has_number()],
     )
     pass_confirm = PasswordField(
         "Confirm password",

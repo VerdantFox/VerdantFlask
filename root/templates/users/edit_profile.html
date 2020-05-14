@@ -21,28 +21,29 @@
 
     {{ form.select_avatar() }}
 
-    <h1>Edit Profile</h1>
-    <br>
+    <div class="text-center">
+      <h1>Edit Profile</h1>
+      <br>
 
-    <!-- Username -->
-    <div class="form-group">
-      {{ form.username.label(class="form-group") }}
-      {{ form.username(class='form-control', placeholder=form.username.description) }}
-      {% for error in form.username.errors %}
-        <p class="error">{{ error }}</p>
-      {% endfor %}
-    </div>
+      <!-- Username -->
+      <div class="form-group">
+        {{ form.username.label(class="form-group") }}
+        {{ form.username(class='form-control text-center', placeholder=form.username.description) }}
+        {% for error in form.username.errors %}
+          <p class="error">{{ error }}</p>
+        {% endfor %}
+      </div>
 
-    <!-- Username -->
-    <div class="form-group">
-      {{ form.full_name.label(class="form-group") }}
-      {{ form.full_name(class='form-control', placeholder=form.full_name.description) }}
-      {% for error in form.full_name.errors %}
-        <p class="error">{{ error }}</p>
-      {% endfor %}
-    </div>
+      <!-- Username -->
+      <div class="form-group">
+        {{ form.full_name.label(class="form-group") }}
+        {{ form.full_name(class='form-control text-center', placeholder=form.full_name.description) }}
+        {% for error in form.full_name.errors %}
+          <p class="error">{{ error }}</p>
+        {% endfor %}
+      </div>
 
-    <div class="avatar-div">
+      <!-- Current avatar -->
       <h4>Current Avatar:</h4>
       {% if current_user.avatar_location %}
         <img src="{{ current_user.avatar_location }}" alt="Image not found"
@@ -51,61 +52,60 @@
       {% else %}
         <i id="alt-profile-img" class="img-thumbnail fas fa-user fa-10x"></i>
       {% endif %}
-    </div>
-    <br>
 
-    <!-- Select avatar -->
-    <p>Select a New Avatar</p>
-    {% for pic in default_pics %}
-      <img src="{{ url_for('static', filename='images/avatars_default/{}'.format(pic)) }}"
-      id="{{ pic }}"
-      height="150"
-      class="default-avatar rounded"
-      alt="No image found">
-    {% endfor %}
+      <br>
 
-    <br><br>
-    <p>-- OR --</p>
-
-    <!-- Upload Avatar -->
-    <div class="form-group">
-      {{ form.upload_avatar.label(class="form-group") }}
-      {{ form.upload_avatar(class='form-control-file', placeholder=form.upload_avatar.description) }}
-      {% for error in form.upload_avatar.errors %}
-        <p class="error">{{ error }}</p>
+      <!-- Select avatar -->
+      <p>Select a New Avatar</p>
+      {% for pic in default_pics %}
+        <img src="{{ url_for('static', filename='images/avatars_default/{}'.format(pic)) }}"
+        id="{{ pic }}"
+        height="150"
+        class="default-avatar rounded"
+        alt="No image found">
       {% endfor %}
-    </div>
-    <p class="text-muted">Uploaded avatar will overwrite selected avatar.</p>
+      <br><br>
+      <p>-- OR --</p>
+      <!-- Upload Avatar -->
+      <div>
+        <div class="custom-file">
+          {{ form.upload_avatar(class='custom-file-input') }}
+          {{ form.upload_avatar.label(class="custom-file-label") }}
+          {% for error in form.upload_avatar.errors %}
+            <p class="error">{{ error }}</p>
+          {% endfor %}
+        </div>
+      </div>
+      <p class="text-muted">Uploaded avatar will overwrite selected avatar.</p>
+      <p>If you'd like to build your own avatar I recommend
+        <a href="https://avatarmaker.com/" target="_blank">Avatar Maker</a> or
+        <a href="https://www.faceyourmanga.com/editmangatar.php" target="_blank">
+          Face Your Manga
+        </a> for avatar building.
+      </p>
 
-    <p>If you'd like to build your own avatar I recommend
-      <a href="https://avatarmaker.com/" target="_blank">Avatar Maker</a> or
-      <a href="https://www.faceyourmanga.com/editmangatar.php" target="_blank">
-        Face Your Manga
-      </a> for avatar building.
-    </p>
+      <!-- Bio -->
+      <div class="form-group">
+        {{ form.bio.label(class="form-group") }}
+        {{ form.bio(class='form-control', placeholder=form.bio.description) }}
+        {% for error in form.bio.errors %}
+          <p class="error">{{ error }}</p>
+        {% endfor %}
+      </div>
 
-    <!-- Bio -->
-    <div class="form-group">
-      {{ form.bio.label(class="form-group") }}
-      {{ form.bio(class='form-control', placeholder=form.bio.description) }}
-      {% for error in form.bio.errors %}
-        <p class="error">{{ error }}</p>
-      {% endfor %}
-    </div>
+      <!-- Birth Date -->
+      <div class="form-group">
+          {{ form.birth_date.label(class="form-group", ) }}
+          {{ form.birth_date(class='form-control text-center', placeholder=form.birth_date.description) }}
+          {% for error in form.birth_date.errors %}
+            <p class="error">{{ error }}</p>
+          {% endfor %}
+      </div>
 
-    <!-- Birth Date -->
-    <div class="form-group">
-      {{ form.birth_date.label(class="form-group", ) }}
-      {{ form.birth_date(class='form-control', placeholder=form.birth_date.description) }}
-      {% for error in form.birth_date.errors %}
-        <p class="error">{{ error }}</p>
-      {% endfor %}
-    </div>
-
-    <!-- Submit -->
-    <div class="text-center">
+      <!-- Submit -->
       {{ form.submit(class="btn btn-lg btn-green") }}
     </div>
+    
   </form>
   <br><br><br>
 </div>

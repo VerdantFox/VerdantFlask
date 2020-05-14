@@ -127,8 +127,6 @@ def edit_profile():
             current_user.avatar_location = url_for(
                 "static", filename=f"images/avatars_default/{avatar_image}"
             )
-        else:
-            current_user.avatar_location = None
         current_user.save()
         flash("User Profile Updated", category="success")
         return redirect(url_for("users.profile"))
@@ -137,7 +135,6 @@ def edit_profile():
         form.full_name.data = current_user.full_name
         form.bio.data = current_user.bio
         form.birth_date.data = current_user.birth_date
-        form.select_avatar.data = current_user.avatar_location
     return render_template(
         "users/edit_profile.html", form=form, default_pics=DEFAULT_PICS
     )

@@ -94,6 +94,33 @@ def has_lower(message=None):
     return validation
 
 
+def has_letter(message=None):
+    """Validates that the field has at least one letter"""
+    if not message:
+        message = "At least one letter required."
+
+    def validation(form, field):
+        lowercase_string = field.data.lower()
+        contains_letters = lowercase_string.islower()
+        if contains_letters is False:
+            raise ValidationError(message)
+
+    return validation
+
+
+def has_number(message=None):
+    """Validates that the field has at least one letter"""
+    if not message:
+        message = "At least one number required."
+
+    def validation(form, field):
+        contains_numbers = any(char.isdigit() for char in field.data)
+        if contains_numbers is False:
+            raise ValidationError(message)
+
+    return validation
+
+
 def matching_password(message=None):
     """Validates that a user's password field matches its password in database"""
     if not message:
