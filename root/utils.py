@@ -4,7 +4,7 @@ import os
 import yaml
 
 # Secrets path
-config_path = os.path.abspath(
+CONFIG_PATH = os.path.abspath(
     os.path.join(os.path.dirname(os.path.dirname(__file__)), "secrets.yaml")
 )
 
@@ -12,9 +12,9 @@ config_path = os.path.abspath(
 def get_secrets():
     """Gets a secrets file at the specified path and setting"""
 
-    if not os.path.exists(config_path):
-        raise EnvironmentError(f"secrets file not found at: {config_path}")
-    with open(config_path) as conf:
+    if not os.path.exists(CONFIG_PATH):
+        raise EnvironmentError(f"secrets file not found at: {CONFIG_PATH}")
+    with open(CONFIG_PATH) as conf:
         secrets = yaml.safe_load(conf)
 
     # debug = os.environ.get("DEBUG")

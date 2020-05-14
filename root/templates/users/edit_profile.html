@@ -16,7 +16,7 @@
 
 {% block content %}
 <div class="container">
-  <form  method="POST">
+  <form  method="POST" action="" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
 
     {{ form.select_avatar() }}
@@ -33,9 +33,38 @@
       {% endfor %}
     </div>
 
-    <!-- Select avatar -->
-    <p>Select an avatar</p>
+    <!-- Username -->
+    <div class="form-group">
+      {{ form.full_name.label(class="form-group") }}
+      {{ form.full_name(class='form-control', placeholder=form.full_name.description) }}
+      {% for error in form.full_name.errors %}
+        <p class="error">{{ error }}</p>
+      {% endfor %}
+    </div>
 
+    <div class="avatar-div">
+      <h4>Current Avatar:</h4>
+      {% if current_user.avatar_location %}
+        <img src="{{ current_user.avatar_location }}" alt="Image not found"
+            height="400"
+            class="default-avatar rounded" id="avatar-img">
+      {% else %}
+        <i id="alt-profile-img" class="img-thumbnail fas fa-user fa-10x"></i>
+      {% endif %}
+    </div>
+    <br>
+
+    <!-- Select avatar -->
+    <p>Select a New Avatar</p>
+    {% for pic in default_pics %}
+      <img src="{{ url_for('static', filename='images/avatars_default/{}'.format(pic)) }}"
+      id="{{ pic }}"
+      height="150"
+      class="default-avatar rounded"
+      alt="No image found">
+    {% endfor %}
+
+    <br><br>
     <p>-- OR --</p>
 
     <!-- Upload Avatar -->
@@ -47,6 +76,13 @@
       {% endfor %}
     </div>
     <p class="text-muted">Uploaded avatar will overwrite selected avatar.</p>
+
+    <p>If you'd like to build your own avatar I recommend
+      <a href="https://avatarmaker.com/" target="_blank">Avatar Maker</a> or
+      <a href="https://www.faceyourmanga.com/editmangatar.php" target="_blank">
+        Face Your Manga
+      </a> for avatar building.
+    </p>
 
     <!-- Bio -->
     <div class="form-group">
@@ -66,7 +102,16 @@
       {% endfor %}
     </div>
 
+    <!-- Submit -->
+    <div class="text-center">
+      {{ form.submit(class="btn btn-lg btn-green") }}
+    </div>
   </form>
+  <br><br><br>
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/users/edit_profile.js') }}"></script>
 {% endblock %}

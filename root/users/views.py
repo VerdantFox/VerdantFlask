@@ -1,3 +1,5 @@
+import os
+
 from authomatic.adapters import WerkzeugAdapter
 from flask import (
     Blueprint,
@@ -11,19 +13,22 @@ from flask import (
 )
 from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.security import generate_password_hash
+from werkzeug.utils import secure_filename
 
+from root.externals import STATIC_PATH
 from root.users.forms import (
     LoginForm,
     RegistrationForm,
     UserProfileForm,
     UserSettingsForm,
 )
+from root.users.image_handler import delete_current_avatar, upload_avatar
 from root.users.models import User
 from root.users.oauth_config import authomatic
 
 users = Blueprint("users", __name__)
 
-oauth_lookup = {
+OAUTH_LOOKUP = {
     "github": {"oname": "GitHub", "db_oid": "github_id", "db_oname": "github_name"},
     "facebook": {
         "oname": "Facebook",
@@ -32,6 +37,8 @@ oauth_lookup = {
     },
     "google": {"oname": "Google", "db_oid": "google_id", "db_oname": "google_name"},
 }
+DEFAULT_AVATARS_PATH = os.path.join(STATIC_PATH, "images", "avatars_default")
+DEFAULT_PICS = sorted(os.listdir(DEFAULT_AVATARS_PATH))
 
 
 @users.route("/register", methods=["GET", "POST"])
@@ -94,16 +101,46 @@ def profile():
 def edit_profile():
     form = UserProfileForm()
     if form.validate_on_submit():
-        # TODO Update user
+        current_user.username = form.username.data
+        if form.full_name.data:
+            current_user.full_name = form.full_name.data
+        else:
+            current_user.full_name = None
+        if form.bio.data:
+            current_user.bio = form.bio.data
+        else:
+            current_user.bio = None
+        if form.birth_date.data:
+            current_user.birth_date = form.birth_date.data
+        else:
+            current_user.birth_date = None
+        if form.upload_avatar.data:
+            avatar_image = upload_avatar(form.upload_avatar.data)
+            if avatar_image is None:
+                return redirect(url_for("users.edit_profile"))
+            current_user.avatar_location = url_for(
+                "static", filename=f"images/avatars_uploaded/{avatar_image}"
+            )
+        elif form.select_avatar.data:
+            avatar_image = secure_filename(form.select_avatar.data)
+            delete_current_avatar()
+            current_user.avatar_location = url_for(
+                "static", filename=f"images/avatars_default/{avatar_image}"
+            )
+        else:
+            current_user.avatar_location = None
+        current_user.save()
         flash("User Profile Updated", category="success")
-        return redirect(url_for("users.account_settings"))
+        return redirect(url_for("users.profile"))
     elif request.method == "GET":
         form.username.data = current_user.username
         form.full_name.data = current_user.full_name
         form.bio.data = current_user.bio
         form.birth_date.data = current_user.birth_date
-
-    return render_template("users/edit_profile.html", form=form)
+        form.select_avatar.data = current_user.avatar_location
+    return render_template(
+        "users/edit_profile.html", form=form, default_pics=DEFAULT_PICS
+    )
 
 
 @users.route("/account_settings", methods=["GET", "POST"])
@@ -112,17 +149,13 @@ def account_settings():
 
     form = UserSettingsForm()
     if form.validate_on_submit():
-        current_user.username = form.username.data
         current_user.email = form.email.data
-        fields = {
-            "email": form.email.data,
-        }
-        if form.timezone.data:
-            fields["timezone"] = (form.timezone.data,)
+        current_user.timezone = form.timezone.data
+        current_user.email = form.email.data
         if form.new_pass.data:
             new_hash = generate_password_hash(form.new_pass.data)
-            fields["password_hash"] = new_hash
-        current_user.update(**fields)
+            current_user.password_hash = new_hash
+        current_user.save()
         flash("User Account Updated", category="success")
         return redirect(url_for("users.account_settings"))
     elif request.method == "GET":
@@ -200,9 +233,9 @@ def oauth_disconnect(oauth_client):
     if not current_user.is_authenticated:
         return redirect(url_for("users.login"))
 
-    oname = oauth_lookup[oauth_client]["oname"]
-    db_oid = oauth_lookup[oauth_client]["db_oid"]
-    db_oname = oauth_lookup[oauth_client]["db_oname"]
+    oname = OAUTH_LOOKUP[oauth_client]["oname"]
+    db_oid = OAUTH_LOOKUP[oauth_client]["db_oid"]
+    db_oname = OAUTH_LOOKUP[oauth_client]["db_oname"]
 
     current_user[db_oid] = None
     current_user[db_oname] = None
@@ -231,9 +264,9 @@ def oauth_generalized(oauth_client):
     # Update user to retrieve data
     result.user.update()
 
-    oname = oauth_lookup[oauth_client]["oname"]
-    db_oid = oauth_lookup[oauth_client]["db_oid"]
-    db_oname = oauth_lookup[oauth_client]["db_oname"]
+    oname = OAUTH_LOOKUP[oauth_client]["oname"]
+    db_oid = OAUTH_LOOKUP[oauth_client]["db_oid"]
+    db_oname = OAUTH_LOOKUP[oauth_client]["db_oname"]
 
     client_oid = result.user.id
     client_name = result.user.name

@@ -97,12 +97,12 @@ html {
     font-size: 1.5em;
 }
 
-.profile-pic-div {
-    max-width: 600px;
+.avatar-div {
+    max-width: 400px;
 }
 
-#profile-img {
-    max-height: 600px;
+#avatar-img {
+    max-height: 400px;
 }
 
 .welcome-bar{
@@ -468,6 +468,15 @@ a.remove-underline{
     position:absolute;
 }
 
+/* User avatars */
+.default-avatar {
+    margin: 2px;
+    border: 6px solid white;
+}
+.avatar-selected {
+    border: 6px solid #B3C87A;
+}
+
 /* Phone or tablet adjustments */
 @media only screen and (max-device-width: 720px) {
     .mobile-no-display {
@@ -532,11 +541,4 @@ a.remove-underline{
         height: 1.6rem;
     }
 
-
-
-
-    /*h3 {*/
-        /*color: pink;*/
-    /*}*/
-
-    }
+}

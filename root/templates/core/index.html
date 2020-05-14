@@ -14,7 +14,6 @@
 {% endblock %}
 
 {% block content %}
-  <script src="{{ url_for('static', filename='js/index.js') }}"></script>
   {% include "core/index/top_image.html" %}
   {% include "core/index/intro.html" %}
   {% include "core/index/image_break_1.html" %}
@@ -24,4 +23,8 @@
   {% include "core/index/image_break_3.html" %}
   {% include "core/index/about.html" %}
   {% include "core/index/footer.html" %}
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/core/index.js') }}"></script>
 {% endblock %}

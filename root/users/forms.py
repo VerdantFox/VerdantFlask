@@ -25,7 +25,6 @@ from root.custom_form_validators import (
 timezone_list = []
 for timezone in pytz.common_timezones:
     timezone_list.append((timezone, timezone))
-print(timezone_list)
 
 
 class LoginForm(FlaskForm):
@@ -115,11 +114,11 @@ class UserProfileForm(FlaskForm):
         "Full Name", description="John Smith", validators=[Optional(), Length(max=60)],
     )
     upload_avatar = FileField(
-        "Upload avatar", description="Upload avatar", validators=[Optional()]
+        "Upload Your Own Avatar", description="Upload avatar", validators=[Optional()]
     )
     select_avatar = HiddenField("Select avatar", validators=[Optional()])
     bio = TextAreaField(
-        "Bio",
+        "About Me",
         description="What's something intereting you'd like to share?",
         validators=[Optional(), Length(max=300)],
     )

@@ -25,3 +25,6 @@ venv/
 
 # Secrets
 secrets.yaml
+
+# User files
+avatars_uploaded/
