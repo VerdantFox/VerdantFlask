@@ -3,15 +3,15 @@
 
 {% block title %}
   Home | Verdant Fox
-{% endblock %}
+{% endblock title %}
 
 {% block breadcrumb %}
   <li class="breadcrumb-item active" aria-current="page">Home</li>
-{% endblock %}
+{% endblock breadcrumb %}
 
 {% block navbar %}
   {% include "core/index/navbar.html" %}
-{% endblock %}
+{% endblock navbar %}
 
 {% block content %}
   {% include "core/index/top_image.html" %}
@@ -23,8 +23,8 @@
   {% include "core/index/image_break_3.html" %}
   {% include "core/index/about.html" %}
   {% include "core/index/footer.html" %}
-{% endblock %}
+{% endblock content %}
 
 {% block scripts %}
   <script src="{{ url_for('static', filename='js/core/index.js') }}"></script>
-{% endblock %}
+{% endblock scripts %}

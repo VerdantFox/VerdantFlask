@@ -1,0 +1,64 @@
+# CodeClimate Configuration
+# Reference: https://docs.codeclimate.com/docs/advanced-configuration
+# Plugin list: https://github.com/codeclimate/codeclimate/blob/master/config/engines.yml
+
+# Config version. Required.
+version: "2"
+
+# Configuration for built-in checks. All are enabled by default.
+checks:
+  argument-count:
+    config:
+      # Override default 4.  Rationale:  Pylint defaults to 5.
+      threshold: 5
+  file-lines:
+    config:
+      # Override default 250. Rationale: some concepts can't be split any further.
+      threshold: 500
+  method-complexity:
+    config:
+      # Override default 5.  Rationale:  pursuit of what CodeClimate measures
+      # as a 5 was making us unhappy.
+      threshold: 6
+  return-statements:
+    config:
+      # Override default 4.  Rationale:  Pylint defaults to 6.
+      threshold: 6
+
+# Configuration for plugins.
+plugins:
+  # Duplication: A built-in plugin that must be configured for Python 3.
+  duplication:
+    enabled: true
+    config:
+      languages:
+        python:
+          python_version: 3
+  # Bandit: https://docs.codeclimate.com/docs/bandit
+  bandit:
+    enabled: true
+  # pep8: https://docs.codeclimate.com/docs/pep8
+  pep8:
+    enabled: true
+  # Pylint: https://docs.codeclimate.com/docs/pylint
+  # Not actually supported currently. Support may be added in the future.
+  # pylint:
+  #   enabled: true
+  # Radon: https://docs.codeclimate.com/docs/radon
+  radon:
+    enabled: true
+    config:
+      # Override default "B". Rationale: too noisy, too many reports where refactoring hurts.
+      threshold: "C"
+    exclude_patterns:
+      # Exclude test files since asserts are counted as complexity.
+      - "**/*_test.py"
+  # SonarPython: https://docs.codeclimate.com/docs/sonar-python
+  sonar-python:
+    enabled: true
+
+# Excluded files and directories.
+exclude_patterns:
+  # Permanently ignore:  we do *not* now want analysis of third-party source.
+  - "node_modules/"
+  - "venv/"

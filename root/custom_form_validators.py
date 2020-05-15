@@ -169,7 +169,7 @@ def safe_string(message=None):
     return validation
 
 
-def safe_string_json_parsed(message=None, max=None):
+def safe_string_json_parsed(message=None, maximum=None):
     """Validates that the field matches some safe requirements
 
     Requirements:
@@ -187,7 +187,7 @@ def safe_string_json_parsed(message=None, max=None):
             match = pattern.match(string)
             if not match:
                 raise ValidationError(message)
-            if max and len(string) > max:
-                raise ValidationError(f"Can't be longer than {max} characters.")
+            if maximum and len(string) > maximum:
+                raise ValidationError(f"Can't be longer than {maximum} characters.")
 
     return validation

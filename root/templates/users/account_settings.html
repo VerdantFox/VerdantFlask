@@ -3,16 +3,16 @@
 
 {% block title %}
   Account Settings | Verdant Fox
-{% endblock %}
+{% endblock title %}
 
 {% block breadcrumb %}
   <li class="breadcrumb-item"><a href="{{ url_for('core.index') }}">Home</a></li>
   <li class="breadcrumb-item active" aria-current="page">Account Settings</li>
-{% endblock %}
+{% endblock breadcrumb %}
 
 {% block navbar %}
   {% include "users/navbar.html" %}
-{% endblock %}
+{% endblock navbar %}
 
 {% block content %}
 
@@ -171,4 +171,4 @@
 <br><br>
 
 
-{% endblock %}
+{% endblock content %}

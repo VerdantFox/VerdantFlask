@@ -1,0 +1,16 @@
+# .bandit.yaml: configuration for Bandit security linter (https://github.com/PyCQA/bandit)
+# https://bandit.readthedocs.io/en/latest/config.html
+# Run Bandit from project root like so: bandit -r -c .bandit.yaml .
+# Note that this file *must* be named ".bandit.yaml" for integration with CodeClimate.
+# CodeClimate plugin: https://github.com/noqcks/codeclimate-bandit
+
+# Note that any inline exceptions to the linter (signified with a trailing "# nosec" comment)
+# must contain a nearby comment explaining why the exception is considered safe or necessary.
+
+# See <URL: https://bandit.readthedocs.io/en/latest/blacklists/index.html > for more details.
+# B101: blacklist of `assert` statement.
+# This skip is safe because we do not use `assert` outside of Pytest tests.
+# B311: blacklist of all calls to `random` module.
+# This skip is safe because we do not need cryptographically secure random numbers.
+exclude_dirs: venv
+skips: ['B101', 'B311']

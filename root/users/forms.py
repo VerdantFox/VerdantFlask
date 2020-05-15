@@ -15,8 +15,8 @@ from wtforms.validators import DataRequired, Email, EqualTo, Length, Optional
 
 # User Based Imports
 from root.custom_form_validators import (
-    has_number,
     has_letter,
+    has_number,
     safe_string,
     unique_or_current_user_field,
     unique_user_field,

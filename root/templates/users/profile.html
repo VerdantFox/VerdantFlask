@@ -3,16 +3,16 @@
 
 {% block title %}
   Profile | Verdant Fox
-{% endblock %}
+{% endblock title %}
 
 {% block breadcrumb %}
   <li class="breadcrumb-item"><a href="{{ url_for('core.index') }}">Home</a></li>
   <li class="breadcrumb-item active" aria-current="page">Profile</li>
-{% endblock %}
+{% endblock breadcrumb %}
 
 {% block navbar %}
   {% include "users/navbar.html" %}
-{% endblock %}
+{% endblock navbar %}
 
 {% block content %}
 <div class="container">
@@ -46,4 +46,4 @@
   </div>
 </div>
 
-{% endblock %}
+{% endblock content %}

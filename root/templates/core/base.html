@@ -6,7 +6,7 @@
     {% include "core/base/favicons.html" %}
     {% include "core/base/imports.html" %}
     <title>
-      {% block title %}{% endblock %}
+      {% block title %}{% endblock title %}
     </title>
   </head>
   <body
@@ -15,11 +15,11 @@
     {% endif %}>
     
     {% include "core/base/header_part_1.html" with context %}
-    {% block breadcrumb %}{% endblock %}
+    {% block breadcrumb %}{% endblock breadcrumb %}
     {% include "core/base/header_part_2.html" with context %}
-    {% block navbar %}{% endblock %}
+    {% block navbar %}{% endblock navbar %}
     {% include 'core/base/flash_messages.html' %}
-    {% block content %}{% endblock %}
-    {% block scripts %}{% endblock %}
+    {% block content %}{% endblock content %}
+    {% block scripts %}{% endblock scripts %}
   </body>
 </html>
