@@ -120,7 +120,7 @@ class UserProfileForm(FlaskForm):
     bio = TextAreaField(
         "About Me",
         description="What's something intereting you'd like to share?",
-        validators=[Optional(), Length(max=300)],
+        validators=[Optional(), Length(max=1000)],
     )
     birth_date = DateField("Birth date", validators=[Optional()])
     submit = SubmitField("Update")

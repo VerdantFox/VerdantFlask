@@ -38,7 +38,7 @@
       {{ current_user.bio if current_user.bio }}
     </p>
     <h4>Birth Date:
-      {{ current_user.birth_date if current_user.birth_date }}
+      {{ current_user.birth_date.strftime('%B %d, %Y') if current_user.birth_date }}
     </h4>
     <h4>Timezone: 
       {{ current_user.timezone if current_user.timezone else "UTC"}}

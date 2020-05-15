@@ -19,7 +19,7 @@ class User(db.Document, UserMixin):
     password_hash = db.StringField(required=False, index=True)
     full_name = db.StringField(required=False, max_length=80, index=True)
     avatar_location = db.StringField(required=False, max_length=400, index=True)
-    bio = db.StringField(required=False, max_length=350, index=True)
+    bio = db.StringField(required=False, max_length=1000, index=True)
     birth_date = db.DateTimeField(required=False, index=True)
     timezone = db.StringField(required=False, max_length=80, index=True)
 
