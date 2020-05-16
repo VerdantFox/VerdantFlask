@@ -23,8 +23,12 @@ email-validator==1.1.0
 flask-mongoengine==0.9.5
 
 # Other
+beautifulsoup4==4.9.0
+bleach==3.1.5
 pytz==2020.1
-markdown2==2.3.9
+Markdown==3.2.2
+Pygments==2.6.1
+micawber==0.5.1
 
 # Data
 pandas==1.0.3

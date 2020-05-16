@@ -12,6 +12,7 @@ def load_user(user_id):
 class User(db.Document, UserMixin):
     """User model"""
 
+    # User editable fields
     username = db.StringField(required=True, unique=True, max_length=30, index=True)
     email = db.EmailField(
         unique=True, required=False, sparse=True, max_length=80, index=True
@@ -22,6 +23,12 @@ class User(db.Document, UserMixin):
     bio = db.StringField(required=False, max_length=1000, index=True)
     birth_date = db.DateTimeField(required=False, index=True)
     timezone = db.StringField(required=False, max_length=80, index=True)
+
+    # Access Levels (mostly for blog)
+    # For now only editable by an admin with database access
+    # 1. Admin
+    # 2. Regular Users
+    access_level = db.IntField(min_value=1, max_value=2, index=True)
 
     # Oauth stuff
     github_id = db.LongField(unique=True, required=False, sparse=True, index=True)
@@ -41,6 +48,7 @@ class User(db.Document, UserMixin):
             "bio",
             "birth_date",
             "timezone",
+            "access_level",
             "github_id",
             "github_name",
             "facebook_id",

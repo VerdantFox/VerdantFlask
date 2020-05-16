@@ -4,6 +4,7 @@ from bson import ObjectId, json_util
 from flask import Flask
 from flask.json import JSONEncoder
 
+from root.blog.views import blog
 from root.core.views import core
 from root.error_pages.handlers import error_pages
 from root.externals import db, login_manager
@@ -24,6 +25,7 @@ def register_blueprints(app):
     # Base blueprints
     app.register_blueprint(core)
     app.register_blueprint(users)
+    app.register_blueprint(blog)
     app.register_blueprint(error_pages)
 
 

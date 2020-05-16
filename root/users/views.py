@@ -25,6 +25,7 @@ from root.users.forms import (
 from root.users.image_handler import delete_current_avatar, upload_avatar
 from root.users.models import User
 from root.users.oauth_config import authomatic
+from root.utils import redirect_next
 
 users = Blueprint("users", __name__)
 
@@ -320,10 +321,3 @@ def oauth_generalized(oauth_client):
 def login_and_redirect(user):
     login_user(user)
     return redirect_next()
-
-
-def redirect_next():
-    next = request.args.get("next")
-    if next is None or not next[0] == "/":
-        next = url_for("core.index")
-    return redirect(next)

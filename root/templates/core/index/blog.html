@@ -1,0 +1,41 @@
+<section id="blog">
+  <div class="container font-adjust">
+    <div class="row">
+      <div class="col"></div>
+      <div class="col-lg-10">
+        <h2 class="text-center">My blog</h2>
+        <br>
+        <p>
+          I'm pretty new to blogging, but I like the idea of it so here it
+          goes. Here are a list of some of my most recent blog posts. I will
+          try to create posts somewhat regularly about programming topics
+          related to things I've learned and found interesting -- basically a
+          mish-mash of tutorials and discussions about things I've learned in
+          my work and personal projects that I think could be valuable to
+          someone else interested in learning about those topics. The intended
+          audience here is generally novice programmers. To see and search on
+          all of my blog posts click the button below.
+        </p>
+        <a class="btn btn-green btn-block" href="{{ url_for('blog.blog_list') }}" name="">
+          Go to Blog
+        </a>
+        <hr>
+        <br>
+        {% include "core/index/blog_shortlist.html" %}
+      </div>
+      <div class="col"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 
+
+  #26 Gary Vaynerchuk
+“What you do after you create your content is what truly counts.”
+
+#39 Chris Brogan
+“If you accept all the praise, you have to accept all the critics.”
+
+“You can always edit a bad page. You can’t edit a blank page.”
+― Jodi Picoult
+ -->
