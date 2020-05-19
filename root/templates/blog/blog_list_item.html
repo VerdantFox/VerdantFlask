@@ -1,0 +1,17 @@
+<h3>{{ post.title }}</h3>
+<hr>
+<p class="text-right">
+  {{ post.created_timestamp.strftime('%B %d, %Y %I:%M %p') }} / 
+  {% if post.tags %}
+    {% for tag in post.tags %}
+        {{ tag }}
+    {% endfor %}
+    /
+  {% endif %}
+  {{ post.comments|length }} comments
+</p>
+<hr>
+<div class="blog-preview">
+  {{ post.html_preview | safe }}
+</div>
+<br>

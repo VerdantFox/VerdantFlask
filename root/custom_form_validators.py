@@ -4,7 +4,9 @@ import re
 from flask_login import current_user
 from wtforms import ValidationError
 
+from root.blog.models import BlogPost
 from root.users.models import User
+from root.utils import get_slug
 
 
 def user_exists(message=None):
@@ -32,6 +34,20 @@ def validate_new_meta_reviewer(message=None):
             raise RuntimeError("Case not submitted with reviwer form.")
         if not user:
             raise ValidationError("Reviewer could not be found.")
+
+    return validation
+
+
+def unique_blog_title(message=None):
+    """Validates that a blog title doesn't already exist"""
+    if not message:
+        message = "Title must be unique"
+
+    def validation(form, field):
+        title = field.data
+        slug = get_slug(title)
+        if BlogPost.objects(slug=slug).first():
+            raise ValidationError(message)
 
     return validation
 

@@ -27,6 +27,12 @@ def error_500(error):
     return render_template("error_pages/all_errors.html", error=error), 500
 
 
+@error_pages.app_errorhandler(401)
+def error_401(error):
+    """Error for trying to access something without authorization."""
+    return render_template("error_pages/all_errors.html", error=error), 401
+
+
 @error_pages.app_errorhandler(403)
 def error_403(error):
     """Error for trying to access something which is forbidden."""

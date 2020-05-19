@@ -1,14 +1,9 @@
 """Blog models
 
-Some code borrowed and altered for my purposes from this blog post:
+Initial blog inspired by:
 https://charlesleifer.com/blog/how-to-make-a-flask-blog-in-one-hour-or-less/
 """
-import datetime
-import functools
-import os
-import re
 
-import bleach
 from bson.objectid import ObjectId
 from flask import (
     Flask,
@@ -65,20 +60,31 @@ class BlogPost(db.Document):
 
     title = db.StringField(required=True, unique=True, max_length=80, index=True)
     slug = db.StringField(required=True, unique=True, max_length=80, index=True)
-    published = db.BooleanField(required=True, default=False, index=True)
     author = db.ObjectIdField(required=True, index=True)
+    published = db.BooleanField(required=True, default=False, index=True)
+    tags = db.ListField(db.StringField(index=True), required=False, index=True)
     markdown_content = db.StringField(required=True, max_length=10_000)
-    html_preview = db.StringField(required=True)
     html_content = db.StringField(required=True)
+    html_preview = db.StringField(required=True)
+    thumbnail_location = db.StringField(required=False)
     image_locations = db.ListField(db.StringField(), required=False)
     created_timestamp = db.DateTimeField(required=True, index=True)
     updated_timestamp = db.DateTimeField(required=True, index=True)
     comments = db.EmbeddedDocumentListField(Comment, required=False, index=True)
-    tags = db.ListField(db.StringField(index=True), required=False, index=True)
 
     meta = {
         "collection": "blog",
         "indexes": [
+            {
+                "fields": ["$title", "$author", "$tags", "$markdown_content"],
+                "default_language": "english",
+                "weights": {
+                    "author": 20,
+                    "tags": 15,
+                    "title": 10,
+                    "markdown_content": 2,
+                },
+            },
             "title",
             "slug",
             "published",
@@ -95,27 +101,3 @@ class BlogPost(db.Document):
 
     def __repr__(self):
         return f"Post: {self.title} author: {self.author}"
-
-    @staticmethod
-    def html_content(markdown_content):
-        """
-        Generate HTML representation of the markdown-formatted blog entry,
-        and also convert any media URLs into rich media objects such as video
-        players or images.
-        """
-        hilite = CodeHiliteExtension(linenums=False, css_class="highlight")
-        extras = ExtraExtension()
-        markdown_content = markdown(markdown_content, extensions=[hilite, extras])
-        oembed_content = parse_html(
-            markdown_content, oembed_providers, urlize_all=True, maxwidth=SITE_WIDTH,
-        )
-        return Markup(oembed_content)
-
-    @staticmethod
-    def sanitize_markup(markup):
-        bleach.clean(markup)
-
-    def update_slug(self, *args, **kwargs):
-        """Generate slug from entries title"""
-        if not self.slug:
-            self.slug = re.sub(r"[^\w]+", "-", self.title.lower()).strip("-")

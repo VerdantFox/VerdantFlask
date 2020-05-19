@@ -1,0 +1,22 @@
+{% extends "core/base.html" %}
+{% set active_page = None %}
+
+{% block title %}
+  Verdant Fox | Blog | View
+{% endblock title %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{{ url_for('core.index') }}">Home</a></li>
+  <li class="breadcrumb-item"><a href="{{ url_for('blog.blog_list') }}">Blog</a></li>
+  <li class="breadcrumb-item active" aria-current="page">Blog Post View</li>
+{% endblock breadcrumb %}
+
+{% block navbar %}
+  {% include "blog/navbar.html" %}
+{% endblock navbar %}
+
+{% block content %}
+<div class="container">
+  
+</div>
+{% endblock content %}

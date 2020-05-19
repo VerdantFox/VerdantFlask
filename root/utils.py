@@ -1,5 +1,6 @@
 """Utility functions available throughout app"""
 import os
+import re
 from math import ceil
 
 import yaml
@@ -66,3 +67,16 @@ def setup_pagination(page, results_per_page, mongo_query):
     else:
         paginator = mongo_query.paginate(page=page, per_page=results_per_page)
     return paginator
+
+
+def get_slug(title):
+    """Generate slug from title"""
+    return re.sub(r"[^\w]+", "-", title.lower()).strip("-")
+
+
+def list_from_string(string):
+    """Generate a list from a string"""
+    if not string:
+        string = ""
+    string_list = string.strip(" []()").split(",")
+    return [item.strip() for item in string_list]

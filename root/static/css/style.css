@@ -59,6 +59,9 @@ html {
     /*display: flex;*/
 /*}*/
 
+.error {
+    color: red;
+}
 
 .pad:before{
     content:" ";

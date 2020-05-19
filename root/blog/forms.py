@@ -10,6 +10,8 @@ from wtforms import (
 )
 from wtforms.validators import DataRequired, Length, Optional
 
+from root.custom_form_validators import unique_blog_title
+
 
 class CommentForm(FlaskForm):
     """Form for commenting on blog posts or replying to comments"""
@@ -21,29 +23,34 @@ class CommentForm(FlaskForm):
 
 
 class EditBlogPostForm(FlaskForm):
-    """Form for editing a blog post"""
+    """Form for creating/editing a blog post"""
 
-    publish = BooleanField("Publish", description="publish", default=False)
     title = StringField(
         "Title", description="Title", validators=[DataRequired(), Length(max=200)],
     )
-    content = TextAreaField(
-        "Content",
-        description="Content",
-        validators=[DataRequired(), Length(max=10_000)],
-    )
-    images = FileField("Images", description="Upload avatar", validators=[Optional()])
     tags = StringField(
         "Tags",
         description="Comma separated list of tags",
         validators=[Optional(), Length(max=200)],
     )
+    publish = BooleanField("Publish", description="publish", default=False)
+    content = TextAreaField(
+        "Content",
+        description="Markdown Content",
+        validators=[DataRequired(), Length(max=10_000)],
+    )
+    thumbnail = HiddenField(
+        "Thumbnail", description="Thumbnail", validators=[Optional()]
+    )
+    images = HiddenField("Images", description="Images", validators=[Optional()])
     submit = SubmitField("Submit")
 
 
-class SearchForm(FlaskForm):
-    """Form for searching against blog posts"""
+class CreateBlogPostForm(EditBlogPostForm):
+    """Create blog post form"""
 
-    page = HiddenField("Page", default=1)
-    search = StringField("Search", description="search", validators=[Optional()])
-    submit = SubmitField("Search")
+    title = StringField(
+        "Title",
+        description="Title",
+        validators=[DataRequired(), Length(max=200), unique_blog_title()],
+    )

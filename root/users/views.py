@@ -53,6 +53,7 @@ def register():
             email=form.email.data,
             username=form.username.data,
             password_hash=password_hash,
+            access_level=2,
         )
         user.save()
         flash("Thanks for registering! Now you can login!", category="success")
@@ -303,6 +304,7 @@ def oauth_generalized(oauth_client):
             "full_name": client_name,
             db_oid: client_oid,
             db_oname: client_name,
+            "access_level": 2,
         }
         user = User(**user_data)
         user.save()
