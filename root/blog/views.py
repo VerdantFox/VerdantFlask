@@ -36,29 +36,19 @@ oembed_providers = bootstrap_basic(OEmbedCache())
 
 @blog.route("/blog", methods=["GET"])
 def blog_list():
-    """Get a timestamp ordered list of blog posts to display with search
-
-    TODO show unpublished to author but not to public
-    """
+    """Get a timestamp ordered list of blog posts to display with search"""
     search = request.args.get("search")
     try:
         page = int(request.args.get("page"))
     except (ValueError, TypeError):
         page = 0
-
-    query = {}
-    if current_user.access_level != 1:
-        query["published"] = True
-
-    posts = BlogPost.objects(**query)
-    if search:
-        posts = posts.search_text(search)
-
-    limit_fields = ["title", "slug", "author", "html_preview", "created_timestamp"]
-    posts = posts.only(*limit_fields).order_by("created_timestamp")
     results_per_page = 20  # Maybe set with form in future
-    paginator = setup_pagination(page, results_per_page, posts)
-    return render_template("blog/list_posts.html", paginator=paginator,)
+
+    paginator = query_and_paginate_blog(
+        search=search, page=page, results_per_page=results_per_page
+    )
+
+    return render_template("blog/list_posts.html", paginator=paginator)
 
 
 @blog.route("/blog/create", methods=["GET", "POST"])
@@ -90,16 +80,32 @@ def view(slug):
                 "This post is unpublished. Only admin can view it, "
                 "sorry. Check back later!",
             )
-    return render_template("blog/view_post.html")
+    return render_template("blog/view_post.html", post=post)
 
 
 @blog.route("/blog/edit/<slug>", methods=["GET", "POST"])
 @login_required
 def edit(slug):
     """Update a blogpost"""
+    # Slug is the True test of unique-ness
+    post = BlogPost.objects(slug=slug).first()
+    if post.author != current_user.id:
+        abort(403, f"Only blogpost author can edit post.")
+
     form = EditBlogPostForm()
-    form.slug.data = slug
-    return "in UPDATE"
+
+    if form.validate_on_submit():
+        return create_or_edit(form=form, title=form.title.data, post=post)
+    elif form.errors:
+        flash("Error editing post!", category="error")
+
+    form.title.data = post.title
+    form.tags.data = ",".join(post.tags)
+    form.publish.data = post.published
+    form.content.data = post.markdown_content
+    form.images.data = ",".join(post.image_locations)
+
+    return render_template("blog/edit_post.html", form=form,)
 
 
 @blog.route("/blog/delete/<slug>", methods=["POST"])
@@ -157,15 +163,48 @@ def delete_reply(slug, comment_id, reply_id):
 # ----------------------------------------------------------------------------
 # HELPER METHODS
 # ----------------------------------------------------------------------------
-def create_or_edit(form, title, edit=False):
+def query_and_paginate_blog(query=None, search=None, page=1, results_per_page=3):
+    """Query database on params and return paginator object
+
+    Params:
+        query: dictionary of mongoengine query parameters
+        search: string used to search against database
+    Returns:
+        mongoengine paginator object
+    """
+    if not query:
+        query = {}
+    query["published"] = True
+    if current_user.is_authenticated and current_user.access_level == 1:
+        query.pop("published")
+    posts = BlogPost.objects(**query)
+    if search:
+        posts = posts.search_text(search)
+    limit_fields = [
+        "title",
+        "slug",
+        "author",
+        "tags",
+        "html_preview",
+        "created_timestamp",
+        "published",
+        "comments",
+    ]
+    posts = posts.only(*limit_fields).order_by("created_timestamp")
+    return setup_pagination(page, results_per_page, posts)
+
+
+def create_or_edit(form, title, post=None):
     """Create or edit a blog post"""
-    slug = get_slug(title)
-    # Slug is the True test of unique-ness
-    post = BlogPost.objects(slug=slug).first()
+    if post is None:
+        edit = False
+    else:
+        edit = True
+
     if edit is False:
         if post:
             flash("Post with that title already exists", category="error")
-            return render_template("blog/create_post.html", form=form,)
+            return render_template("blog/create_post.html", form=form)
         post = BlogPost()
 
     post.title = form.title.data
@@ -173,15 +212,13 @@ def create_or_edit(form, title, edit=False):
     post.author = current_user.id
     post.published = form.publish.data
     post.tags = list_from_string(form.tags.data)
-    form.tags.data = ",".join(post.tags)
     post.markdown_content = form.content.data.strip()
     post.html_content = get_html(post.markdown_content)
-    markdown_preview = post.markdown_content[:100]
     # Use 1500 after testing
+    markdown_preview = post.markdown_content[:1500]
     post.html_preview = get_html(markdown_preview)
     post.thumbnail_location = form.thumbnail.data.strip()
     post.image_locations = list_from_string(form.images.data)
-    form.images.data = ",".join(post.image_locations)
     if edit is False:
         post.created_timestamp = datetime.datetime.now()
     post.updated_timestamp = datetime.datetime.now()

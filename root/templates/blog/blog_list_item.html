@@ -1,17 +1,22 @@
-<h3>{{ post.title }}</h3>
-<hr>
-<p class="text-right">
-  {{ post.created_timestamp.strftime('%B %d, %Y %I:%M %p') }} / 
-  {% if post.tags %}
-    {% for tag in post.tags %}
-        {{ tag }}
-    {% endfor %}
-    /
-  {% endif %}
-  {{ post.comments|length }} comments
-</p>
-<hr>
 <div class="blog-preview">
+  <h1 class="blog-list-title">
+    <a href="{{ url_for('blog.view', slug=post.slug) }}">{{ post.title }}</a>
+    {% if post.published == False %}
+      <span class="text-muted">[unpublished]</span>
+    {% endif %}
+  </h1>
+  <hr>
+  <p class="text-right blog-list-stats">
+    {{ post.created_timestamp.strftime('%B %d, %Y %I:%M %p') }} / 
+    {% if post.tags %}
+      {% for tag in post.tags %}
+          {{ tag }}
+      {% endfor %}
+      /
+    {% endif %}
+    {{ post.comments|length }} comments
+  </p>
+  <hr>
   {{ post.html_preview | safe }}
+  <br><br><br><br>
 </div>
-<br>

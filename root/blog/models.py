@@ -100,4 +100,7 @@ class BlogPost(db.Document):
     }
 
     def __repr__(self):
-        return f"Post: {self.title} author: {self.author}"
+        return (
+            f"Post(title: {self.title}, author: {self.author}, "
+            f"published: {self.published})"
+        )

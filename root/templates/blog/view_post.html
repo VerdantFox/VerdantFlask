@@ -17,6 +17,35 @@
 
 {% block content %}
 <div class="container">
-  
+  <div class="row">
+    <!-- Using columns to artificial reduce container size -->
+    <div class="col-lg-1"></div>
+    <div class="col-lg-10 blog-post">
+      <h1>
+        {{ post.title }}
+        {% if post.published == False %}
+          <span class="text-muted">[unpublished]</span>
+        {% endif %}
+        {% if post.author == current_user.id %}
+          <a href="{{ url_for('blog.edit', slug=post.slug) }}">* Edit *</a>
+        {% endif %}
+      </h1>
+      <hr>
+      <p class="text-right">
+        {{ post.created_timestamp.strftime('%B %d, %Y %I:%M %p') }} / 
+        {% if post.tags %}
+          {% for tag in post.tags %}
+              {{ tag }}
+          {% endfor %}
+          /
+        {% endif %}
+        {{ post.comments|length }} comments
+      </p>
+      <hr>
+      {{ post.html_content | safe }}
+      <br>
+    </div>
+    <div class="col-lg-1"></div>
+  </div>
 </div>
 {% endblock content %}
