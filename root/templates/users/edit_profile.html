@@ -34,13 +34,25 @@
         {% endfor %}
       </div>
 
-      <!-- Username -->
-      <div class="form-group">
-        {{ form.full_name.label(class="form-group") }}
-        {{ form.full_name(class='form-control text-center', placeholder=form.full_name.description) }}
-        {% for error in form.full_name.errors %}
-          <p class="error">{{ error }}</p>
-        {% endfor %}
+      <!-- Full name -->
+      <div class="form-row">
+        <div class="form-group col-8">
+          {{ form.full_name.label(class="form-group") }}
+          {{ form.full_name(class='form-control text-center', placeholder=form.full_name.description) }}
+          {% for error in form.full_name.errors %}
+            <p class="error">{{ error }}</p>
+          {% endfor %}
+        </div>
+        <div class="col-1"></div>
+        <div class="form-group col-3">
+          <br>
+          {{form.share_name(class="form-check-input", placeholder=form.share_name.description) }}
+          {{ form.share_name.label(class="form-check-label") }}
+          <p class="text-muted">Name visible in public profile?</p>
+          {% for error in form.share_name.errors %}
+            <p class="error">{{ error }}</p>
+          {% endfor %}
+        </div>
       </div>
 
       <!-- Current avatar -->
@@ -94,12 +106,24 @@
       </div>
 
       <!-- Birth Date -->
-      <div class="form-group">
-          {{ form.birth_date.label(class="form-group", ) }}
-          {{ form.birth_date(class='form-control text-center', placeholder=form.birth_date.description) }}
-          {% for error in form.birth_date.errors %}
+      <div class="form-row">
+        <div class="form-group col-8">
+            {{ form.birth_date.label(class="form-group", ) }}
+            {{ form.birth_date(class='form-control text-center', placeholder=form.birth_date.description) }}
+            {% for error in form.birth_date.errors %}
+              <p class="error">{{ error }}</p>
+            {% endfor %}
+        </div>
+        <div class="col-1"></div>
+        <div class="form-group col-3">
+          <br>
+          {{form.share_birth_date(class="form-check-input", placeholder=form.share_birth_date.description) }}
+          {{ form.share_birth_date.label(class="form-check-label") }}
+          <p class="text-muted">Birthdate visible in public profile?</p>
+          {% for error in form.share_birth_date.errors %}
             <p class="error">{{ error }}</p>
           {% endfor %}
+        </div>
       </div>
 
       <!-- Submit -->

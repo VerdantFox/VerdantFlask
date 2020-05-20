@@ -4,6 +4,7 @@ from authomatic.adapters import WerkzeugAdapter
 from flask import (
     Blueprint,
     Markup,
+    abort,
     flash,
     make_response,
     redirect,
@@ -92,10 +93,16 @@ def logout():
     return redirect(url_for("users.login"))
 
 
-@users.route("/profile", methods=["GET", "POST"])
+@users.route("/profile/<username>", methods=["GET", "POST"])
 @login_required
-def profile():
-    return render_template("users/profile.html")
+def profile(username):
+    user = User.objects(username=username).first()
+    if not user:
+        abort(404, "User not found.")
+    is_current_user = True if user.id == current_user.id else False
+    return render_template(
+        "users/profile.html", user=user, is_current_user=is_current_user
+    )
 
 
 @users.route("/edit_profile", methods=["GET", "POST"])
@@ -129,14 +136,19 @@ def edit_profile():
             current_user.avatar_location = url_for(
                 "static", filename=f"images/avatars_default/{avatar_image}"
             )
+        current_user.share_name = form.share_name.data
+        current_user.share_birth_date = form.share_birth_date.data
+
         current_user.save()
         flash("User Profile Updated", category="success")
-        return redirect(url_for("users.profile"))
+        return redirect(url_for("users.profile", username=current_user.username))
     elif request.method == "GET":
         form.username.data = current_user.username
         form.full_name.data = current_user.full_name
         form.bio.data = current_user.bio
         form.birth_date.data = current_user.birth_date
+        form.share_birth_date.data = current_user.share_birth_date
+        form.share_name.data = current_user.share_name
     return render_template(
         "users/edit_profile.html", form=form, default_pics=DEFAULT_PICS
     )
@@ -154,6 +166,8 @@ def account_settings():
         if form.new_pass.data:
             new_hash = generate_password_hash(form.new_pass.data)
             current_user.password_hash = new_hash
+        current_user.share_email = form.share_email.data
+        current_user.share_timezone = form.share_timezone.data
         current_user.save()
         flash("User Account Updated", category="success")
         return redirect(url_for("users.account_settings"))
@@ -162,6 +176,8 @@ def account_settings():
         # Only override default if timezone set
         if current_user.timezone:
             form.timezone.data = current_user.timezone
+        form.share_email.data = current_user.share_email
+        form.share_timezone.data = current_user.share_timezone
 
     return render_template(
         "users/account_settings.html", form=form, can_disconnect=can_oauth_disconnect()

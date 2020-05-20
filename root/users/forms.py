@@ -2,6 +2,7 @@
 import pytz
 from flask_wtf import FlaskForm
 from wtforms import (
+    BooleanField,
     FileField,
     HiddenField,
     PasswordField,
@@ -85,6 +86,7 @@ class UserSettingsForm(FlaskForm):
             unique_or_current_user_field("Email is already registered."),
         ],
     )
+    share_email = BooleanField("Share Email", description="Share Email", default=False)
     new_pass = PasswordField(
         "New Password",
         description="New password",
@@ -96,6 +98,9 @@ class UserSettingsForm(FlaskForm):
         validators=[Optional(), EqualTo("new_pass", message="Passwords Must Match!")],
     )
     timezone = SelectField("Timezone", choices=timezone_list, default="UTC")
+    share_timezone = BooleanField(
+        "Share Timezone", description="Share Timezone", default=False
+    )
     submit = SubmitField("Update")
 
 
@@ -113,6 +118,7 @@ class UserProfileForm(FlaskForm):
     full_name = StringField(
         "Full Name", description="John Smith", validators=[Optional(), Length(max=60)],
     )
+    share_name = BooleanField("Share Name", description="Share Name", default=False)
     upload_avatar = FileField(
         "Upload Your Own Avatar", description="Upload avatar", validators=[Optional()]
     )
@@ -123,4 +129,7 @@ class UserProfileForm(FlaskForm):
         validators=[Optional(), Length(max=1000)],
     )
     birth_date = DateField("Birth date", validators=[Optional()])
+    share_birth_date = BooleanField(
+        "Share Birthdate", description="Share Birthdate", default=False
+    )
     submit = SubmitField("Update")

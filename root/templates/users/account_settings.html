@@ -24,12 +24,24 @@
     <br>
 
     <!-- Email -->
-    <div class="form-group">
-      {{ form.email.label(class="form-group") }}
-      {{form.email(class='form-control', placeholder=form.email.description) }}
-      {% for error in form.email.errors %}
-        <p class="error">{{ error }}</p>
-      {% endfor %}
+    <div class="form-row">
+      <div class="form-group col-8">
+        {{ form.email.label(class="form-group") }}
+        {{form.email(class='form-control', placeholder=form.email.description) }}
+        {% for error in form.email.errors %}
+          <p class="error">{{ error }}</p>
+        {% endfor %}
+      </div>
+      <div class="col-1"></div>
+      <div class="form-group col-3">
+        <br>
+        {{form.share_email(class="form-check-input", placeholder=form.share_email.description) }}
+        {{ form.share_email.label(class="form-check-label") }}
+        <p class="text-muted">Email visible in public profile?</p>
+        {% for error in form.share_email.errors %}
+          <p class="error">{{ error }}</p>
+        {% endfor %}
+      </div>
     </div>
 
     <!-- Password -->
@@ -57,12 +69,24 @@
     </div>
 
     <!-- Timezone -->
-    <div class="form-group">
-      {{ form.timezone.label() }}
-      {{ form.timezone(class="form-control", placeholder=form.timezone.description) }}
-      {% for error in form.timezone.errors %}
-        <p class="error">{{ error }}</p>
-      {% endfor %}
+    <div class="form-row">
+      <div class="form-group col-8">
+        {{ form.timezone.label() }}
+        {{ form.timezone(class="form-control", placeholder=form.timezone.description) }}
+        {% for error in form.timezone.errors %}
+          <p class="error">{{ error }}</p>
+        {% endfor %}
+      </div>
+      <div class="col-1"></div>
+      <div class="form-group col-3">
+        <br>
+        {{form.share_timezone(class="form-check-input", placeholder=form.share_timezone.description) }}
+        {{ form.share_timezone.label(class="form-check-label") }}
+        <p class="text-muted">Timezone visible in public profile?</p>
+        {% for error in form.share_timezone.errors %}
+          <p class="error">{{ error }}</p>
+        {% endfor %}
+      </div>
     </div>
 
     <!-- Submit -->

@@ -7,7 +7,7 @@
 
 {% block breadcrumb %}
   <li class="breadcrumb-item"><a href="{{ url_for('core.index') }}">Home</a></li>
-  <li class="breadcrumb-item active" aria-current="page">Profile</li>
+  <li class="breadcrumb-item active" aria-current="page">{{ user.username }} Profile</li>
 {% endblock breadcrumb %}
 
 {% block navbar %}
@@ -17,32 +17,85 @@
 {% block content %}
 <div class="container">
   <div class="text-center">
-    <h1>Your User Profile</h1>
-    <h4>Name:
-      {{ current_user.full_name if current_user.full_name }}
-    </h4>
-    <h4>Username: {{ current_user.username }}</h4>
+
+    <!-- Username -->
+    <h1>{{ user.username }} User Profile</h1>
+
+    <!-- Name -->
+    {% if is_current_user %}
+      <h4>Name:
+        {{ user.full_name }}
+        {% if not user.share_name %}
+          <span class="text-muted">(hidden to public)</span>
+        {% endif %}
+      </h4>
+    {% elif user.share_name and user.full_name %}
+      <h4>Name:
+        {{ user.full_name }}
+      </h4>
+    {% endif %}
+    
+    <!-- Avatar -->
     <h4>Avatar:</h4>
-    {% if current_user.avatar_location %}
-      <img src="{{ current_user.avatar_location }}" alt="Image not found"
+    {% if user.avatar_location %}
+      <img src="{{ user.avatar_location }}" alt="Image not found"
           height="400"
           class="default-avatar rounded" id="avatar-img">
     {% else %}
       <i id="alt-profile-img" class="img-thumbnail fas fa-user fa-10x"></i>
     {% endif %}
+
+    <!-- Email -->
+    {% if is_current_user %}
     <h4>Email:
-      {{ current_user.email if current_user.email }}
+      {{ user.email }}
+      {% if not user.share_email %}
+        <span class="text-muted">(hidden to public)</span>
+      {% endif %}
     </h4>
+    {% elif user.share_email and user.email %}
+      <h4>Email:
+        {{ user.email }}
+      </h4>
+    {% endif %}
+
+    <!-- Bio -->
     <h4>About me:</h4>
     <p>
-      {{ current_user.bio if current_user.bio }}
+      {{ user.bio if user.bio }}
     </p>
-    <h4>Birth Date:
-      {{ current_user.birth_date.strftime('%B %d, %Y') if current_user.birth_date }}
-    </h4>
-    <h4>Timezone: 
-      {{ current_user.timezone if current_user.timezone else "UTC"}}
-    </h4>
+
+    <!-- Birth Date -->
+    {% if is_current_user %}
+      <h4>Birth Date:
+        {{ user.birth_date.strftime('%B %d, %Y') if user.birth_date else None }}
+        {% if not user.share_birth_date %}
+          <span class="text-muted">(hidden to public)</span>
+        {% endif %}
+      </h4>
+    {% elif user.share_birth_date %}
+      <h4>Birth Date:
+        {{ user.birth_date.strftime('%B %d, %Y') if user.birth_date else None }}
+      </h4>
+    {% endif %}
+
+    <!-- Timezone -->
+    {% if is_current_user %}
+      <h4>Timezone: 
+        {{ user.timezone if user.timezone else "UTC"}}
+        {% if not user.share_timezone %}
+          <span class="text-muted">(hidden to public)</span>
+        {% endif %}
+      </h4>
+    {% elif user.share_timezone  %}
+      <h4>Timezone: 
+        {{ user.timezone if user.timezone else "UTC"}}
+        {% if not user.share_timezone %}
+          <span class="text-muted">(hidden to public)</span>
+        {% endif %}
+      </h4>
+    {% endif %}
+
   </div>
 </div>
 

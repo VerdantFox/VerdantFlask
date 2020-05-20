@@ -35,7 +35,7 @@
                 {% endif %}
               </a>
               <div id="main-dropdown" class="dropdown-menu position-absolute" aria-labelledby="navbarDropdownMenuLink">
-                <a class="dropdown-item" href="{{ url_for('users.profile') }}">
+                <a class="dropdown-item" href="{{ url_for('users.profile', username=current_user.username) }}">
                   <i class="fas fa-user"></i> View Profile
                 </a>
                 <a class="dropdown-item" href="{{ url_for('users.edit_profile') }}">

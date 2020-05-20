@@ -7,13 +7,13 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <!-- In dropdown -->
-    
+
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="nav nav-pills flex-lg-row flex-column">
         {% if current_user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link {% if active_page == 'profile' %}active{% endif %}"
-                href="{{ url_for('users.profile') }}">View Profile</a>
+                href="{{ url_for('users.profile', username=current_user.username) }}">View Profile</a>
           </li>
           <li class="nav-item">
             <a class="nav-link {% if active_page == 'edit_profile' %}active{% endif %}"
