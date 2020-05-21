@@ -25,9 +25,9 @@
                   id="userDropdownMenuLink" data-toggle="dropdown"
                   aria-haspopup="true" aria-expanded="false">
                 Welcome, {{ current_user.username }}&nbsp;
-                {% if current_user.picture %}
-                  <img src="{{ current_user.picture }}"
-                        height="30rem"
+                {% if current_user.avatar_location %}
+                  <img src="{{ current_user.avatar_location }}"
+                        height="35rem"
                         alt="Image not found" class="rounded"
                         id="thumbnail-profile-img">
                 {% else %}
