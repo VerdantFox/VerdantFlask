@@ -79,4 +79,4 @@ def list_from_string(string):
     if not string:
         string = ""
     string_list = string.strip(" []()").split(",")
-    return [item.strip() for item in string_list]
+    return [item.strip().lower() for item in string_list]

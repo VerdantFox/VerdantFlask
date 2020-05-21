@@ -3,9 +3,7 @@ body {
     color: #202E24;
 }
 
-html {
-    font-size: 16px;
-}
+
 
 .dropdown-item:active {
     background-color: #347A2A;
@@ -267,6 +265,9 @@ text{
 .bgc-8 {
     background-color: #342B2B;
 }
+.bgc-black {
+    background-color: black;
+}
 
 .c-1 {
     color: #EBE8BE;
@@ -298,6 +299,9 @@ text{
 
 .c-8 {
     color: #342B2B;
+}
+.c-black {
+    color: black;
 }
 
 
@@ -369,11 +373,34 @@ a.remove-underline{
 }
 
 
-.body{
+.body {
     position: relative;
 }
 
+
 /* Nav Tabs CSS */
+
+.navbar-brand {
+    font-size: 1.45rem;
+}
+
+#top-brand {
+    font-size: 1.8rem;
+}
+
+#userDropdownMenuLink {
+    font-size: 1.4rem;
+}
+
+.breadcrumb-item {
+    font-size: 1.4rem;
+}
+
+
+.nav-item {
+    font-size: 1.1rem;
+}
+
 .nav-tabs {
     border-bottom: 1px solid #202E24;
     /*border: 5px solid black;*/
@@ -383,10 +410,6 @@ a.remove-underline{
     color: #fff;
     background-color: #202E24;
 }
-
-/*.nav-pills > .active > a, .nav-pills > .active > a:hover {*/
-    /*background-color: red;*/
-/*}*/
 
 .nav-tabs .nav-link.active {
     background-color:#EBE8BE;
@@ -437,11 +460,6 @@ a.remove-underline{
     display: none;
 }
 
-/*.youtube-display {*/
-    /*width: 560px;*/
-    /*height: 315px;*/
-/*}*/
-
 
 .video-responsive{
     overflow:hidden;
@@ -468,36 +486,48 @@ a.remove-underline{
 
 /* Blog stuff */
 
-.blog-preview {
-    font-size: 1rem;
+.blog-view {
+    font-size: 1.1rem;
 }
-.blog-preview .blog-list-title {
+.blog-view .blog-list-title {
     font-size: 2.0rem;
     font-weight: 500;
 }
-.blog-preview .blog-list-stats {
+.blog-view .blog-list-stats {
     font-size: 1rem;
 }
-.blog-preview h1 {
+.blog-view h1 {
+    font-size: 2.0rem;
+}
+.blog-view h2 {
     font-size: 1.8rem;
 }
-.blog-preview h2 {
+.blog-view h3 {
     font-size: 1.6rem;
 }
-.blog-preview h3 {
+.blog-view h4 {
     font-size: 1.4rem;
 }
-.blog-preview h4 {
+.blog-view h5 {
+    font-size: 1.3rem;
+}
+.blog-view h6 {
     font-size: 1.2rem;
 }
-.blog-preview h5 {
-    font-size: 1.1rem;
+.blog-view hr {
+    background-color: #B3C87A;
 }
-.blog-preview h6 {
-    font-size: 1rem;
-}
+/* .blog-view table border {
+
+} */
 
 /* End blog stuff */
+.hr-thick {
+    border-width: 0.3rem;
+}
+.li-large {
+    font-size: 1.3rem;
+}
 
 /* Phone or tablet adjustments */
 @media only screen and (max-device-width: 720px) {

@@ -11,7 +11,7 @@
     <nav class="navbar navbar-expand-lg navbar-light">
       <div class="container">
         <!-- Image borrowed and edited from https://pngtree.com/free-animal-vectors/fox -->
-        <a class="navbar-brand top-bar" href="{{ url_for('core.index') }}">
+        <a class="navbar-brand top-bar" href="{{ url_for('core.index') }}" id="top-brand">
           <img id="fox-icon"
                src="{{ url_for('static', filename='images/core/green_fox_logo1.png') }}"
                class="d-inline-block align-top rounded"
@@ -22,7 +22,7 @@
           {% if current_user.is_authenticated %}
             <li class="nav-item dropdown">
               <a class="dropdown-toggle nav-link" href="#"
-                  id="dropdownMenuLink" data-toggle="dropdown"
+                  id="userDropdownMenuLink" data-toggle="dropdown"
                   aria-haspopup="true" aria-expanded="false">
                 Welcome, {{ current_user.username }}&nbsp;
                 {% if current_user.picture %}
@@ -34,7 +34,7 @@
                   <i class="fas fa-user"></i>
                 {% endif %}
               </a>
-              <div id="main-dropdown" class="dropdown-menu position-absolute" aria-labelledby="navbarDropdownMenuLink">
+              <div id="main-dropdown" class="dropdown-menu position-absolute" aria-labelledby="userDropdownMenuLink">
                 <a class="dropdown-item" href="{{ url_for('users.profile', username=current_user.username) }}">
                   <i class="fas fa-user"></i> View Profile
                 </a>

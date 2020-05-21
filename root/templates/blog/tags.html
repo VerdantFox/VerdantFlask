@@ -1,13 +1,14 @@
 {% extends "core/base.html" %}
-{% set active_page = "blog_list" %}
+{% set active_page = "tags" %}
 
 {% block title %}
-  Verdant Fox | Blog
+  Verdant Fox | Blog | Tags
 {% endblock title %}
 
 {% block breadcrumb %}
   <li class="breadcrumb-item"><a href="{{ url_for('core.index') }}">Home</a></li>
-  <li class="breadcrumb-item active" aria-current="page">Blog</li>
+  <li class="breadcrumb-item"><a href="{{ url_for('blog.blog_list') }}">Blog</a></li>
+  <li class="breadcrumb-item active" aria-current="page">Tags</li>
 {% endblock breadcrumb %}
 
 {% block navbar %}
@@ -21,22 +22,13 @@
     <!-- Using columns to artificial reduce container size -->
     <div class="col-lg-1"></div>
     <div class="col-lg-10 blog-post">
-      <h1>
-        Blog Posts by Date
-        {% if tag %}
-          | tag: '{{ tag }}'
-        {% endif %}
-        {% if search %}
-          | search: '{{ search }}'
-        {% endif %}
-      </h1>
+      <h1 class=>Blog Entries by Tags</h1>
       <hr class="hr-thick bgc-2">
-      <br>
-      {% for post in paginator.items %}
-        {% include "blog/blog_list_item.html" %}
-      {% endfor %}
-      
-      {% include "blog/paginator.html" %}
+      <ul>
+        {% for tag, count in tag_counts.items() %}
+           <li class="li-large"><a href="#">{{ tag }}</a> ({{ count }})</li>
+        {% endfor %}
+      </ul>
     </div>
     <div class="col-lg-1"></div>
   </div>

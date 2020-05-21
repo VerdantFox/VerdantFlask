@@ -21,7 +21,7 @@ start = time.now()
 print("printing")
 end = time.now()
 total = end - start
-print(totoal)
+print(total)
 ```
 
 Fuga quo voluptatibus saepe illum qui id excepturi ut et. Ut molestiae perspiciatis saepe. Ipsam nesciunt qui voluptatem dolores voluptas iusto. Magnam qui repudiandae vel excepturi aliquid ducimus culpa nisi consequatur. Veritatis sint eius suscipit ut qui sit et.

@@ -13,6 +13,10 @@
           <a class="nav-link {% if active_page == 'blog_list' %}active{% endif %}"
               href="{{ url_for('blog.blog_list') }}">Blog</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link {% if active_page == 'tags' %}active{% endif %}"
+              href="{{ url_for('blog.tags') }}">Tags</a>
+        </li>
         {% if current_user.access_level == 1 %}
           <li class="nav-item">
             <a class="nav-link {% if active_page == 'create' %}active{% endif %}"

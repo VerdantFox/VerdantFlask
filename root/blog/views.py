@@ -2,6 +2,7 @@ import datetime
 import functools
 import os
 import re
+from collections import OrderedDict
 
 from flask import (
     Blueprint,
@@ -38,6 +39,11 @@ oembed_providers = bootstrap_basic(OEmbedCache())
 def blog_list():
     """Get a timestamp ordered list of blog posts to display with search"""
     search = request.args.get("search")
+    tag = request.args.get("tag")
+    query = {}
+    if tag:
+        query["tags"] = tag
+
     try:
         page = int(request.args.get("page"))
     except (ValueError, TypeError):
@@ -45,10 +51,19 @@ def blog_list():
     results_per_page = 20  # Maybe set with form in future
 
     paginator = query_and_paginate_blog(
-        search=search, page=page, results_per_page=results_per_page
+        query=query, search=search, page=page, results_per_page=results_per_page
     )
 
-    return render_template("blog/list_posts.html", paginator=paginator)
+    return render_template("blog/list_posts.html", paginator=paginator, tag=tag, search=search)
+
+
+@blog.route("/blog/tags", methods=["GET"])
+def tags():
+    """List tags and associated counts of blogs"""
+
+    tag_counts = get_current_tags(False)
+
+    return render_template("blog/tags.html", tag_counts=tag_counts)
 
 
 @blog.route("/blog/create", methods=["GET", "POST"])
@@ -102,6 +117,7 @@ def edit(slug):
     form.title.data = post.title
     form.tags.data = ",".join(post.tags)
     form.publish.data = post.published
+    form.description.data = post.markdown_description
     form.content.data = post.markdown_content
     form.images.data = ",".join(post.image_locations)
 
@@ -185,12 +201,12 @@ def query_and_paginate_blog(query=None, search=None, page=1, results_per_page=3)
         "slug",
         "author",
         "tags",
-        "html_preview",
+        "html_description",
         "created_timestamp",
         "published",
         "comments",
     ]
-    posts = posts.only(*limit_fields).order_by("created_timestamp")
+    posts = posts.only(*limit_fields).order_by("-created_timestamp")
     return setup_pagination(page, results_per_page, posts)
 
 
@@ -214,9 +230,8 @@ def create_or_edit(form, title, post=None):
     post.tags = list_from_string(form.tags.data)
     post.markdown_content = form.content.data.strip()
     post.html_content = get_html(post.markdown_content)
-    # Use 1500 after testing
-    markdown_preview = post.markdown_content[:1500]
-    post.html_preview = get_html(markdown_preview)
+    post.markdown_description = form.description.data.strip()
+    post.html_description = get_html(post.markdown_description)
     post.thumbnail_location = form.thumbnail.data.strip()
     post.image_locations = list_from_string(form.images.data)
     if edit is False:
@@ -239,3 +254,27 @@ def get_html(markdown_content):
         markdown_content, oembed_providers, urlize_all=True, maxwidth=SITE_WIDTH,
     )
     return Markup(oembed_content)
+
+
+def get_current_tags(only_published=True):
+    """Return an ordered dictionary """
+    query = {"published": True}
+    if current_user.is_authenticated and current_user.access_level == 1:
+        query.pop("published")
+    limit_fields = [
+        "tags",
+    ]
+    posts = BlogPost.objects(**query).only(*limit_fields)
+    all_tags = set(posts.distinct("tags"))
+    all_tags.discard(None)
+    all_tags = list(all_tags)
+    all_tags.sort()
+    tag_counts = dict()
+    for tag in all_tags:
+        tag_counts[tag] = 0
+    for post in posts:
+        for tag in post.tags:
+            tag_counts[tag] += 1
+    # Sort by count after already sorted by tag
+    tag_counts = OrderedDict(sorted(tag_counts.items(), key=lambda x: -x[1]))
+    return tag_counts

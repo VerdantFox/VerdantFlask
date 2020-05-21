@@ -30,19 +30,21 @@
           <a href="{{ url_for('blog.edit', slug=post.slug) }}">* Edit *</a>
         {% endif %}
       </h1>
-      <hr>
+      <hr class="bgc-2 hr-thick">
       <p class="text-right">
         {{ post.created_timestamp.strftime('%B %d, %Y %I:%M %p') }} / 
         {% if post.tags %}
           {% for tag in post.tags %}
-              {{ tag }}
+            <a href="{{ url_for('blog.blog_list', tag=tag) }}">{{ tag }}</a>
           {% endfor %}
           /
         {% endif %}
         {{ post.comments|length }} comments
       </p>
-      <hr>
-      {{ post.html_content | safe }}
+      <hr class="bgc-2 hr-thick">
+      <div class="blog-view">
+        {{ post.html_content | safe }}
+      </div>
       <br>
     </div>
     <div class="col-lg-1"></div>

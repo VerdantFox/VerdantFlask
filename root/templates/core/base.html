@@ -21,6 +21,7 @@
     {% block navbar %}{% endblock navbar %}
     {% include 'core/base/flash_messages.html' %}
     {% block content %}{% endblock content %}
+    <script src="{{ url_for('static', filename='js/core/master.js') }}"></script> 
     {% block scripts %}{% endblock scripts %}
   </body>
 </html>

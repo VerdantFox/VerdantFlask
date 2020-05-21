@@ -58,7 +58,7 @@ start = time.now()
 print("printing")
 end = time.now()
 total = end - start
-print(totoal)
+print(total)
 ```
 
 Javascript code
@@ -105,6 +105,12 @@ Reference-style:
 
 [logo]: https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 2"
 
+## Horizontal rules
+
+Three or more...
+
+---
+
 ## Block quotes
 
 > Blockquotes are very handy in email to emulate reply text.
@@ -113,9 +119,3 @@ Reference-style:
 Quote break.
 
 > This is a very long line that will still be quoted properly when it wraps. Oh boy let's keep writing to make sure this is long enough to actually wrap for everyone. Oh, you can *put* **Markdown** into a blockquote.
-
-## Horizontal rules
-
-Three or more...
-
----

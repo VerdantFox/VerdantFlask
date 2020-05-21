@@ -34,10 +34,15 @@ class EditBlogPostForm(FlaskForm):
         validators=[Optional(), Length(max=200)],
     )
     publish = BooleanField("Publish", description="publish", default=False)
+    description = TextAreaField(
+        "Description",
+        description="Short Markdown Description (couple paragraphs)",
+        validators=[DataRequired(), Length(max=5_000)],
+    )
     content = TextAreaField(
         "Content",
-        description="Markdown Content",
-        validators=[DataRequired(), Length(max=10_000)],
+        description="Markdown Content (The Whole Blog Post)",
+        validators=[DataRequired(), Length(max=30_000)],
     )
     thumbnail = HiddenField(
         "Thumbnail", description="Thumbnail", validators=[Optional()]

@@ -1,0 +1,58 @@
+<form method="POST">
+  <br>
+  {{ form.hidden_tag() }}
+
+  <!-- Title -->
+  <div class="form-group">
+    {{ form.title.label() }}
+    {{ form.title(class="form-control", placeholder=form.title.description) }}
+    {% for error in form.title.errors %}
+      <p class="error">{{ error }}</p>
+    {% endfor %}
+  </div>
+
+  <div class="form-row">
+    <!-- Tags -->
+    <div class="form-group col-8">
+      {{ form.tags.label() }}
+      {{ form.tags(class="form-control", placeholder=form.tags.description) }}
+      {% for error in form.tags.errors %}
+        <p class="error">{{ error }}</p>
+      {% endfor %}
+    </div>
+    <div class="col-1"></div>
+    <!-- Publish -->
+    <div class="form-group form-check col-3">
+      <br>
+      {{ form.publish(class="form-check-input", placeholder=form.tags.description) }}
+      {{ form.publish.label(class="form-check-label") }}
+      {% for error in form.publish.errors %}
+        <p class="error">{{ error }}</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Description -->
+  <div class="form-group">
+    {{ form.description.label() }}
+    {{ form.description(rows="7", class="form-control", placeholder=form.description.description) }}
+    {% for error in form.description.errors %}
+      <p class="error">{{ error }}</p>
+    {% endfor %}
+  </div>
+
+  <!-- Content -->
+  <div class="form-group">
+    {{ form.content.label() }}
+    {{ form.content(rows="15", class="form-control", placeholder=form.content.description) }}
+    {% for error in form.content.errors %}
+      <p class="error">{{ error }}</p>
+    {% endfor %}
+  </div>
+
+  <!-- Submit -->
+  <div class="text-center">
+    {{ form.submit(class="btn btn-lg btn-green") }}
+  </div>
+  <br>
+</form>
