@@ -9,35 +9,6 @@ from root.users.models import User
 from root.utils import get_slug
 
 
-def user_exists(message=None):
-    """Validates by username that a reviewer exists in the database"""
-    if not message:
-        message = "Reviewer could not be found."
-
-    def validation(form, field):
-        # Field must be a username
-        if not User.objects(username=field.data).first():
-            raise ValidationError(message)
-
-    return validation
-
-
-def validate_new_meta_reviewer(message=None):
-    """Validates that a reviewer is not already in the case metadata"""
-    if not message:
-        message = "Reviewer already has case role."
-
-    def validation(form, field):
-        user = User.objects(username=field.data).first()
-        case = form.case.data
-        if not case:
-            raise RuntimeError("Case not submitted with reviwer form.")
-        if not user:
-            raise ValidationError("Reviewer could not be found.")
-
-    return validation
-
-
 def unique_blog_title(message=None):
     """Validates that a blog title doesn't already exist"""
     if not message:

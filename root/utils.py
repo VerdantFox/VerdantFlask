@@ -45,14 +45,6 @@ def set_environment_variables(variables):
         os.environ[var] = val
 
 
-def redirect_next():
-    """Redirect to page saved as 'next', else to the index"""
-    next = request.args.get("next")
-    if next is None or not next[0] == "/":
-        next = url_for("core.index")
-    return redirect(next)
-
-
 def setup_pagination(page, results_per_page, mongo_query):
     """Validate current page and create pagination object"""
     page = int(page)

@@ -2,6 +2,7 @@ import os
 
 from authomatic.adapters import WerkzeugAdapter
 from flask import (
+    session,
     Blueprint,
     Markup,
     abort,
@@ -15,6 +16,7 @@ from flask import (
 from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
+from werkzeug.routing import BuildError
 
 from root.externals import STATIC_PATH
 from root.users.forms import (
@@ -26,7 +28,6 @@ from root.users.forms import (
 from root.users.image_handler import delete_current_avatar, upload_avatar
 from root.users.models import User
 from root.users.oauth_config import authomatic
-from root.utils import redirect_next
 
 users = Blueprint("users", __name__)
 
@@ -47,6 +48,7 @@ DEFAULT_PICS = sorted(os.listdir(DEFAULT_AVATARS_PATH))
 def register():
     """Registers the user in 'flask' database, 'users' collection"""
     logout_user()
+    session["next"] = request.args.get("next")
     form = RegistrationForm()
     if form.validate_on_submit():
         password_hash = generate_password_hash(form.password.data)
@@ -66,6 +68,7 @@ def register():
 def login():
     """Logs the user in"""
     logout_user()
+    session["next"] = request.args.get("next")
     form = LoginForm()
     if form.validate_on_submit():
         # Grab the user from our User Models table
@@ -76,7 +79,7 @@ def login():
             user = User.objects(username=username_or_email).first()
         # User validates
         if user is not None and user.check_password(form.password.data):
-            login_and_redirect(user)
+            return login_and_redirect(user, )
         else:
             flash(
                 "(email or username)/password combination not found", category="error"
@@ -255,7 +258,6 @@ def oauth_disconnect(oauth_client):
     current_user[db_oid] = None
     current_user[db_oname] = None
     current_user.save()
-    print(current_user)
 
     flash(f"Disconnected from {oname}!")
     return redirect(url_for("users.account_settings"))
@@ -267,13 +269,11 @@ def oauth_generalized(oauth_client):
     response = make_response()
     # Log the user in, pass it the adapter and the provider name.
     result = authomatic.login(WerkzeugAdapter(request, response), oauth_client)
-
     # If there is no LoginResult object, the login procedure is still pending.
     if not result:
         return response
 
     if not result.user:
-        print("AUTH FAILED")
         return redirect(url_for("users.login"))
 
     # Update user to retrieve data
@@ -332,10 +332,13 @@ def oauth_generalized(oauth_client):
                 "class='c-4'>account settings</a>."
             )
         )
-
     return login_and_redirect(user)
 
 
 def login_and_redirect(user):
     login_user(user)
-    return redirect_next()
+    try:
+        next_page = session.pop("next", None)
+        return redirect(url_for(next_page))
+    except (TypeError, BuildError):
+        return redirect(url_for("core.index"))
