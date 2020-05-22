@@ -1,7 +1,19 @@
 {% if post.image_locations %}
+  {{ edit_images }}
   <p>Uploaded Images:</p>
   {% for image in post.image_locations %}
-    <p>![image_name]({{ image }})</p>
+    <br><br>
+    <p>
+      {% if edit_images %}
+      <input class="btn btn-sm btn-danger"
+             id="submit_image"
+             name="submit_image"
+             onclick="$('#delete_image').val('{{ image }}')"
+             type="submit"
+             value="Delete">
+      {% endif %}
+      ![image_name]({{ image }})
+    </p>
     <img src="{{ image }}" alt="Image not found">
   {% endfor %}
   {% else %}

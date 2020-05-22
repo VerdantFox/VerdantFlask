@@ -465,7 +465,7 @@ a.remove-underline{
 /* Blog stuff */
 
 .container-blog {
-    max-width: 60%;
+    max-width: 100%;
 }
 
 .blog-view {
@@ -511,9 +511,6 @@ a.remove-underline{
 }
 .blog-view hr {
     background-color: #B3C87A;
-}
-.blog-view img {
-    max-width: 1000px;
 }
 
 /* End blog stuff */

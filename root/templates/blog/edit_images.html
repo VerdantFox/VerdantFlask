@@ -1,15 +1,15 @@
 {% extends "core/base.html" %}
-{% set active_page = "upload_images" %}
+{% set active_page = "edit_images" %}
 
 {% block title %}
-  Verdant Fox | Blog | Upload Images
+  Verdant Fox | Blog | Edit Images
 {% endblock title %}
 
 {% block breadcrumb %}
   <li class="breadcrumb-item"><a href="{{ url_for('core.index') }}">Home</a></li>
   <li class="breadcrumb-item"><a href="{{ url_for('blog.blog_list') }}">Blog</a></li>
   <li class="breadcrumb-item"><a href="{{ url_for('blog.view', slug=post.slug) }}">View Post</a></li>
-  <li class="breadcrumb-item active" aria-current="page">Upload Images</li>
+  <li class="breadcrumb-item active" aria-current="page">Edit Images</li>
 {% endblock breadcrumb %}
 
 {% block navbar %}
@@ -17,15 +17,17 @@
 {% endblock navbar %}
 
 {% block content %}
+  {% set edit_images = True %}
   <div class="container">
-
     <div id="image_div">
       {% if post %}
+        <div class="text-center">
+          <a class="btn btn-green btn-block" href="{{ url_for('blog.edit', slug=post.slug) }}">Go To Edit</a>
+        </div>
+        <br>
         <form name="image_submit_form" method="POST" action="" enctype="multipart/form-data">
           {{ form.hidden_tag() }}
-
           {{ form.delete_image() }}
-    
           <div class="row">
             <div class="col-10">
               <div class="custom-file">
@@ -40,16 +42,15 @@
               {{ form.submit_image(class="btn btn-green") }}
             </div>
           </div>
-        </form>
-        <br>
-        <div class="text-center">
-          <a class="btn btn-green btn-block" href="{{ url_for('blog.edit', slug=post.slug) }}">Go To Edit</a>
           <br>
-          {% include "blog/list_images.html" %}
-        </div>
+          <div class="text-center">
+            {% include "blog/list_images.html" %}
+          </div>
+        </form>
       {% endif %}
     </div>
   </div>
+  <br><br><br>
 {% endblock content %}
 
 

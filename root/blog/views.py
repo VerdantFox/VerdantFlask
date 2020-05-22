@@ -22,11 +22,11 @@ from root.blog.forms import (
     CommentForm,
     CreateBlogPostForm,
     EditBlogPostForm,
-    UploadImageForm,
+    EditImagesForm,
 )
 from root.blog.models import BlogPost
 from root.externals import SITE_WIDTH
-from root.users.image_handler import upload_blog_image
+from root.users.image_handler import delete_blog_image, upload_blog_image
 from root.utils import get_slug, list_from_string, setup_pagination
 
 blog = Blueprint("blog", __name__)
@@ -124,12 +124,12 @@ def edit(slug):
     return render_template("blog/edit_post.html", form=form, post=post)
 
 
-@blog.route("/blog/upload_images/<slug>", methods=["GET", "POST"])
+@blog.route("/blog/edit_images/<slug>", methods=["GET", "POST"])
 @login_required
-def upload_images(slug):
-    """Upload images to blogpost"""
+def edit_images(slug):
+    """Edit images at blogpost"""
     post = get_post_for_update_delete(slug)
-    form = UploadImageForm()
+    form = EditImagesForm()
     if form.upload_image.data:
         blog_image = upload_blog_image(form.upload_image.data)
         if blog_image is not None:
@@ -138,8 +138,14 @@ def upload_images(slug):
             )
             post.image_locations.append(blog_image_location)
             post.save()
+            return redirect(url_for("blog.edit_images", slug=slug))
+    if form.delete_image.data:
+        post.update(pull__image_locations=form.delete_image.data)
+        post.save()
+        delete_blog_image(form.delete_image.data)
+        return redirect(url_for("blog.edit_images", slug=slug))
 
-    return render_template("blog/upload_images.html", form=form, post=post)
+    return render_template("blog/edit_images.html", form=form, post=post)
 
 
 @blog.route("/blog/delete/<slug>", methods=["POST"])

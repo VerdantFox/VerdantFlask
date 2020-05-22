@@ -65,12 +65,22 @@ def upload_avatar(pic):
     return storage_filename
 
 
+def delete_image(rel_path, abs_path_dir):
+    """Delete image given a relative filepath"""
+    # Want absolute file path
+    filename = ntpath.basename(rel_path)
+    filepath = os.path.join(abs_path_dir, filename)
+    if os.path.exists(filepath):
+        os.remove(filepath)
+
+
+def delete_blog_image(rel_path):
+    """Delete a blog image"""
+    delete_image(rel_path, BLOG_UPLOAD_FOLDER)
+
+
 def delete_current_avatar():
     """delete the current user's uploaded avatar if it exists"""
     av_loc = current_user.avatar_location
     if av_loc and "avatars_default" not in av_loc:
-        # Want absolute file path
-        filename = ntpath.basename(av_loc)
-        filepath = os.path.join(AVATAR_UPLOAD_FOLDER, filename)
-        if os.path.exists(filepath):
-            os.remove(filepath)
+        delete_image(av_loc, AVATAR_UPLOAD_FOLDER)

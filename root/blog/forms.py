@@ -58,7 +58,7 @@ class CreateBlogPostForm(EditBlogPostForm):
     )
 
 
-class UploadImageForm(FlaskForm):
+class EditImagesForm(FlaskForm):
     upload_image = FileField("Upload an Image", description="Upload an Image",)
     delete_image = HiddenField("Delete Image", description="Delete Image")
     submit_image = SubmitField("Upload Image")
