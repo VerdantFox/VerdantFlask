@@ -67,7 +67,6 @@ class BlogPost(db.Document):
     markdown_content = db.StringField(required=True, max_length=30_000)
     html_description = db.StringField(required=True)
     html_content = db.StringField(required=True)
-    thumbnail_location = db.StringField(required=False)
     image_locations = db.ListField(db.StringField(), required=False)
     created_timestamp = db.DateTimeField(required=True, index=True)
     updated_timestamp = db.DateTimeField(required=True, index=True)

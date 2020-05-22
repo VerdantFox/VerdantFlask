@@ -26,5 +26,6 @@ venv/
 # Secrets
 secrets.yaml
 
-# User files
+# Static files to not track
 avatars_uploaded/
+blog_uploaded/

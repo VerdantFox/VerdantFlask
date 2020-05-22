@@ -1,7 +1,4 @@
 import datetime
-import functools
-import os
-import re
 from collections import OrderedDict
 
 from flask import (
@@ -9,7 +6,6 @@ from flask import (
     Markup,
     abort,
     flash,
-    make_response,
     redirect,
     render_template,
     request,
@@ -22,9 +18,15 @@ from markdown.extensions.extra import ExtraExtension
 from micawber import bootstrap_basic, parse_html
 from micawber.cache import Cache as OEmbedCache
 
-from root.blog.forms import CommentForm, CreateBlogPostForm, EditBlogPostForm
+from root.blog.forms import (
+    CommentForm,
+    CreateBlogPostForm,
+    EditBlogPostForm,
+    UploadImageForm,
+)
 from root.blog.models import BlogPost
 from root.externals import SITE_WIDTH
+from root.users.image_handler import upload_blog_image
 from root.utils import get_slug, list_from_string, setup_pagination
 
 blog = Blueprint("blog", __name__)
@@ -54,7 +56,9 @@ def blog_list():
         query=query, search=search, page=page, results_per_page=results_per_page
     )
 
-    return render_template("blog/list_posts.html", paginator=paginator, tag=tag, search=search)
+    return render_template(
+        "blog/list_posts.html", paginator=paginator, tag=tag, search=search
+    )
 
 
 @blog.route("/blog/tags", methods=["GET"])
@@ -102,11 +106,7 @@ def view(slug):
 @login_required
 def edit(slug):
     """Update a blogpost"""
-    # Slug is the True test of unique-ness
-    post = BlogPost.objects(slug=slug).first()
-    if post.author != current_user.id:
-        abort(403, f"Only blogpost author can edit post.")
-
+    post = get_post_for_update_delete(slug)
     form = EditBlogPostForm()
 
     if form.validate_on_submit():
@@ -119,9 +119,27 @@ def edit(slug):
     form.publish.data = post.published
     form.description.data = post.markdown_description
     form.content.data = post.markdown_content
-    form.images.data = ",".join(post.image_locations)
+    form.next_page.data = None
 
-    return render_template("blog/edit_post.html", form=form,)
+    return render_template("blog/edit_post.html", form=form, post=post)
+
+
+@blog.route("/blog/upload_images/<slug>", methods=["GET", "POST"])
+@login_required
+def upload_images(slug):
+    """Upload images to blogpost"""
+    post = get_post_for_update_delete(slug)
+    form = UploadImageForm()
+    if form.upload_image.data:
+        blog_image = upload_blog_image(form.upload_image.data)
+        if blog_image is not None:
+            blog_image_location = url_for(
+                "static", filename=f"images/blog_uploaded/{blog_image}"
+            )
+            post.image_locations.append(blog_image_location)
+            post.save()
+
+    return render_template("blog/upload_images.html", form=form, post=post)
 
 
 @blog.route("/blog/delete/<slug>", methods=["POST"])
@@ -212,6 +230,8 @@ def query_and_paginate_blog(query=None, search=None, page=1, results_per_page=3)
 
 def create_or_edit(form, title, post=None):
     """Create or edit a blog post"""
+
+    next_page = form.next_page.data
     if post is None:
         edit = False
     else:
@@ -232,12 +252,17 @@ def create_or_edit(form, title, post=None):
     post.html_content = get_html(post.markdown_content)
     post.markdown_description = form.description.data.strip()
     post.html_description = get_html(post.markdown_description)
-    post.thumbnail_location = form.thumbnail.data.strip()
-    post.image_locations = list_from_string(form.images.data)
     if edit is False:
         post.created_timestamp = datetime.datetime.now()
     post.updated_timestamp = datetime.datetime.now()
     post.save()
+
+    if next_page:
+        try:
+            return redirect(url_for(f"blog.{next_page}", slug=post.slug))
+        except Exception as e:
+            print(f"got exception, e={e}")
+            pass
     return redirect(url_for("blog.view", slug=post.slug))
 
 
@@ -278,3 +303,14 @@ def get_current_tags(only_published=True):
     # Sort by count after already sorted by tag
     tag_counts = OrderedDict(sorted(tag_counts.items(), key=lambda x: -x[1]))
     return tag_counts
+
+
+def get_post_for_update_delete(slug):
+    """Gets a post for update or delete and checks if it exists and is accessible"""
+    # Slug is the True test of unique-ness
+    post = BlogPost.objects(slug=slug).first()
+    if not post:
+        abort(404, "Blog post not found!")
+    if post.author != current_user.id:
+        abort(403, f"Only blogpost author can edit post.")
+    return post

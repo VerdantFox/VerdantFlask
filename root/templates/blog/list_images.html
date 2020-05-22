@@ -1,0 +1,9 @@
+{% if post.image_locations %}
+  <p>Uploaded Images:</p>
+  {% for image in post.image_locations %}
+    <p>![image_name]({{ image }})</p>
+    <img src="{{ image }}" alt="Image not found">
+  {% endfor %}
+  {% else %}
+  <p>No Uploaded Images Found</p>
+{% endif %}

@@ -1,6 +1,7 @@
-<form method="POST">
+<form name="blog_edit_form" method="POST">
   <br>
   {{ form.hidden_tag() }}
+  {{ form.next_page() }}
 
   <!-- Title -->
   <div class="form-group">
@@ -52,7 +53,53 @@
 
   <!-- Submit -->
   <div class="text-center">
-    {{ form.submit(class="btn btn-lg btn-green") }}
+    {% if post %}
+      {{ 
+        form.submit(
+          class="btn btn-lg btn-green",
+          value="Submit and View",
+          onclick="$('#next_page').val('view')",
+        ) 
+      }}
+      {{ 
+        form.submit(
+          class="btn btn-lg btn-green",
+          value="Refresh",
+          onclick="$('#next_page').val('edit')",
+        ) 
+      }}
+      {{ 
+        form.submit(
+          class="btn btn-lg btn-green",
+          value="Upload Images",
+          onclick="$('#next_page').val('upload_images')",
+        ) 
+      }}
+      <br><br>
+      {% include "blog/list_images.html" %}
+    {% else %}
+      {{ 
+        form.submit(
+          class="btn btn-lg btn-green",
+          value="Submit and View",
+          onclick="$('#next_page').val('view')",
+        ) 
+      }}
+      {{ 
+        form.submit(
+          class="btn btn-lg btn-green",
+          value="Submit and Edit",
+          onclick="$('#next_page').val('edit')",
+        ) 
+      }}
+      <br><br>
+      <p>
+        Images can only be uploaded in "Edit" mode after post is created.
+        Submit post and edit to add images.
+      </p>
+    {% endif %}
   </div>
   <br>
 </form>
+
+<br><br><br>

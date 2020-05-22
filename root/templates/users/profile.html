@@ -42,7 +42,7 @@
           height="400"
           class="default-avatar rounded" id="avatar-img">
     {% else %}
-      <i id="alt-profile-img" class="img-thumbnail fas fa-user fa-10x"></i>
+      <i id="alt-avatar-img" class="img-thumbnail fas fa-user fa-10x"></i>
     {% endif %}
 
     <!-- Email -->
@@ -87,7 +87,7 @@
           <span class="text-muted">(hidden to public)</span>
         {% endif %}
       </h4>
-    {% elif user.share_timezone  %}
+    {% elif user.share_timezone %}
       <h4>Timezone: 
         {{ user.timezone if user.timezone else "UTC"}}
         {% if not user.share_timezone %}

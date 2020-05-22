@@ -1,9 +1,19 @@
+html {
+    font-size: 18px;
+}
+
 body {
     background-color: #EBE8BE;
     color: #202E24;
 }
 
+/* Adjust some bootstrap */
 
+.alert {
+    font-size: 1.2rem;
+}
+
+/* End bootstrap adjustments */
 
 .dropdown-item:active {
     background-color: #347A2A;
@@ -66,29 +76,6 @@ body {
     font-weight: bold;
 }
 
-.success {
-    color: green;
-    padding: 0;
-    list-style-type: none;
-    font-weight: bold;
-    font-size: 1.5em;
-}
-
-.warning {
-    color: darkred;
-    padding: 0;
-    list-style-type: none;
-    font-weight: bold;
-    font-size: 1.5em;
-}
-
-.info{
-    color: black;
-    padding: 0;
-    list-style-type: none;
-    font-weight: bold;
-    font-size: 1.5em;
-}
 
 #avatar-img {
     max-height: 400px;
@@ -96,7 +83,6 @@ body {
 }
 
 .welcome-bar{
-    font-size: 1.25em;
     z-index: 2;
 }
 
@@ -110,17 +96,17 @@ body {
 
 
 .top-bar {
-    font-size: 1.5em;
+    font-size: 1.5rem;
 }
 
 .profile-list {
     padding: 0;
     list-style-type: none;
-    font-size: 1.4em;
+    font-size: 1.4rem;
 }
 
 .bio {
-    font-size: 0.8em;
+    font-size: 0.8rem;
 }
 
 .cursor-pointer {
@@ -139,12 +125,9 @@ body {
     max-width: 70%;
 }
 
-.container-blog {
-    max-width: 60%;
-}
 
 .font-adjust {
-    font-size: 1.1em;
+    font-size: 1.1rem;
     font-weight: 500;
 }
 
@@ -155,15 +138,15 @@ body {
 }
 
 .footer {
-    height: 45vh;
+    height: 60vh;
     background-color: #202E24;
     color: #EBE8BE;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-size: 1.4rem;
-    line-height: 1.4rem;
+    font-size: 1.3rem;
+    line-height: 1.3rem;
 }
 
 
@@ -188,7 +171,7 @@ text{
 .card-body{
     background-color: #feffef;
     border: 1px solid #202E24;
-    border-radius: .3em;
+    border-radius: .3rem;
 }
 
 
@@ -381,21 +364,16 @@ a.remove-underline{
 /* Nav Tabs CSS */
 
 .navbar-brand {
-    font-size: 1.45rem;
+    font-size: 1.3rem;
 }
 
 #top-brand {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
 }
 
-#userDropdownMenuLink {
-    font-size: 1.4rem;
+#userDropdownMenuLink, .breadcrumb-item {
+    font-size: 1.2rem;
 }
-
-.breadcrumb-item {
-    font-size: 1.4rem;
-}
-
 
 .nav-item {
     font-size: 1.1rem;
@@ -449,7 +427,7 @@ a.remove-underline{
 }
 
 .skill-image {
-    width: 12.5rem;
+    width: 11rem;
 }
 
 .big-break {
@@ -486,10 +464,27 @@ a.remove-underline{
 
 /* Blog stuff */
 
+.container-blog {
+    max-width: 60%;
+}
+
 .blog-view {
     font-size: 1.1rem;
 }
-.blog-view .blog-list-title {
+
+.blog-view img {
+    max-height: 600px;
+    max-width: 100%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.blog-view p {
+    text-align: justify;
+}
+
+.blog-list-title {
     font-size: 2.0rem;
     font-weight: 500;
 }
@@ -517,11 +512,13 @@ a.remove-underline{
 .blog-view hr {
     background-color: #B3C87A;
 }
-/* .blog-view table border {
-
-} */
+.blog-view img {
+    max-width: 1000px;
+}
 
 /* End blog stuff */
+
+
 .hr-thick {
     border-width: 0.3rem;
 }

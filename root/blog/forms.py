@@ -25,6 +25,7 @@ class CommentForm(FlaskForm):
 class EditBlogPostForm(FlaskForm):
     """Form for creating/editing a blog post"""
 
+    next_page = HiddenField("Next Page", description="Next Page")
     title = StringField(
         "Title", description="Title", validators=[DataRequired(), Length(max=200)],
     )
@@ -44,10 +45,6 @@ class EditBlogPostForm(FlaskForm):
         description="Markdown Content (The Whole Blog Post)",
         validators=[DataRequired(), Length(max=30_000)],
     )
-    thumbnail = HiddenField(
-        "Thumbnail", description="Thumbnail", validators=[Optional()]
-    )
-    images = HiddenField("Images", description="Images", validators=[Optional()])
     submit = SubmitField("Submit")
 
 
@@ -59,3 +56,9 @@ class CreateBlogPostForm(EditBlogPostForm):
         description="Title",
         validators=[DataRequired(), Length(max=200), unique_blog_title()],
     )
+
+
+class UploadImageForm(FlaskForm):
+    upload_image = FileField("Upload an Image", description="Upload an Image",)
+    delete_image = HiddenField("Delete Image", description="Delete Image")
+    submit_image = SubmitField("Upload Image")

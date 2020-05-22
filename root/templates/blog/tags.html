@@ -26,7 +26,7 @@
       <hr class="hr-thick bgc-2">
       <ul>
         {% for tag, count in tag_counts.items() %}
-           <li class="li-large"><a href="#">{{ tag }}</a> ({{ count }})</li>
+           <li class="li-large"><a href="{{ url_for('blog.blog_list', tag=tag) }}">{{ tag }}</a> ({{ count }})</li>
         {% endfor %}
       </ul>
     </div>

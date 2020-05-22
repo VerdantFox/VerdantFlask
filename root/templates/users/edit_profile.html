@@ -79,14 +79,12 @@
       <br><br>
       <p>-- OR --</p>
       <!-- Upload Avatar -->
-      <div>
-        <div class="custom-file">
-          {{ form.upload_avatar(class='custom-file-input') }}
-          {{ form.upload_avatar.label(class="custom-file-label") }}
-          {% for error in form.upload_avatar.errors %}
-            <p class="error">{{ error }}</p>
-          {% endfor %}
-        </div>
+      <div class="custom-file">
+        {{ form.upload_avatar(class='custom-file-input') }}
+        {{ form.upload_avatar.label(class="custom-file-label") }}
+        {% for error in form.upload_avatar.errors %}
+          <p class="error">{{ error }}</p>
+        {% endfor %}
       </div>
       <p class="text-muted">Uploaded avatar will overwrite selected avatar.</p>
       <p>If you'd like to build your own avatar I recommend

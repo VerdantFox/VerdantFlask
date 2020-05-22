@@ -15,6 +15,7 @@
       data-spy="scroll" data-target="#main-navbar" data-offset="65"
     {% endif %}>
     
+    {% block fixes %}{% endblock fixes %}
     {% include "core/base/header_part_1.html" with context %}
     {% block breadcrumb %}{% endblock breadcrumb %}
     {% include "core/base/header_part_2.html" with context %}
