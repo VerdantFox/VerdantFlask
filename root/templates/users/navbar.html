@@ -26,11 +26,11 @@
         {% else %}
           <li class="nav-item">
             <a class="nav-link {% if active_page == 'login' %}active{% endif %}"
-                href="{{ url_for('users.login') }}">Login</a>
+                href="{{ url_for('users.login', next=request.args.get('next')) }}">Login</a>
           </li>
           <li class="nav-item">
             <a class="nav-link  {% if active_page == 'register' %}active{% endif %}"
-                href="{{ url_for('users.register') }}">Register</a>
+                href="{{ url_for('users.register', next=request.args.get('next')) }}">Register</a>
           </li>
         {% endif %}
       </ul>

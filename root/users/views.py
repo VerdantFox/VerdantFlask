@@ -2,7 +2,6 @@ import os
 
 from authomatic.adapters import WerkzeugAdapter
 from flask import (
-    session,
     Blueprint,
     Markup,
     abort,
@@ -11,12 +10,12 @@ from flask import (
     redirect,
     render_template,
     request,
+    session,
     url_for,
 )
 from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
-from werkzeug.routing import BuildError
 
 from root.externals import STATIC_PATH
 from root.users.forms import (
@@ -79,7 +78,7 @@ def login():
             user = User.objects(username=username_or_email).first()
         # User validates
         if user is not None and user.check_password(form.password.data):
-            return login_and_redirect(user, )
+            return login_and_redirect(user,)
         else:
             flash(
                 "(email or username)/password combination not found", category="error"

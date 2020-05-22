@@ -45,7 +45,10 @@
       <div class="blog-view">
         {{ post.html_content | safe }}
       </div>
-      <br>
+      <br><br><br>
+      <div id="comments-section">
+        {% include "blog/comments.html" %}
+      </div>
     </div>
     <div class="col-lg-1"></div>
   </div>

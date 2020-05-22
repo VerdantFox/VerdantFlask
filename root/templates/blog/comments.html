@@ -1,0 +1,74 @@
+<form method="POST" >
+  {{ form.hidden_tag() }}
+
+  {{ form.reply() }}
+
+  <h1>Comments ({{ post.comments|length }})</h1>
+  <hr class="bgc-2">
+  <br>
+  {% if current_user.is_authenticated %}
+    <div class="row">
+      <div class="col-2">
+        {% if current_user.avatar_location %}
+        <img src="{{ current_user.avatar_location }}"
+              height="100rem"
+              alt="User avatar not found" class="rounded"
+              id="thumbnail-profile-img">
+        {% else %}
+        <i class="fas fa-user"></i>
+        {% endif %}
+      </div>
+      <div class="col-10 align-self-center">
+        <div class="input-group">
+          {{
+            form.comment(
+              class='form-control',
+              placeholder=form.comment.description,
+              rows="1",
+            )
+          }}
+          {% for error in form.comment.errors %}
+            <p class="error">{{ error }}</p>
+          {% endfor %}
+          <div class="input-group-append" id="comment-submit">
+            <button class="btn btn-green"
+                    ic-post-to="{{ url_for('blog.create_comment', slug=post.slug) }}"
+                    ic-target='#comments-section'>
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  {% else %}
+    Must <a href="{{ url_for('users.login', next=request.path) }}">log in</a> to comment
+  {% endif %}
+
+  <br>
+  <hr class="bgc-2">
+  {% if post.comments %}
+    {% for comment in post.comments %}
+      {% set user = comment_authors.get(comment.author) %}
+      <h5 class="comment-header">
+        {% if user.avatar_location %}
+          <img src="{{ user.avatar_location }}"
+                height="50rem"
+                alt="User avatar not found" class="rounded"
+                id="thumbnail-profile-img">
+        {% else %}
+          <i class="fas fa-2x fa-user"></i>
+        {% endif %}
+        <span>{{ user.username if user.username else "Anonymous (account deleted)" }}</span>
+        | <span>{{ comment.created_timestamp.strftime('%B %d, %Y %I:%M %p') }}</span>
+      </h5>
+      <p class="font-adjust">
+        {{ comment.content }}
+      </p>
+      <br>
+    {% endfor %}
+  {% else %}
+    <h5>This post has no comments yet.</h5>
+  {% endif %}
+  <br><br><br>
+</form>

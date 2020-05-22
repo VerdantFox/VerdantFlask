@@ -47,11 +47,12 @@
     </div>
   </form>
 
-  <br>
-  <p class="text-center">
-    <a href="#">Forgot username or password?</a>
-  </p>
-
+  <div class="text-center">
+    <br>
+    <p><a href="#">Forgot username or password?</a></p>
+    <p>Need to register? <a href="{{ url_for('users.register', next=request.args.get('next')) }}">click here</a></p>
+    <br>
+  </div>
 </div>
 
 {% endblock content %}

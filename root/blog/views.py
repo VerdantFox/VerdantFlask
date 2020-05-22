@@ -1,5 +1,5 @@
-import datetime
 from collections import OrderedDict
+from datetime import datetime
 
 from flask import (
     Blueprint,
@@ -24,9 +24,10 @@ from root.blog.forms import (
     EditBlogPostForm,
     EditImagesForm,
 )
-from root.blog.models import BlogPost
+from root.blog.models import BlogPost, Comment, Reply
 from root.externals import SITE_WIDTH
 from root.users.image_handler import delete_blog_image, upload_blog_image
+from root.users.models import User
 from root.utils import get_slug, list_from_string, setup_pagination
 
 blog = Blueprint("blog", __name__)
@@ -86,20 +87,15 @@ def create():
     return render_template("blog/create_post.html", form=form,)
 
 
-@blog.route("/blog/view/<slug>", methods=["GET"])
+@blog.route("/blog/view/<slug>", methods=["GET", "POST"])
 def view(slug):
     """Display an individual blogpost"""
-    post = BlogPost.objects(slug=slug).first()
-    if not post:
-        abort(404, "Blog post not found!")
-    if post.published is False:
-        if not current_user.is_authenticated or current_user.access_level != 1:
-            abort(
-                401,
-                "This post is unpublished. Only admin can view it, "
-                "sorry. Check back later!",
-            )
-    return render_template("blog/view_post.html", post=post)
+    form = CommentForm()
+    post = get_post_for_view(slug)
+    comment_authors = get_comment_authors(post)
+    return render_template(
+        "blog/view_post.html", post=post, comment_authors=comment_authors, form=form
+    )
 
 
 @blog.route("/blog/edit/<slug>", methods=["GET", "POST"])
@@ -163,7 +159,21 @@ def delete(slug):
 def create_comment(slug):
     """Comment on a blogpost"""
     form = CommentForm()
-    return "in comment CREATE"
+    post = get_post_for_view(slug)
+    if form.validate_on_submit() and form.comment.data:
+        comment = Comment(
+            author=current_user.id,
+            content=form.comment.data,
+            created_timestamp=datetime.now(),
+            updated_timestamp=datetime.now(),
+        )
+        post.comments.append(comment)
+        post.comments = sort_comments(post.comments)
+        post.save()
+    comment_authors = get_comment_authors(post)
+    return render_template(
+        "blog/comments.html", post=post, comment_authors=comment_authors, form=form
+    )
 
 
 @blog.route("/blog/comment/<slug>/edit/<comment_id>", methods=["POST"])
@@ -262,8 +272,8 @@ def create_or_edit(form, title, post=None):
     post.markdown_description = form.description.data.strip()
     post.html_description = get_html(post.markdown_description)
     if edit is False:
-        post.created_timestamp = datetime.datetime.now()
-    post.updated_timestamp = datetime.datetime.now()
+        post.created_timestamp = datetime.now()
+    post.updated_timestamp = datetime.now()
     post.save()
 
     if next_page:
@@ -323,3 +333,51 @@ def get_post_for_update_delete(slug):
     if post.author != current_user.id:
         abort(403, f"Only blogpost author can edit post.")
     return post
+
+
+def get_post_for_view(slug):
+    """Gets a post for viewing and commenting"""
+    post = BlogPost.objects(slug=slug).first()
+    if not post:
+        abort(404, "Blog post not found!")
+    if post.published is False:
+        if not current_user.is_authenticated or current_user.access_level != 1:
+            abort(
+                401,
+                "This post is unpublished. Only admin can view it, "
+                "sorry. Check back later!",
+            )
+    return post
+
+
+def get_comment_authors(post):
+    """Gets authors of comments
+
+    returns
+        a dictionary like so:
+            {
+                user_id: user_object # with username, id, and avatar fields
+            }
+    """
+    if post.comments:
+        comment_author_ids = []
+        for comment in post.comments:
+            comment_author_ids.append(comment.author)
+            if comment.replies:
+                for reply in comment.replies:
+                    comment_author_ids.append(reply.author)
+        users = User.objects(id__in=comment_author_ids).only(
+            "username", "avatar_location"
+        )
+        comment_authors = {user.id: user for user in users}
+
+    else:
+        comment_authors = dict()
+    return comment_authors
+
+
+def sort_comments(comments):
+    """Sort comments from newest to oldest"""
+    return sorted(
+        comments, key=lambda comment: comment.created_timestamp, reverse=True
+    )
