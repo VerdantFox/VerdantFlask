@@ -75,6 +75,11 @@
           onclick="$('#next_page').val('edit_images')",
         ) 
       }}
+      <a onclick="return confirm('Are you sure you want to delete post?')"
+         class="btn btn-lg btn-danger"
+         href="{{ url_for('blog.delete', slug=post.slug) }}">
+        Delete Post
+      </a>
       <br><br>
       {% include "blog/list_images.html" %}
     {% else %}

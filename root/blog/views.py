@@ -148,11 +148,14 @@ def edit_images(slug):
     return render_template("blog/edit_images.html", form=form, post=post)
 
 
-@blog.route("/blog/delete/<slug>", methods=["POST"])
+@blog.route("/blog/delete/<slug>", methods=["GET"])
 @login_required
 def delete(slug):
     """Delete a blogpost"""
-    return "in DELETE"
+    post = get_post_for_update_delete(slug)
+    post.delete()
+    flash(f"Deleted post '{slug}'!")
+    return redirect(url_for("blog.blog_list"))
 
 
 @blog.route("/blog/comment/<slug>", methods=["POST"])

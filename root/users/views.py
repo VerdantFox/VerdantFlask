@@ -337,8 +337,11 @@ def oauth_generalized(oauth_client):
 
 def login_and_redirect(user):
     login_user(user)
-    try:
-        next_page = session.pop("next", None)
-        return redirect(next_page)
-    except (TypeError, BuildError):
-        return redirect(url_for("core.index"))
+    next_page = session.pop("next", None)
+    if isinstance(next_page, str):
+        for path in ("login", "register"):
+            if path in next_page:
+                return redirect(url_for("core.index"))
+    else:
+        next_page = url_for("core.index")
+    return redirect(next_page)

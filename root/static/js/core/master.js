@@ -3,7 +3,7 @@ $(function() {
     $('.lazy').lazy();
 });
 
-// Fixes for blog
+// Blog Stuff
 $('.blog-view table').addClass('table');
 $('.blog-view table').addClass('table-dark');
 $('.blog-view table').addClass('table-striped');
