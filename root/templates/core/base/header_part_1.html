@@ -52,10 +52,10 @@
           {% else %}
             <br><br>
             <li class="nav-item">
-              <a class="nav-link mr-auto" href="{{ url_for('users.login', next=request.endpoint) }}">
+              <a class="nav-link mr-auto" href="{{ url_for('users.login', next=request.path) }}">
                   <i class="fas fa-sign-in-alt"></i><span class="pad"></span>Login
               </a>
-              <a class="nav-link mr-auto" href="{{ url_for('users.register', next=request.endpoint) }}">
+              <a class="nav-link mr-auto" href="{{ url_for('users.register', next=request.path) }}">
                 <i class="fas fa-user-plus"></i><span class="pad"></span>Register
               </a>
             </li>

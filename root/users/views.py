@@ -339,6 +339,6 @@ def login_and_redirect(user):
     login_user(user)
     try:
         next_page = session.pop("next", None)
-        return redirect(url_for(next_page))
+        return redirect(next_page)
     except (TypeError, BuildError):
         return redirect(url_for("core.index"))
