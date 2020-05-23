@@ -16,6 +16,7 @@ from root.custom_form_validators import unique_blog_title
 class CommentForm(FlaskForm):
     """Form for commenting on blog posts or replying to comments"""
 
+    comment_edit = HiddenField("Reply field", validators=[Length(max=300)])
     reply = HiddenField("Reply field", validators=[Length(max=300)])
     comment = TextAreaField(
         "Comment", description="Comment", validators=[Length(max=300)],

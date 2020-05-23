@@ -188,7 +188,22 @@ def edit_comment(slug, comment_id):
 @login_required
 def delete_comment(slug, comment_id):
     """Delete comment"""
-    return "in comment DELETE"
+    form = CommentForm()
+    post = get_post_for_view(slug)
+    index = None
+    for i, comment in enumerate(post.comments):
+        if str(comment.comment_id) == comment_id:
+            if comment.author == current_user.id:
+                index = i
+            else:
+                flash("Can only delete your own comments!")
+    if index is not None:
+        post.comments.pop(index)
+        post.save()
+    comment_authors = get_comment_authors(post)
+    return render_template(
+        "blog/comments.html", post=post, comment_authors=comment_authors, form=form
+    )
 
 
 @blog.route("/blog/comment/<slug>/reply/<comment_id>", methods=["POST"])

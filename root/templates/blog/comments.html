@@ -8,7 +8,7 @@
   <br>
   {% if current_user.is_authenticated %}
     <div class="row">
-      <div class="col-2">
+      <div>
         {% if current_user.avatar_location %}
         <img src="{{ current_user.avatar_location }}"
               height="100rem"
@@ -18,24 +18,31 @@
         <i class="fas fa-user"></i>
         {% endif %}
       </div>
-      <div class="col-10 align-self-center">
-        <div class="input-group">
+      <div class="col-9">
+        <div class="row">
           {{
             form.comment(
               class='form-control',
               placeholder=form.comment.description,
-              rows="1",
+              rows="2",
             )
           }}
           {% for error in form.comment.errors %}
             <p class="error">{{ error }}</p>
           {% endfor %}
-          <div class="input-group-append" id="comment-submit">
-            <button class="btn btn-green"
-                    ic-post-to="{{ url_for('blog.create_comment', slug=post.slug) }}"
-                    ic-target='#comments-section'>
-              Submit
-            </button>
+        </div>
+        <div class="row">
+          <div class="col text-right">
+            <div class="btn-group btn-group-sm" role="group">
+              <button id="cancel-comment" class="btn btn-danger">
+                Cancel
+              </button>
+              <button class="btn btn-green"
+                      ic-post-to="{{ url_for('blog.create_comment', slug=post.slug) }}"
+                      ic-target='#comments-section'>
+                Submit
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -50,18 +57,43 @@
   {% if post.comments %}
     {% for comment in post.comments %}
       {% set user = comment_authors.get(comment.author) %}
-      <h5 class="comment-header">
-        {% if user.avatar_location %}
-          <img src="{{ user.avatar_location }}"
-                height="50rem"
-                alt="User avatar not found" class="rounded"
-                id="thumbnail-profile-img">
-        {% else %}
-          <i class="fas fa-2x fa-user"></i>
-        {% endif %}
-        <span>{{ user.username if user.username else "Anonymous (account deleted)" }}</span>
-        | <span>{{ comment.created_timestamp.strftime('%B %d, %Y %I:%M %p') }}</span>
-      </h5>
+      <div class="row">
+        <div class="col-11">
+          <h5 class="comment-header">
+            {% if user.avatar_location %}
+              <img src="{{ user.avatar_location }}"
+                    height="50rem"
+                    alt="User avatar not found" class="rounded"
+                    id="thumbnail-profile-img">
+            {% else %}
+              <i class="fas fa-2x fa-user"></i>
+            {% endif %}
+            <span>{{ user.username if user.username else "Anonymous (account deleted)" }}</span>
+            | <span>{{ comment.created_timestamp.strftime('%B %d, %Y %I:%M %p') }}</span>
+          </h5>
+        </div>
+        <div class="col-1">
+          {% if comment.author == current_user.id %}
+            <div class="dropdown dropleft">
+              <i class="fas fa-ellipsis-v"
+                 type="button"
+                 id="dropdownMenuButton_{{ comment.id }}"
+                 data-toggle="dropdown"
+                 aria-haspopup="true"
+                 aria-expanded="false">
+              </i>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <button class="dropdown-item">Edit</button>
+                <button class="dropdown-item"
+                        ic-post-to="{{ url_for('blog.delete_comment', slug=post.slug, comment_id=comment.comment_id) }}"
+                        ic-target='#comments-section'>Delete</button>
+              </div>
+            </div>
+
+          {% endif %}
+        </div>
+      </div>
+
       <p class="font-adjust">
         {{ comment.content }}
       </p>
