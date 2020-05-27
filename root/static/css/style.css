@@ -251,6 +251,12 @@ text{
 .bgc-black {
     background-color: black;
 }
+.bgc-red {
+    background-color: red;
+}
+.bgc-blue {
+    background-color: blue;
+}
 
 .c-1 {
     color: #EBE8BE;
@@ -285,6 +291,12 @@ text{
 }
 .c-black {
     color: black;
+}
+.c-red {
+    color: red;
+}
+.c-blue {
+    color: blue;
 }
 
 
@@ -511,6 +523,12 @@ a.remove-underline{
 }
 .blog-view hr {
     background-color: #B3C87A;
+}
+.comment-padding {
+    padding-left: 4.1rem;
+}
+.reply-padding {
+    padding-left: 3.3rem;
 }
 
 /* End blog stuff */

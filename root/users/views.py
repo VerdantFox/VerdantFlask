@@ -326,9 +326,9 @@ def oauth_generalized(oauth_client):
         flash(f"Registered user {user.username}!")
         flash(
             Markup(
-                "You can change your username in "
-                f"<a href='{url_for('users.account_settings')}' "
-                "class='c-4'>account settings</a>."
+                "You can change your username and profile picture in the "
+                f"<a href='{url_for('users.edit_profile')}' "
+                "class='c-blue'>edit profile</a> page."
             )
         )
     return login_and_redirect(user)

@@ -163,7 +163,7 @@ def create_comment(slug):
     if form.validate_on_submit() and form.comment.data:
         comment = Comment(
             author=current_user.id,
-            content=form.comment.data,
+            content=str(form.comment.data).strip(),
             created_timestamp=datetime.now(),
             updated_timestamp=datetime.now(),
         )
@@ -181,7 +181,33 @@ def create_comment(slug):
 def edit_comment(slug, comment_id):
     """Edit comment"""
     form = CommentForm()
-    return "in comment EDIT"
+    post = get_post_for_view(slug)
+    failed_comment_id = None
+    comment_error = None
+    if form.validate_on_submit() and form.comment_edit.data:
+        for comment in post.comments:
+            if comment.author != current_user.id:
+                failed_comment_id = comment_id
+                comment_error = "Can only edit your own comment!"
+                break
+            if str(comment.comment_id) == comment_id:
+                comment.content = str(form.comment_edit.data).strip()
+                comment.updated_timestamp = datetime.now()
+                post.save()
+                break
+
+    if not form.validate_on_submit() and form.comment_edit.errors:
+        failed_comment_id = comment_id
+        comment_error = form.comment_edit.errors[0]
+    comment_authors = get_comment_authors(post)
+    return render_template(
+        "blog/comments.html",
+        post=post,
+        comment_authors=comment_authors,
+        form=form,
+        failed_comment_id=failed_comment_id,
+        comment_error=comment_error,
+    )
 
 
 @blog.route("/blog/comment/<slug>/delete/<comment_id>", methods=["POST"])
@@ -191,18 +217,27 @@ def delete_comment(slug, comment_id):
     form = CommentForm()
     post = get_post_for_view(slug)
     index = None
+    failed_comment_id = None
+    comment_error = None
     for i, comment in enumerate(post.comments):
         if str(comment.comment_id) == comment_id:
             if comment.author == current_user.id:
                 index = i
             else:
-                flash("Can only delete your own comments!")
+                failed_comment_id = comment_id
+                comment_error = "Can only edit your own comment!"
+            break
     if index is not None:
         post.comments.pop(index)
         post.save()
     comment_authors = get_comment_authors(post)
     return render_template(
-        "blog/comments.html", post=post, comment_authors=comment_authors, form=form
+        "blog/comments.html",
+        post=post,
+        comment_authors=comment_authors,
+        form=form,
+        failed_comment_id=failed_comment_id,
+        comment_error=comment_error,
     )
 
 
@@ -210,14 +245,68 @@ def delete_comment(slug, comment_id):
 def create_reply(slug, comment_id):
     """Reply to comment"""
     form = CommentForm()
-    return "in reply CREATE"
+    post = get_post_for_view(slug)
+    if form.validate_on_submit() and form.reply.data:
+        for comment in post.comments:
+            if str(comment.comment_id) == comment_id:
+                reply = Reply(
+                    author=current_user.id,
+                    content=str(form.reply.data).strip(),
+                    created_timestamp=datetime.now(),
+                    updated_timestamp=datetime.now(),
+                )
+                comment.replies.append(reply)
+                post.save()
+                break
+    failed_comment_id = None
+    comment_error = None
+    if not form.validate_on_submit() and form.reply.errors:
+        failed_comment_id = comment_id
+        comment_error = form.reply.errors[0]
+    comment_authors = get_comment_authors(post)
+    return render_template(
+        "blog/comments.html",
+        post=post,
+        comment_authors=comment_authors,
+        form=form,
+        failed_comment_id=failed_comment_id,
+        comment_error=comment_error,
+    )
 
 
 @blog.route("/blog/comment/<slug>/reply/<comment_id>/edit/<reply_id>", methods=["POST"])
 def edit_reply(slug, comment_id, reply_id):
     """Edit reply to comment"""
     form = CommentForm()
-    return "in reply EDIT"
+    post = get_post_for_view(slug)
+    failed_reply_id = None
+    reply_error = None
+    if form.validate_on_submit() and form.reply.data:
+        for comment in post.comments:
+            if str(comment.comment_id) == comment_id:
+                for reply in comment.replies:
+                    if str(reply.reply_id) == reply_id:
+                        if reply.author == current_user.id:
+                            reply.content = str(form.reply.data).strip()
+                            reply.updated_timestamp = datetime.now()
+                            post.save()
+                        else:
+                            failed_reply_id = reply_id
+                            reply_error = "Can only edit your own reply!"
+                        break
+                break
+    if not form.validate_on_submit() and form.reply.errors:
+        failed_reply_id = reply_id
+        reply_error = form.reply.errors[0]
+    comment_authors = get_comment_authors(post)
+    return render_template(
+        "blog/comments.html",
+        post=post,
+        comment_authors=comment_authors,
+        form=form,
+        failed_reply_id=failed_reply_id,
+        reply_error=reply_error,
+    )
 
 
 @blog.route(
@@ -225,7 +314,36 @@ def edit_reply(slug, comment_id, reply_id):
 )
 def delete_reply(slug, comment_id, reply_id):
     """Delete reply to comment"""
-    return "in reply DELETE"
+    form = CommentForm()
+    post = get_post_for_view(slug)
+    comment_index = None
+    reply_index = None
+    failed_reply_id = None
+    reply_error = None
+    for i, comment in enumerate(post.comments):
+        if str(comment.comment_id) == comment_id:
+            for j, reply in enumerate(comment.replies):
+                if str(reply.reply_id) == reply_id:
+                    if reply.author == current_user.id:
+                        comment_index = i
+                        reply_index = j
+                    else:
+                        failed_reply_id = reply_id
+                        reply_error = "Can only delete your own reply!"
+                    break
+            break
+    if reply_index is not None:
+        post.comments[comment_index].replies.pop(reply_index)
+        post.save()
+    comment_authors = get_comment_authors(post)
+    return render_template(
+        "blog/comments.html",
+        post=post,
+        comment_authors=comment_authors,
+        form=form,
+        failed_reply_id=failed_reply_id,
+        reply_error=reply_error,
+    )
 
 
 # ----------------------------------------------------------------------------
@@ -392,7 +510,5 @@ def get_comment_authors(post):
 
 
 def sort_comments(comments):
-    """Sort comments from newest to oldest"""
-    return sorted(
-        comments, key=lambda comment: comment.created_timestamp, reverse=True
-    )
+    """Sort comments (or replies) from newest to oldest"""
+    return sorted(comments, key=lambda comment: comment.created_timestamp, reverse=True)

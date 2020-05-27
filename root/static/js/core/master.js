@@ -24,7 +24,3 @@ $('#blog-search').keydown(function(event) {
         document.getElementById('search-submit').click();
     };
 });
-$('#cancel-comment').on("click", function(){
-    event.preventDefault();
-    $("#comment").val('');
-});
