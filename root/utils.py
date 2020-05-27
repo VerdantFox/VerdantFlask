@@ -4,7 +4,6 @@ import re
 from math import ceil
 
 import yaml
-from flask import redirect, request, url_for
 
 # Secrets path
 CONFIG_PATH = os.path.abspath(

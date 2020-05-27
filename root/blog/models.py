@@ -5,29 +5,8 @@ https://charlesleifer.com/blog/how-to-make-a-flask-blog-in-one-hour-or-less/
 """
 
 from bson.objectid import ObjectId
-from flask import (
-    Flask,
-    Markup,
-    Response,
-    flash,
-    redirect,
-    render_template,
-    request,
-    session,
-    url_for,
-)
-from markdown import markdown
-from markdown.extensions.codehilite import CodeHiliteExtension
-from markdown.extensions.extra import ExtraExtension
-from micawber import bootstrap_basic, parse_html
-from micawber.cache import Cache as OEmbedCache
 
-from root.externals import SITE_WIDTH, db
-
-# Configure micawber with the default OEmbed providers (YouTube, Flickr, etc).
-# We'll use a simple in-memory cache so that multiple requests for the same
-# video don't require multiple network requests.
-oembed_providers = bootstrap_basic(OEmbedCache())
+from root.externals import db
 
 
 class Reply(db.EmbeddedDocument):
