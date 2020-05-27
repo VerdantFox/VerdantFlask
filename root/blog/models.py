@@ -12,7 +12,7 @@ from root.externals import db
 class Reply(db.EmbeddedDocument):
     """Reply to comment embedded document"""
 
-    reply_id = db.ObjectIdField(default=lambda: ObjectId(), index=True)
+    id = db.ObjectIdField(default=lambda: ObjectId(), index=True)
     author = db.ObjectIdField(required=True, index=True)
     content = db.StringField(required=True, max_length=500)
     created_timestamp = db.DateTimeField(required=True, index=True)
@@ -24,7 +24,7 @@ class Reply(db.EmbeddedDocument):
 class Comment(db.EmbeddedDocument):
     """Comment embedded document"""
 
-    comment_id = db.ObjectIdField(default=lambda: ObjectId(), index=True)
+    id = db.ObjectIdField(default=lambda: ObjectId(), index=True)
     author = db.ObjectIdField(required=True, index=True)
     content = db.StringField(required=True, max_length=500)
     created_timestamp = db.DateTimeField(required=True, index=True)

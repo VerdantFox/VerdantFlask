@@ -190,7 +190,7 @@ def edit_comment(slug, comment_id):
                 failed_comment_id = comment_id
                 comment_error = "Can only edit your own comment!"
                 break
-            if str(comment.comment_id) == comment_id:
+            if str(comment.id) == comment_id:
                 comment.content = str(form.comment_edit.data).strip()
                 comment.updated_timestamp = datetime.now()
                 post.save()
@@ -220,7 +220,7 @@ def delete_comment(slug, comment_id):
     failed_comment_id = None
     comment_error = None
     for i, comment in enumerate(post.comments):
-        if str(comment.comment_id) == comment_id:
+        if str(comment.id) == comment_id:
             if comment.author == current_user.id:
                 index = i
             else:
@@ -248,7 +248,7 @@ def create_reply(slug, comment_id):
     post = get_post_for_view(slug)
     if form.validate_on_submit() and form.reply.data:
         for comment in post.comments:
-            if str(comment.comment_id) == comment_id:
+            if str(comment.id) == comment_id:
                 reply = Reply(
                     author=current_user.id,
                     content=str(form.reply.data).strip(),
@@ -283,9 +283,9 @@ def edit_reply(slug, comment_id, reply_id):
     reply_error = None
     if form.validate_on_submit() and form.reply.data:
         for comment in post.comments:
-            if str(comment.comment_id) == comment_id:
+            if str(comment.id) == comment_id:
                 for reply in comment.replies:
-                    if str(reply.reply_id) == reply_id:
+                    if str(reply.id) == reply_id:
                         if reply.author == current_user.id:
                             reply.content = str(form.reply.data).strip()
                             reply.updated_timestamp = datetime.now()
@@ -321,9 +321,9 @@ def delete_reply(slug, comment_id, reply_id):
     failed_reply_id = None
     reply_error = None
     for i, comment in enumerate(post.comments):
-        if str(comment.comment_id) == comment_id:
+        if str(comment.id) == comment_id:
             for j, reply in enumerate(comment.replies):
-                if str(reply.reply_id) == reply_id:
+                if str(reply.id) == reply_id:
                     if reply.author == current_user.id:
                         comment_index = i
                         reply_index = j
