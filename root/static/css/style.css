@@ -524,6 +524,9 @@ a.remove-underline{
 .blog-view hr {
     background-color: #B3C87A;
 }
+.primary-comment-padding {
+    padding-left: 7rem;
+}
 .comment-padding {
     padding-left: 4.1rem;
 }

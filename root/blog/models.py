@@ -17,6 +17,7 @@ class Reply(db.EmbeddedDocument):
     content = db.StringField(required=True, max_length=500)
     created_timestamp = db.DateTimeField(required=True, index=True)
     updated_timestamp = db.DateTimeField(required=True, index=True)
+    likes = db.IntField(default=0, index=True)
 
     meta = {"indexes": ["author"]}
 
@@ -29,6 +30,7 @@ class Comment(db.EmbeddedDocument):
     content = db.StringField(required=True, max_length=500)
     created_timestamp = db.DateTimeField(required=True, index=True)
     updated_timestamp = db.DateTimeField(required=True, index=True)
+    likes = db.IntField(default=0, index=True)
     replies = db.EmbeddedDocumentListField(Reply, required=False, index=True)
 
     meta = {"indexes": ["author", "replies"]}
@@ -49,6 +51,7 @@ class BlogPost(db.Document):
     image_locations = db.ListField(db.StringField(), required=False)
     created_timestamp = db.DateTimeField(required=True, index=True)
     updated_timestamp = db.DateTimeField(required=True, index=True)
+    likes = db.IntField(default=0, index=True)
     comments = db.EmbeddedDocumentListField(Comment, required=False, index=True)
 
     meta = {
@@ -71,6 +74,7 @@ class BlogPost(db.Document):
             "created_timestamp",
             "updated_timestamp",
             "tags",
+            "likes",
             "comments",
             "comments.author",
             "comments.replies",

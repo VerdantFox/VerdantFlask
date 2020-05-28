@@ -5,6 +5,18 @@
 // ****************************************************************
 
 // Blog comments
+function mainCommentCancel (textarea_id) {
+    event.preventDefault();
+    $("#comment_textarea_main").val('');
+    hideError(textarea_id);
+}
+function setComment (id) {
+    event.preventDefault();
+    $('#comment').val(
+        $(`textarea#${id}`).val().trim()
+    );
+    checkCommentLength(id);
+}
 function expandEdit (commentID) {
     event.preventDefault();
     const commentText = $(`#comment_content_${commentID}`).text().trim();
@@ -12,10 +24,11 @@ function expandEdit (commentID) {
     $(`#comment_content_${commentID}`).hide();
     $(`#comment_edit_${commentID}`).show();
 }
-function contractEdit (commentID) {
+function contractEdit (commentID, textarea_id) {
     event.preventDefault();
     $(`#comment_edit_${commentID}`).hide();
     $(`#comment_content_${commentID}`).show();
+    hideError(textarea_id);
 }
 function setCommentEdit (commentID) {
     $('#comment_edit').val(
@@ -30,10 +43,11 @@ function expandCreateReply (commentID) {
     $(`#reply_button_${commentID}`).hide();
     $(`#create_reply_${commentID}`).show();
 }
-function contractCreateReply (commentID) {
+function contractCreateReply (commentID, textarea_id) {
     event.preventDefault();
     $(`#create_reply_${commentID}`).hide();
     $(`#reply_button_${commentID}`).show();
+    hideError(textarea_id);
 }
 function expandReplyEdit (replyID) {
     event.preventDefault();
@@ -42,10 +56,11 @@ function expandReplyEdit (replyID) {
     $(`#reply_content_${replyID}`).hide();
     $(`#reply_edit_${replyID}`).show();
 }
-function contractReplyEdit (replyID) {
+function contractReplyEdit (replyID, textarea_id) {
     event.preventDefault();
     $(`#reply_edit_${replyID}`).hide();
     $(`#reply_content_${replyID}`).show();
+    hideError(textarea_id);
 }
 function setCreateReply (commentID) {
     $('#reply').val(
@@ -58,13 +73,25 @@ function setEditReply (replyID) {
     );
 }
 
+// multi-scope
+function checkCommentLength (textarea_id) {
+    $(document).on('beforeAjaxSend.ic', function(event, ajaxSetup, elt){
+        if ($(`#${textarea_id}`).val().length > 500) {
+            ajaxSetup.cancel = true;
+            const error_p_id = `${textarea_id}_error_p`;
+            $(`#${error_p_id}`).show();
+        } else {
+            ajaxSetup.cancel = false;
+        }
+    });
+};
+function hideError (textarea_id) {
+    const error_p_id = `${textarea_id}_error_p`;
+    $(`#${error_p_id}`).hide();
+};
+
 
 // ****************************************************************
 // actions
 // ****************************************************************
-$('#cancel-comment').on("click", function(){
-    event.preventDefault();
-    $("#comment").val('');
-});
-$("#comment").val('');
 

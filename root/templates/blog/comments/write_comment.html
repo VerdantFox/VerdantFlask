@@ -1,0 +1,25 @@
+<div class="col">
+  <div class="row">
+    <textarea class="form-control"
+              id="{{ textarea_id }}"
+              name="comment"
+              placeholder="Comment"
+              rows="2"></textarea>
+  </div>
+  <div class="row">
+    <div class="col text-right">
+      <div class="btn-group btn-group-sm" role="group">
+        <button class="btn btn-danger"
+                onclick="{{ cancel_onclick }}">
+          Cancel
+        </button>
+        <button class="btn btn-green"
+                onclick="setComment('{{ textarea_id }}');"
+                ic-post-to="{{ post_to }}"
+                ic-target='#comments-section'>
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

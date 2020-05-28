@@ -1,0 +1,10 @@
+<div id="{{ textarea_id }}_error" class="container">
+  <div class="row">
+    <p id="{{ textarea_id }}_error_p" class="error" style="display: none;">
+      Comment cannot exceed 500 characters
+    </p>
+  {% if failed_comment_id and failed_comment_id == failed_comment_id_equals %}
+      <p class="error">{{ comment_error }}</p>
+  {% endif %}
+  </div>
+</div>

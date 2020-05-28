@@ -31,13 +31,9 @@ from root.users.oauth_config import authomatic
 users = Blueprint("users", __name__)
 
 OAUTH_LOOKUP = {
-    "github": {"oname": "GitHub", "db_oid": "github_id", "db_oname": "github_name"},
-    "facebook": {
-        "oname": "Facebook",
-        "db_oid": "facebook_id",
-        "db_oname": "facebook_name",
-    },
-    "google": {"oname": "Google", "db_oid": "google_id", "db_oname": "google_name"},
+    "github": {"oname": "GitHub", "db_oid": "github_id"},
+    "facebook": {"oname": "Facebook", "db_oid": "facebook_id",},
+    "google": {"oname": "Google", "db_oid": "google_id"},
 }
 DEFAULT_AVATARS_PATH = os.path.join(STATIC_PATH, "images", "avatars_default")
 DEFAULT_PICS = sorted(os.listdir(DEFAULT_AVATARS_PATH))
@@ -252,10 +248,8 @@ def oauth_disconnect(oauth_client):
 
     oname = OAUTH_LOOKUP[oauth_client]["oname"]
     db_oid = OAUTH_LOOKUP[oauth_client]["db_oid"]
-    db_oname = OAUTH_LOOKUP[oauth_client]["db_oname"]
 
     current_user[db_oid] = None
-    current_user[db_oname] = None
     current_user.save()
 
     flash(f"Disconnected from {oname}!")
@@ -280,7 +274,6 @@ def oauth_generalized(oauth_client):
 
     oname = OAUTH_LOOKUP[oauth_client]["oname"]
     db_oid = OAUTH_LOOKUP[oauth_client]["db_oid"]
-    db_oname = OAUTH_LOOKUP[oauth_client]["db_oname"]
 
     client_oid = result.user.id
     client_name = result.user.name
@@ -297,7 +290,6 @@ def oauth_generalized(oauth_client):
             )
         else:
             current_user[db_oid] = client_oid
-            current_user[db_oname] = client_name
             current_user.save()
         return redirect(url_for("users.account_settings"))
 
@@ -318,7 +310,6 @@ def oauth_generalized(oauth_client):
             "username": username,
             "full_name": client_name,
             db_oid: client_oid,
-            db_oname: client_name,
             "access_level": 2,
         }
         user = User(**user_data)

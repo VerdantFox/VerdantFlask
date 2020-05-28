@@ -2,7 +2,7 @@
 {% set active_page = None %}
 
 {% block title %}
-  Verdant Fox | Blog | View
+  Verdant Fox | {{ post.title }}
 {% endblock title %}
 
 {% block breadcrumb %}
@@ -47,7 +47,7 @@
       </div>
       <br><br><br>
       <div id="comments-section">
-        {% include "blog/comments.html" %}
+        {% include "blog/comments/comments.html" %}
       </div>
     </div>
     <div class="col-lg-1"></div>

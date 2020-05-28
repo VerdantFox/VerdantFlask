@@ -1,0 +1,18 @@
+<!-- hamburger dropdown for edit/delete  -->
+{% if comment_or_reply.author == current_user.id %}
+  <div class="dropdown dropleft">
+    <i class="fas fa-ellipsis-v"
+        type="button"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false">
+    </i>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <button class="dropdown-item"
+              onclick="{{ edit_onclick }}">Edit</button>
+      <button class="dropdown-item"
+              ic-post-to="{{ post_to }}"
+              ic-target='#comments-section'>Delete</button>
+    </div>
+  </div>
+{% endif %}

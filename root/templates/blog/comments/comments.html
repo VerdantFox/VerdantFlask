@@ -1,0 +1,156 @@
+<form method="POST" >
+  {{ form.hidden_tag() }}
+
+  <h1>Comments ({{ post.comments|length }})</h1>
+  <hr class="bgc-2">
+  <br>
+
+  {% if current_user.is_authenticated %}
+    <!-- Top comment create -->
+    <div class="container">
+      <div class="row">
+        {% set user = current_user %}
+        {% set av_height = "100rem" %}
+        {% include "blog/comments/commenter_avatar.html" %}
+        {% set textarea_id = "comment_textarea_main" %}
+        {% set cancel_onclick = "mainCommentCancel('{}')".format(textarea_id) %}
+        {% set post_to = url_for('blog.create_comment', slug=post.slug) %}
+        {% include "blog/comments/write_comment.html" %}
+      </div>
+    </div>
+    <div class="primary-comment-padding">
+      {% set failed_comment_id_equals = "primary" %}
+      {% include "blog/comments/comment_error.html" %}
+    </div>
+  {% else %}
+    <p>
+      Must <a href="{{ url_for('users.login', next=request.path) }}">log in</a>
+      to comment. Not Registered?
+      <a href="{{ url_for('users.register', next=request.path) }}">It's easy!</a>
+    </p>
+  {% endif %}
+  <br>
+  <hr class="bgc-2">
+
+  {% if post.comments %}
+    {% for comment in post.comments %}
+
+      <div class="container">
+        <div class="row">
+          <div class="col-11">
+            <!-- Comment header -->
+            <h5 class="comment-header">
+              {% set user = comment_authors.get(comment.author) %}
+              {% set av_height = "50rem" %}
+              {% include "blog/comments/comment_header.html" %}
+            </h5>
+          </div>
+          <div class="col-1">
+            <!-- Comment dropdown -->
+            {% set comment_or_reply = comment %}
+            {% set edit_onclick = "expandEdit('{}')".format(comment.id) %}
+            {% set post_to = url_for('blog.delete_comment', slug=post.slug, comment_id=comment.id) %}
+            {% include "blog/comments/edit_dropdown.html" %}
+          </div>
+        </div>
+
+        <div class="container comment-padding">
+          <!-- Comment edit -->
+          <div id="comment_edit_{{ comment.id }}" class="row" style="display: none;">
+            {% set textarea_id = "comment_edit_textarea_{}".format(comment.id) %}
+            {% set cancel_onclick = "contractEdit('{}', '{}')".format(comment.id, textarea_id) %}
+            {% set post_to = url_for('blog.edit_comment', slug=post.slug, comment_id=comment.id) %}
+            {% include "blog/comments/write_comment.html" %}
+          </div>
+          <!-- comment content -->
+          <div class="row">
+            <p id="comment_content_{{ comment.id }}" class="font-adjust">
+              {{ comment.content }}
+            </p>
+          </div>
+          <!-- Comment errors -->
+          {% set failed_comment_id_equals = comment.id|string %}
+          {% include "blog/comments/comment_error.html" %}
+        </div>
+
+        {% if current_user.is_authenticated %}
+
+          <!-- Reply button -->
+          <div id="reply_button_{{ comment.id }}" class="row">
+            <p class="comment-padding c-3 cursor-pointer"
+              onclick="expandCreateReply('{{ comment.id }}')">
+              reply
+            </p>
+          </div>
+
+          <!-- Reply Create Field -->
+          <div id="create_reply_{{ comment.id }}" class="row comment-padding" style="display: none;">
+            {% set textarea_id = "reply_textarea_{}".format(comment.id) %}
+            {% set cancel_onclick = "contractCreateReply('{}', '{}')".format(comment.id, textarea_id) %}
+            {% set post_to = url_for('blog.create_reply', slug=post.slug, comment_id=comment.id) %}
+            {% include "blog/comments/write_comment.html" %}
+            <!-- Reply create errors -->
+            {% set failed_comment_id_equals = comment.id|string %}
+            {% include "blog/comments/comment_error.html" %}
+          </div>
+
+        {% endif %}
+        
+        <!-- Replies list -->
+        {% if comment.replies %}
+          {% for reply in comment.replies %}
+
+            <!-- Reply -->
+            <div class="container reply-padding">
+              <div class="row">
+                <div class="col-11">
+                  <!-- Reply header -->
+                  <h6 class="reply-header font-adjust">
+                    {% set user = comment_authors.get(reply.author) %}
+                    {% set av_height = "35rem" %}
+                    {% include "blog/comments/comment_header.html" %}
+                  </h6>
+                </div>
+
+                <div class="col-1">
+                  <!-- Reply dropdown -->
+                  {% set comment_or_reply = reply %}
+                  {% set edit_onclick = "expandReplyEdit('{}')".format(reply.id) %}
+                  {% set post_to =  url_for('blog.delete_reply', slug=post.slug, comment_id=comment.id, reply_id=reply.id) %}
+                  {% include "blog/comments/edit_dropdown.html" %}
+                </div>
+              </div>
+      
+              <div class="container reply-padding">
+                <!-- Reply edit -->
+                <div id="reply_edit_{{ reply.id }}" class="row" style="display: none;">
+                  {% set textarea_id = "reply_edit_textarea_{}".format(reply.id) %}
+                  {% set cancel_onclick = "contractReplyEdit('{}', '{}')".format(reply.id, textarea_id) %}
+                  {% set post_to = url_for('blog.edit_reply', slug=post.slug, comment_id=comment.id, reply_id=reply.id) %}
+                  {% include "blog/comments/write_comment.html" %}
+                  <br><br><br><br><br>
+                </div>
+
+                <!-- Reply content -->
+                <div class="row">
+                  <p id="reply_content_{{ reply.id }}">
+                    {{ reply.content }}
+                  </p>
+                </div>
+
+                <!-- Reply errors -->
+                {% set failed_comment_id_equals = reply.id|string %}
+                {% include "blog/comments/comment_error.html" %}
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+
+      </div>
+    {% endfor %}
+  {% else %}
+    <h5>This post has no comments yet.</h5>
+  {% endif %}
+  <br><br><br>
+</form>
+<script src="{{ url_for('static', filename='js/blog/blog_comments.js') }}"></script>

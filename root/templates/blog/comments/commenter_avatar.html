@@ -1,0 +1,8 @@
+{% if user.avatar_location %}
+  <img src="{{ user.avatar_location }}"
+        height="{{ av_height }}"
+        alt="User avatar not found"
+        class="rounded">
+{% else %}
+  <i class="fas fa-2x fa-user"></i>
+{% endif %}

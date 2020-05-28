@@ -36,11 +36,8 @@ class User(db.Document, UserMixin):
 
     # Oauth stuff
     github_id = db.LongField(unique=True, required=False, sparse=True, index=True)
-    github_name = db.StringField(required=False, index=True)
     facebook_id = db.StringField(unique=True, required=False, sparse=True, index=True)
-    facebook_name = db.StringField(required=False, index=True)
     google_id = db.StringField(unique=True, required=False, sparse=True, index=True)
-    google_name = db.StringField(required=False, index=True)
 
     meta = {
         "collection": "users",
@@ -54,11 +51,8 @@ class User(db.Document, UserMixin):
             "timezone",
             "access_level",
             "github_id",
-            "github_name",
             "facebook_id",
-            "facebook_name",
             "google_id",
-            "google_name",
         ],
     }
 

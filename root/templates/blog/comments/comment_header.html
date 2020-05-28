@@ -1,0 +1,3 @@
+{% include "blog/comments/commenter_avatar.html" %}
+<span>{{ user.username if user.username else "Anonymous (account deleted)" }}</span>
+| <span>{{ comment.created_timestamp.strftime('%B %d, %Y %I:%M %p') }}</span>
