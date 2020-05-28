@@ -33,6 +33,7 @@ class EditBlogPostForm(FlaskForm):
         validators=[Optional(), Length(max=200)],
     )
     publish = BooleanField("Publish", description="publish", default=False)
+    can_comment = BooleanField("Can Comment", description="Can Comment", default=True)
     description = TextAreaField(
         "Description",
         description="Short Markdown Description (couple paragraphs)",

@@ -5,7 +5,7 @@
   <hr class="bgc-2">
   <br>
 
-  {% if current_user.is_authenticated %}
+  {% if post.can_comment and current_user.is_authenticated %}
     <!-- Top comment create -->
     <div class="container">
       <div class="row">
@@ -22,12 +22,14 @@
       {% set failed_comment_id_equals = "primary" %}
       {% include "blog/comments/comment_error.html" %}
     </div>
-  {% else %}
+  {% elif post.can_comment and not current_user.is_authenticated %}
     <p>
       Must <a href="{{ url_for('users.login', next=request.path) }}">log in</a>
       to comment. Not Registered?
       <a href="{{ url_for('users.register', next=request.path) }}">It's easy!</a>
     </p>
+  {% else %}
+    <p>Commenting has been closed for this post.</p>
   {% endif %}
   <br>
   <hr class="bgc-2">
@@ -73,7 +75,7 @@
           {% include "blog/comments/comment_error.html" %}
         </div>
 
-        {% if current_user.is_authenticated %}
+        {% if post.can_comment and current_user.is_authenticated %}
 
           <!-- Reply button -->
           <div id="reply_button_{{ comment.id }}" class="row">

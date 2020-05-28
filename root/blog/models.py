@@ -52,6 +52,7 @@ class BlogPost(db.Document):
     created_timestamp = db.DateTimeField(required=True, index=True)
     updated_timestamp = db.DateTimeField(required=True, index=True)
     likes = db.IntField(default=0, index=True)
+    can_comment = db.BooleanField(default=True, index=True)
     comments = db.EmbeddedDocumentListField(Comment, required=False, index=True)
 
     meta = {
@@ -75,6 +76,7 @@ class BlogPost(db.Document):
             "updated_timestamp",
             "tags",
             "likes",
+            "can_comment",
             "comments",
             "comments.author",
             "comments.replies",

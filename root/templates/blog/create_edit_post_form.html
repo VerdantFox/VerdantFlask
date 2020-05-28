@@ -25,11 +25,20 @@
     <!-- Publish -->
     <div class="form-group form-check col-3">
       <br>
-      {{ form.publish(class="form-check-input", placeholder=form.tags.description) }}
-      {{ form.publish.label(class="form-check-label") }}
-      {% for error in form.publish.errors %}
-        <p class="error">{{ error }}</p>
-      {% endfor %}
+      <div class="row">
+        {{ form.can_comment(class="form-check-input", placeholder=form.can_comment.description) }}
+        {{ form.can_comment.label(class="form-check-label") }}
+        {% for error in form.can_comment.errors %}
+          <p class="error">{{ error }}</p>
+        {% endfor %}
+      </div>
+      <div class="row">
+        {{ form.publish(class="form-check-input", placeholder=form.publish.description) }}
+        {{ form.publish.label(class="form-check-label") }}
+        {% for error in form.publish.errors %}
+          <p class="error">{{ error }}</p>
+        {% endfor %}
+      </div>
     </div>
   </div>
 

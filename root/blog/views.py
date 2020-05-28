@@ -112,6 +112,7 @@ def edit(slug):
 
     form.title.data = post.title
     form.tags.data = ",".join(post.tags)
+    form.can_comment.data = post.can_comment
     form.publish.data = post.published
     form.description.data = post.markdown_description
     form.content.data = post.markdown_content
@@ -162,19 +163,22 @@ def create_comment(slug):
     post = get_post_for_view(slug)
     failed_comment_id = None
     comment_error = None
-    if form.validate_on_submit() and form.comment.data:
-        comment = Comment(
-            author=current_user.id,
-            content=str(form.comment.data).strip(),
-            created_timestamp=datetime.now(),
-            updated_timestamp=datetime.now(),
-        )
-        post.comments.append(comment)
-        post.comments = sort_comments(post.comments)
-        post.save()
-    if not form.validate_on_submit() and form.comment.errors:
-        failed_comment_id = "primary"
-        comment_error = form.comment.errors[0]
+    if post.can_comment:
+        if form.validate_on_submit() and form.comment.data:
+            comment = Comment(
+                author=current_user.id,
+                content=str(form.comment.data).strip(),
+                created_timestamp=datetime.now(),
+                updated_timestamp=datetime.now(),
+            )
+            post.comments.append(comment)
+            post.comments = sort_comments(post.comments)
+            post.save()
+        if not form.validate_on_submit() and form.comment.errors:
+            failed_comment_id = "primary"
+            comment_error = form.comment.errors[0]
+    else:
+        flash("Commenting is locked for this post.", category="error")
     comment_authors = get_comment_authors(post)
     return render_template(
         "blog/comments/comments.html",
@@ -194,21 +198,23 @@ def edit_comment(slug, comment_id):
     post = get_post_for_view(slug)
     failed_comment_id = None
     comment_error = None
-    if form.validate_on_submit() and form.comment.data:
-        for comment in post.comments:
-            if comment.author != current_user.id:
-                failed_comment_id = comment_id
-                comment_error = "Can only edit your own comment!"
-                break
-            if str(comment.id) == comment_id:
-                comment.content = str(form.comment.data).strip()
-                comment.updated_timestamp = datetime.now()
-                post.save()
-                break
-
-    if not form.validate_on_submit() and form.comment.errors:
-        failed_comment_id = comment_id
-        comment_error = form.comment.errors[0]
+    if post.can_comment:
+        if form.validate_on_submit() and form.comment.data:
+            for comment in post.comments:
+                if comment.author != current_user.id:
+                    failed_comment_id = comment_id
+                    comment_error = "Can only edit your own comment!"
+                    break
+                if str(comment.id) == comment_id:
+                    comment.content = str(form.comment.data).strip()
+                    comment.updated_timestamp = datetime.now()
+                    post.save()
+                    break
+        if not form.validate_on_submit() and form.comment.errors:
+            failed_comment_id = comment_id
+            comment_error = form.comment.errors[0]
+    else:
+        flash("Commenting is locked for this post.", category="error")
     comment_authors = get_comment_authors(post)
     return render_template(
         "blog/comments/comments.html",
@@ -229,17 +235,20 @@ def delete_comment(slug, comment_id):
     index = None
     failed_comment_id = None
     comment_error = None
-    for i, comment in enumerate(post.comments):
-        if str(comment.id) == comment_id:
-            if comment.author == current_user.id:
-                index = i
-            else:
-                failed_comment_id = comment_id
-                comment_error = "Can only edit your own comment!"
-            break
-    if index is not None:
-        post.comments.pop(index)
-        post.save()
+    if post.can_comment:
+        for i, comment in enumerate(post.comments):
+            if str(comment.id) == comment_id:
+                if comment.author == current_user.id:
+                    index = i
+                else:
+                    failed_comment_id = comment_id
+                    comment_error = "Can only edit your own comment!"
+                break
+        if index is not None:
+            post.comments.pop(index)
+            post.save()
+    else:
+        flash("Commenting is locked for this post.", category="error")
     comment_authors = get_comment_authors(post)
     return render_template(
         "blog/comments/comments.html",
@@ -256,23 +265,26 @@ def create_reply(slug, comment_id):
     """Reply to comment"""
     form = CommentForm()
     post = get_post_for_view(slug)
-    if form.validate_on_submit() and form.comment.data:
-        for comment in post.comments:
-            if str(comment.id) == comment_id:
-                reply = Reply(
-                    author=current_user.id,
-                    content=str(form.comment.data).strip(),
-                    created_timestamp=datetime.now(),
-                    updated_timestamp=datetime.now(),
-                )
-                comment.replies.append(reply)
-                post.save()
-                break
     failed_comment_id = None
     comment_error = None
-    if not form.validate_on_submit() and form.comment.errors:
-        failed_comment_id = comment_id
-        comment_error = form.comment.errors[0]
+    if post.can_comment:
+        if form.validate_on_submit() and form.comment.data:
+            for comment in post.comments:
+                if str(comment.id) == comment_id:
+                    reply = Reply(
+                        author=current_user.id,
+                        content=str(form.comment.data).strip(),
+                        created_timestamp=datetime.now(),
+                        updated_timestamp=datetime.now(),
+                    )
+                    comment.replies.append(reply)
+                    post.save()
+                    break
+        if not form.validate_on_submit() and form.comment.errors:
+            failed_comment_id = comment_id
+            comment_error = form.comment.errors[0]
+    else:
+        flash("Commenting is locked for this post.", category="error")
     comment_authors = get_comment_authors(post)
     return render_template(
         "blog/comments/comments.html",
@@ -291,23 +303,26 @@ def edit_reply(slug, comment_id, reply_id):
     post = get_post_for_view(slug)
     failed_comment_id = None
     comment_error = None
-    if form.validate_on_submit() and form.comment.data:
-        for comment in post.comments:
-            if str(comment.id) == comment_id:
-                for reply in comment.replies:
-                    if str(reply.id) == reply_id:
-                        if reply.author == current_user.id:
-                            reply.content = str(form.comment.data).strip()
-                            reply.updated_timestamp = datetime.now()
-                            post.save()
-                        else:
-                            failed_comment_id = reply_id
-                            comment_error = "Can only edit your own reply!"
-                        break
-                break
-    if not form.validate_on_submit() and form.comment.errors:
-        failed_comment_id = reply_id
-        comment_error = form.comment.errors[0]
+    if post.can_comment:
+        if form.validate_on_submit() and form.comment.data:
+            for comment in post.comments:
+                if str(comment.id) == comment_id:
+                    for reply in comment.replies:
+                        if str(reply.id) == reply_id:
+                            if reply.author == current_user.id:
+                                reply.content = str(form.comment.data).strip()
+                                reply.updated_timestamp = datetime.now()
+                                post.save()
+                            else:
+                                failed_comment_id = reply_id
+                                comment_error = "Can only edit your own reply!"
+                            break
+                    break
+        if not form.validate_on_submit() and form.comment.errors:
+            failed_comment_id = reply_id
+            comment_error = form.comment.errors[0]
+    else:
+        flash("Commenting is locked for this post.", category="error")
     comment_authors = get_comment_authors(post)
     return render_template(
         "blog/comments/comments.html",
@@ -330,21 +345,24 @@ def delete_reply(slug, comment_id, reply_id):
     reply_index = None
     failed_comment_id = None
     comment_error = None
-    for i, comment in enumerate(post.comments):
-        if str(comment.id) == comment_id:
-            for j, reply in enumerate(comment.replies):
-                if str(reply.id) == reply_id:
-                    if reply.author == current_user.id:
-                        comment_index = i
-                        reply_index = j
-                    else:
-                        failed_comment_id = reply_id
-                        comment_error = "Can only delete your own reply!"
-                    break
-            break
-    if reply_index is not None:
-        post.comments[comment_index].replies.pop(reply_index)
-        post.save()
+    if post.can_comment:
+        for i, comment in enumerate(post.comments):
+            if str(comment.id) == comment_id:
+                for j, reply in enumerate(comment.replies):
+                    if str(reply.id) == reply_id:
+                        if reply.author == current_user.id:
+                            comment_index = i
+                            reply_index = j
+                        else:
+                            failed_comment_id = reply_id
+                            comment_error = "Can only delete your own reply!"
+                        break
+                break
+        if reply_index is not None:
+            post.comments[comment_index].replies.pop(reply_index)
+            post.save()
+    else:
+        flash("Commenting is locked for this post.", category="error")
     comment_authors = get_comment_authors(post)
     return render_template(
         "blog/comments/comments.html",
@@ -409,6 +427,8 @@ def create_or_edit(form, title, post=None):
     post.slug = get_slug(post.title)
     post.author = current_user.id
     post.published = form.publish.data
+    print(form.can_comment.data)
+    post.can_comment = form.can_comment.data
     post.tags = list_from_string(form.tags.data)
     post.markdown_content = form.content.data.strip()
     post.html_content = get_html(post.markdown_content)

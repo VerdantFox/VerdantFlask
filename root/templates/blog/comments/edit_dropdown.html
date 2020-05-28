@@ -1,5 +1,5 @@
 <!-- hamburger dropdown for edit/delete  -->
-{% if comment_or_reply.author == current_user.id %}
+{% if comment_or_reply.author == current_user.id and post.can_comment %}
   <div class="dropdown dropleft">
     <i class="fas fa-ellipsis-v"
         type="button"
