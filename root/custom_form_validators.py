@@ -4,8 +4,8 @@ import re
 from flask_login import current_user
 from wtforms import ValidationError
 
-from root.blog.models import BlogPost
-from root.users.models import User
+from root.routes.blog.models import BlogPost
+from root.routes.users.models import User
 from root.utils import get_slug
 
 

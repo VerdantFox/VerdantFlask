@@ -4,11 +4,11 @@ from bson import ObjectId, json_util
 from flask import Flask
 from flask.json import JSONEncoder
 
-from root.blog.views import blog
-from root.core.views import core
-from root.error_pages.handlers import error_pages
+from root.routes.blog.views import blog
+from root.routes.core.views import core
+from root.routes.error_pages.handlers import error_pages
 from root.externals import db, login_manager
-from root.users.views import users
+from root.routes.users.views import users
 from root.utils import extract_secret, get_secrets, set_environment_variables
 
 

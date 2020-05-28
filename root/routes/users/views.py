@@ -18,15 +18,15 @@ from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
 
 from root.externals import STATIC_PATH
-from root.users.forms import (
+from root.routes.users.forms import (
     LoginForm,
     RegistrationForm,
     UserProfileForm,
     UserSettingsForm,
 )
-from root.users.image_handler import delete_current_avatar, upload_avatar
-from root.users.models import User
-from root.users.oauth_config import authomatic
+from root.routes.users.image_handler import delete_current_avatar, upload_avatar
+from root.routes.users.models import User
+from root.routes.users.oauth_config import authomatic
 
 users = Blueprint("users", __name__)
 
