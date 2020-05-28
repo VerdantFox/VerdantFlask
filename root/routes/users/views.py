@@ -24,7 +24,7 @@ from root.routes.users.forms import (
     UserProfileForm,
     UserSettingsForm,
 )
-from root.routes.users.image_handler import delete_current_avatar, upload_avatar
+from root.image_handler import delete_current_avatar, upload_avatar
 from root.routes.users.models import User
 from root.routes.users.oauth_config import authomatic
 

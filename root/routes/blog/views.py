@@ -26,7 +26,7 @@ from root.routes.blog.forms import (
 )
 from root.routes.blog.models import BlogPost, Comment, Reply
 from root.externals import SITE_WIDTH
-from root.routes.users.image_handler import delete_blog_image, upload_blog_image
+from root.image_handler import delete_blog_image, upload_blog_image
 from root.routes.users.models import User
 from root.utils import get_slug, list_from_string, setup_pagination
 
