@@ -38,7 +38,7 @@ blog = Blueprint("blog", __name__)
 oembed_providers = bootstrap_basic(OEmbedCache())
 
 
-@blog.route("/blog", methods=["GET"])
+@blog.route("/", methods=["GET"])
 def blog_list():
     """Get a timestamp ordered list of blog posts to display with search"""
     search = request.args.get("search")
@@ -62,7 +62,7 @@ def blog_list():
     )
 
 
-@blog.route("/blog/tags", methods=["GET"])
+@blog.route("/tags", methods=["GET"])
 def tags():
     """List tags and associated counts of blogs"""
 
@@ -71,7 +71,7 @@ def tags():
     return render_template("blog/tags.html", tag_counts=tag_counts)
 
 
-@blog.route("/blog/create", methods=["GET", "POST"])
+@blog.route("/create", methods=["GET", "POST"])
 @login_required
 def create():
     """Create a new blogpost"""
@@ -87,7 +87,7 @@ def create():
     return render_template("blog/create_post.html", form=form,)
 
 
-@blog.route("/blog/view/<slug>", methods=["GET", "POST"])
+@blog.route("/view/<slug>", methods=["GET", "POST"])
 def view(slug):
     """Display an individual blogpost"""
     form = CommentForm()
@@ -98,7 +98,7 @@ def view(slug):
     )
 
 
-@blog.route("/blog/edit/<slug>", methods=["GET", "POST"])
+@blog.route("/edit/<slug>", methods=["GET", "POST"])
 @login_required
 def edit(slug):
     """Update a blogpost"""
@@ -121,7 +121,7 @@ def edit(slug):
     return render_template("blog/edit_post.html", form=form, post=post)
 
 
-@blog.route("/blog/edit_images/<slug>", methods=["GET", "POST"])
+@blog.route("/edit_images/<slug>", methods=["GET", "POST"])
 @login_required
 def edit_images(slug):
     """Edit images at blogpost"""
@@ -145,7 +145,7 @@ def edit_images(slug):
     return render_template("blog/edit_images.html", form=form, post=post)
 
 
-@blog.route("/blog/delete/<slug>", methods=["GET"])
+@blog.route("/delete/<slug>", methods=["GET"])
 @login_required
 def delete(slug):
     """Delete a blogpost"""
@@ -155,7 +155,7 @@ def delete(slug):
     return redirect(url_for("blog.blog_list"))
 
 
-@blog.route("/blog/comment/<slug>", methods=["POST"])
+@blog.route("/comment/<slug>", methods=["POST"])
 @login_required
 def create_comment(slug):
     """Comment on a blogpost"""
@@ -190,7 +190,7 @@ def create_comment(slug):
     )
 
 
-@blog.route("/blog/comment/<slug>/edit/<comment_id>", methods=["POST"])
+@blog.route("/comment/<slug>/edit/<comment_id>", methods=["POST"])
 @login_required
 def edit_comment(slug, comment_id):
     """Edit comment"""
@@ -226,7 +226,7 @@ def edit_comment(slug, comment_id):
     )
 
 
-@blog.route("/blog/comment/<slug>/delete/<comment_id>", methods=["POST"])
+@blog.route("/comment/<slug>/delete/<comment_id>", methods=["POST"])
 @login_required
 def delete_comment(slug, comment_id):
     """Delete comment"""
@@ -260,7 +260,7 @@ def delete_comment(slug, comment_id):
     )
 
 
-@blog.route("/blog/comment/<slug>/reply/<comment_id>", methods=["POST"])
+@blog.route("/comment/<slug>/reply/<comment_id>", methods=["POST"])
 def create_reply(slug, comment_id):
     """Reply to comment"""
     form = CommentForm()
@@ -296,7 +296,7 @@ def create_reply(slug, comment_id):
     )
 
 
-@blog.route("/blog/comment/<slug>/reply/<comment_id>/edit/<reply_id>", methods=["POST"])
+@blog.route("/comment/<slug>/reply/<comment_id>/edit/<reply_id>", methods=["POST"])
 def edit_reply(slug, comment_id, reply_id):
     """Edit reply to comment"""
     form = CommentForm()

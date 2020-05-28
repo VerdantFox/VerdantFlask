@@ -22,11 +22,11 @@ class MongoJsonEncoder(JSONEncoder):
 
 
 def register_blueprints(app):
-    # Base blueprints
-    app.register_blueprint(core)
-    app.register_blueprint(users)
-    app.register_blueprint(blog)
-    app.register_blueprint(error_pages)
+    """Register app blueprints with url prefix locations"""
+    app.register_blueprint(core, url_prefix="")
+    app.register_blueprint(users, url_prefix="/users")
+    app.register_blueprint(blog, url_prefix="/blog")
+    app.register_blueprint(error_pages, url_prefix="/error")
 
 
 def create_app():
