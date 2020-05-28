@@ -7,20 +7,20 @@ secrets = get_secrets()
 oauth_secrets = extract_secret(secrets, "OAUTH")
 
 OAUTH_CONFIG = {
-    "facebook": {
+    "Facebook": {
         "id": 1,
         "class_": oauth2.Facebook,
         "consumer_key": extract_secret(oauth_secrets, "FACEBOOK_ID"),
         "consumer_secret": extract_secret(oauth_secrets, "FACEBOOK_SECRET"),
     },
-    "github": {
+    "GitHub": {
         "id": 2,
         "class_": oauth2.GitHub,
         "access_headers": {"User-Agent": "VerdantFox"},
         "consumer_key": extract_secret(oauth_secrets, "GITHUB_ID"),
         "consumer_secret": extract_secret(oauth_secrets, "GITHUB_SECRET"),
     },
-    "google": {
+    "Google": {
         "id": 3,
         "class_": oauth2.Google,
         "consumer_key": extract_secret(oauth_secrets, "GOOGLE_ID"),

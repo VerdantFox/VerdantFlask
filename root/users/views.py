@@ -30,11 +30,6 @@ from root.users.oauth_config import authomatic
 
 users = Blueprint("users", __name__)
 
-OAUTH_LOOKUP = {
-    "github": {"oname": "GitHub", "db_oid": "github_id"},
-    "facebook": {"oname": "Facebook", "db_oid": "facebook_id",},
-    "google": {"oname": "Google", "db_oid": "google_id"},
-}
 DEFAULT_AVATARS_PATH = os.path.join(STATIC_PATH, "images", "avatars_default")
 DEFAULT_PICS = sorted(os.listdir(DEFAULT_AVATARS_PATH))
 
@@ -55,7 +50,7 @@ def register():
         )
         user.save()
         flash("Thanks for registering! Now you can login!", category="success")
-        return redirect(url_for("users.login"))
+        return login_and_redirect(user)
     return render_template("users/register.html", form=form)
 
 
@@ -74,7 +69,7 @@ def login():
             user = User.objects(username=username_or_email).first()
         # User validates
         if user is not None and user.check_password(form.password.data):
-            return login_and_redirect(user,)
+            return login_and_redirect(user)
         else:
             flash(
                 "(email or username)/password combination not found", category="error"
@@ -194,33 +189,33 @@ def delete_account():
 
 @users.route("/facebook_oauth", methods=["GET", "POST"])
 def facebook_oauth():
-    return oauth_generalized("facebook")
+    return oauth_generalized("Facebook")
 
 
 @users.route("/google_oauth", methods=["GET", "POST"])
 def google_oauth():
-    return oauth_generalized("google")
+    return oauth_generalized("Google")
 
 
 @users.route("/github_oauth", methods=["GET", "POST"])
 def github_oauth():
     """Perform github oauth register, login, or account association"""
-    return oauth_generalized("github")
+    return oauth_generalized("GitHub")
 
 
 @users.route("/facebook_oauth_disconnect", methods=["GET", "POST"])
 def facebook_oauth_disconnect():
-    return oauth_disconnect("facebook")
+    return oauth_disconnect("Facebook")
 
 
 @users.route("/google_oauth_disconnect", methods=["GET", "POST"])
 def google_oauth_disconnect():
-    return oauth_disconnect("google")
+    return oauth_disconnect("Google")
 
 
 @users.route("/github_oauth_disconnect", methods=["GET", "POST"])
 def github_oauth_disconnect():
-    return oauth_disconnect("github")
+    return oauth_disconnect("GitHub")
 
 
 # ----------------------------------------------------------------------------
@@ -246,13 +241,12 @@ def oauth_disconnect(oauth_client):
     if not current_user.is_authenticated:
         return redirect(url_for("users.login"))
 
-    oname = OAUTH_LOOKUP[oauth_client]["oname"]
-    db_oid = OAUTH_LOOKUP[oauth_client]["db_oid"]
+    db_oauth_key = str(oauth_client).lower() + "_id"
 
-    current_user[db_oid] = None
+    current_user[db_oauth_key] = None
     current_user.save()
 
-    flash(f"Disconnected from {oname}!")
+    flash(f"Disconnected from {oauth_client}!")
     return redirect(url_for("users.account_settings"))
 
 
@@ -267,35 +261,43 @@ def oauth_generalized(oauth_client):
         return response
 
     if not result.user:
+        flash("Login failed, try again with another method.", category="error")
         return redirect(url_for("users.login"))
 
     # Update user to retrieve data
     result.user.update()
 
-    oname = OAUTH_LOOKUP[oauth_client]["oname"]
-    db_oid = OAUTH_LOOKUP[oauth_client]["db_oid"]
+    db_oauth_key = str(oauth_client).lower() + "_id"
 
-    client_oid = result.user.id
     client_name = result.user.name
+    client_oauth_id = result.user.id
 
-    lookup = {db_oid: client_oid}
+    # Check if user in in database with this oauth login already exists
+    lookup = {db_oauth_key: client_oauth_id}
     user = User.objects(**lookup).first()
+
     if current_user.is_authenticated:
+        # Oauth method is already linked to an account, do nothing
         if user:
             flash(
-                f"That {oname} account is already linked with an account. "
-                f"Please log in to that account through {oname} and un-link "
+                f"That {oauth_client} account is already linked with an account. "
+                f"Please log in to that account through {oauth_client} and un-link "
                 "it from that account to link it to this account.",
                 category="error",
             )
+        # Add this oauth method to current user
         else:
-            current_user[db_oid] = client_oid
+            current_user[db_oauth_key] = client_oauth_id
             current_user.save()
+        # Should only get here from "settings" so return there
         return redirect(url_for("users.account_settings"))
 
+    # Unauthenticated user is found and thus now authenticated
     if user:
         flash(f"Welcome {user.username}!")
+    # Register a new user with this oauth authentication method
     else:
+        # Generate a unique username from client's name found in oauth lookup
         base_username = client_name.lower().split()[0]
         username = base_username
         attempts = 0
@@ -306,10 +308,11 @@ def oauth_generalized(oauth_client):
                 username = base_username + str(attempts)
             else:
                 break
+        # Create user and save to database
         user_data = {
             "username": username,
             "full_name": client_name,
-            db_oid: client_oid,
+            db_oauth_key: client_oauth_id,
             "access_level": 2,
         }
         user = User(**user_data)
@@ -326,6 +329,7 @@ def oauth_generalized(oauth_client):
 
 
 def login_and_redirect(user):
+    """Logs in user and redirects to 'next' in session, or index otherwise"""
     login_user(user)
     next_page = session.pop("next", None)
     if isinstance(next_page, str):

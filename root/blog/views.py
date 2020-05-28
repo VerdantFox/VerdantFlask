@@ -427,7 +427,6 @@ def create_or_edit(form, title, post=None):
     post.slug = get_slug(post.title)
     post.author = current_user.id
     post.published = form.publish.data
-    print(form.can_comment.data)
     post.can_comment = form.can_comment.data
     post.tags = list_from_string(form.tags.data)
     post.markdown_content = form.content.data.strip()
