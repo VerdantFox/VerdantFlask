@@ -533,6 +533,20 @@ a.remove-underline{
 .reply-padding {
     padding-left: 3.3rem;
 }
+.blog-view h1,h2,h3,h4,h5,h6 {
+    padding-top: 1rem;
+}
+.blog-view a {
+    font-weight: 600;
+}
+
+.blog-view code {
+    color: purple;
+    font-weight: 600;
+}
+.blog-view pre code {
+    font-weight: 500;
+}
 
 /* End blog stuff */
 
