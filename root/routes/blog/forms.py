@@ -37,12 +37,12 @@ class EditBlogPostForm(FlaskForm):
     description = TextAreaField(
         "Description",
         description="Short Markdown Description (couple paragraphs)",
-        validators=[DataRequired(), Length(max=5_000)],
+        validators=[DataRequired(), Length(max=50_000)],
     )
     content = TextAreaField(
         "Content",
         description="Markdown Content (The Whole Blog Post)",
-        validators=[DataRequired(), Length(max=30_000)],
+        validators=[DataRequired(), Length(max=500_000)],
     )
     submit = SubmitField("Submit")
 

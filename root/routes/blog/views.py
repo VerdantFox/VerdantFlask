@@ -18,6 +18,8 @@ from markdown.extensions.extra import ExtraExtension
 from micawber import bootstrap_basic, parse_html
 from micawber.cache import Cache as OEmbedCache
 
+from root.externals import SITE_WIDTH
+from root.image_handler import delete_blog_image, upload_blog_image
 from root.routes.blog.forms import (
     CommentForm,
     CreateBlogPostForm,
@@ -25,8 +27,6 @@ from root.routes.blog.forms import (
     EditImagesForm,
 )
 from root.routes.blog.models import BlogPost, Comment, Reply
-from root.externals import SITE_WIDTH
-from root.image_handler import delete_blog_image, upload_blog_image
 from root.routes.users.models import User
 from root.utils import get_slug, list_from_string, setup_pagination
 
@@ -448,9 +448,9 @@ def create_or_edit(form, title, post=None):
 
 
 def get_html(markdown_content):
-    """
-    Generate HTML representation of the markdown-formatted blog entry,
-    and also convert any media URLs into rich media objects such as video
+    """Generate HTML representation of the markdown-formatted blog entry
+
+    Also convert any media URLs into rich media objects such as video
     players or images.
     """
     hilite = CodeHiliteExtension(linenums=False, css_class="highlight")

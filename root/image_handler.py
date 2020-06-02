@@ -29,7 +29,7 @@ def prep_image(pic):
     return ext_type, mod_timestamp
 
 
-def upload_image(pic, path):
+def upload_image(pic, path, max_pixels=1_000):
     """Uploads a general image"""
     ext_type, mod_timestamp = prep_image(pic)
     if ext_type is None:
@@ -37,7 +37,7 @@ def upload_image(pic, path):
     storage_filename = secure_filename(f"{mod_timestamp}.{ext_type}")
     filepath = os.path.join(path, storage_filename)
     pic = Image.open(pic)
-    output_size = (600, 600)
+    output_size = (max_pixels, max_pixels)
     pic.thumbnail(output_size)
     pic.save(filepath)
 

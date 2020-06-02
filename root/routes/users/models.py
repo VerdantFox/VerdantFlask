@@ -13,7 +13,7 @@ class User(db.Document, UserMixin):
     """User model"""
 
     # User editable fields
-    username = db.StringField(required=True, unique=True, max_length=30, index=True)
+    username = db.StringField(required=True, unique=True, max_length=40, index=True)
     email = db.EmailField(
         unique=True, required=False, sparse=True, max_length=80, index=True
     )
