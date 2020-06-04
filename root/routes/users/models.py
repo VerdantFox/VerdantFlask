@@ -32,7 +32,7 @@ class User(db.Document, UserMixin):
     # For now only editable by an admin with database access
     # 1. Admin
     # 2. Regular Users
-    access_level = db.IntField(min_value=1, max_value=2, index=True)
+    access_level = db.IntField(min_value=1, max_value=2, default=2, index=True)
 
     # Oauth stuff
     github_id = db.LongField(unique=True, required=False, sparse=True, index=True)

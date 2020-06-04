@@ -15,30 +15,34 @@ for path in (AVATAR_UPLOAD_FOLDER, BLOG_UPLOAD_FOLDER):
     if not os.path.isdir(path):
         os.mkdir(path)
 
-ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
 
 
-def prep_image(pic):
+def prep_image(pic, allowed_extensions):
     """Common first steps to image uploading"""
     filename = pic.filename
     ext_type = filename.split(".")[-1].lower()
     mod_timestamp = str(datetime.now().timestamp()).replace(".", "")
-    if ext_type not in ALLOWED_EXTENSIONS:
+    if ext_type not in allowed_extensions:
         flash(f"Invalid image extension type '{ext_type}'")
         return None, None
     return ext_type, mod_timestamp
 
 
-def upload_image(pic, path, max_pixels=1_000):
+def upload_image(pic, path, max_pixels=1_000, allowed_extensions=ALLOWED_EXTENSIONS):
     """Uploads a general image"""
-    ext_type, mod_timestamp = prep_image(pic)
+    ext_type, mod_timestamp = prep_image(pic, allowed_extensions)
     if ext_type is None:
         return
     storage_filename = secure_filename(f"{mod_timestamp}.{ext_type}")
     filepath = os.path.join(path, storage_filename)
-    pic = Image.open(pic)
-    output_size = (max_pixels, max_pixels)
-    pic.thumbnail(output_size)
+
+    # Some bug with gifs in pillow causes messed up colors
+    # So don't use pillow to resize
+    if ext_type != "gif":
+        pic = Image.open(pic)
+        output_size = (max_pixels, max_pixels)
+        pic.thumbnail(output_size)
     pic.save(filepath)
 
     return storage_filename
@@ -46,7 +50,9 @@ def upload_image(pic, path, max_pixels=1_000):
 
 def upload_blog_image(pic):
     """Upload a blog image"""
-    return upload_image(pic, BLOG_UPLOAD_FOLDER)
+    allowed_extensions = ALLOWED_EXTENSIONS
+    allowed_extensions.add("gif")
+    return upload_image(pic, BLOG_UPLOAD_FOLDER, allowed_extensions=allowed_extensions)
 
 
 def upload_avatar(pic):

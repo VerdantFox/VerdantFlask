@@ -49,14 +49,14 @@ def register():
             access_level=2,
         )
         user.save()
-        flash("Thanks for registering! Now you can login!", category="success")
+        flash_register_message(user.username)
         return login_and_redirect(user)
     return render_template("users/register.html", form=form)
 
 
 @users.route("/login", methods=["GET", "POST"])
 def login():
-    """Logs the user in"""
+    """Logs the user in through username/password"""
     logout_user()
     session["next"] = request.args.get("next")
     form = LoginForm()
@@ -69,6 +69,7 @@ def login():
             user = User.objects(username=username_or_email).first()
         # User validates
         if user is not None and user.check_password(form.password.data):
+            flash(f"Welcome {user.username}!")
             return login_and_redirect(user)
         else:
             flash(
@@ -155,7 +156,6 @@ def account_settings():
     if form.validate_on_submit():
         current_user.email = form.email.data
         current_user.timezone = form.timezone.data
-        current_user.email = form.email.data
         if form.new_pass.data:
             new_hash = generate_password_hash(form.new_pass.data)
             current_user.password_hash = new_hash
@@ -181,10 +181,9 @@ def account_settings():
 def delete_account():
     """Delete current user's account"""
     current_user.delete()
-    current_user.save()
     logout_user()
     flash("Account deleted!", category="success")
-    return redirect("/")
+    return redirect(url_for("core.index"))
 
 
 @users.route("/facebook_oauth", methods=["GET", "POST"])
@@ -292,11 +291,8 @@ def oauth_generalized(oauth_client):
         # Should only get here from "settings" so return there
         return redirect(url_for("users.account_settings"))
 
-    # Unauthenticated user is found and thus now authenticated
-    if user:
-        flash(f"Welcome {user.username}!")
     # Register a new user with this oauth authentication method
-    else:
+    if not user:
         # Generate a unique username from client's name found in oauth lookup
         base_username = client_name.lower().split()[0]
         username = base_username
@@ -317,20 +313,17 @@ def oauth_generalized(oauth_client):
         }
         user = User(**user_data)
         user.save()
-        flash(f"Registered user {user.username}!")
-        flash(
-            Markup(
-                "You can change your username and profile picture in the "
-                f"<a href='{url_for('users.edit_profile')}' "
-                "class='c-blue'>edit profile</a> page."
-            )
-        )
+        flash_register_message(user.username)
+
+    # Else user was found and is now authenticated
+    # Log in the found or created user
     return login_and_redirect(user)
 
 
 def login_and_redirect(user):
     """Logs in user and redirects to 'next' in session, or index otherwise"""
     login_user(user)
+    flash(f"Welcome {user.username}!")
     next_page = session.pop("next", None)
     if isinstance(next_page, str):
         for path in ("login", "register"):
@@ -339,3 +332,15 @@ def login_and_redirect(user):
     else:
         next_page = url_for("core.index")
     return redirect(next_page)
+
+
+def flash_register_message(username):
+    """Flash a welcome message for newly registered user"""
+    flash(f"Thanks for registering, {username}!", category="success")
+    flash(
+        Markup(
+            "You can change your username and profile picture in the "
+            f"<a href='{url_for('users.edit_profile')}' "
+            "class='c-blue'>edit profile</a> page."
+        )
+    )
