@@ -15,6 +15,7 @@ from flask_login import current_user, login_required
 from markdown import markdown
 from markdown.extensions.codehilite import CodeHiliteExtension
 from markdown.extensions.extra import ExtraExtension
+from markdown.extensions.toc import TocExtension
 from micawber import bootstrap_basic, parse_html
 from micawber.cache import Cache as OEmbedCache
 
@@ -430,9 +431,9 @@ def create_or_edit(form, title, post=None):
     post.can_comment = form.can_comment.data
     post.tags = list_from_string(form.tags.data)
     post.markdown_content = form.content.data.strip()
-    post.html_content = get_html(post.markdown_content)
+    post.html_content = markdown_to_html(post.markdown_content, table=True)
     post.markdown_description = form.description.data.strip()
-    post.html_description = get_html(post.markdown_description)
+    post.html_description = markdown_to_html(post.markdown_description)
     if edit is False:
         post.created_timestamp = datetime.now()
     post.updated_timestamp = datetime.now()
@@ -447,7 +448,7 @@ def create_or_edit(form, title, post=None):
     return redirect(url_for("blog.view", slug=post.slug))
 
 
-def get_html(markdown_content):
+def markdown_to_html(markdown_content, table=False):
     """Generate HTML representation of the markdown-formatted blog entry
 
     Also convert any media URLs into rich media objects such as video
@@ -455,7 +456,10 @@ def get_html(markdown_content):
     """
     hilite = CodeHiliteExtension(linenums=False, css_class="highlight")
     extras = ExtraExtension()
-    markdown_content = markdown(markdown_content, extensions=[hilite, extras])
+    toc = TocExtension(toc_depth=3)
+    if table:
+        markdown_content = "[TOC]\n\n" + markdown_content
+    markdown_content = markdown(markdown_content, extensions=[hilite, extras, toc])
     oembed_content = parse_html(
         markdown_content, oembed_providers, urlize_all=True, maxwidth=SITE_WIDTH,
     )

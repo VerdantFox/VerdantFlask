@@ -60,3 +60,7 @@
   </div>
 </div>
 {% endblock content %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/blog/blog.js') }}"></script>
+{% endblock scripts %}

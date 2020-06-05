@@ -547,6 +547,13 @@ a.remove-underline{
 .blog-view pre code {
     font-weight: 500;
 }
+.toc {
+    background-color: #DEFBC2;
+    border: 2px solid #347A2A;
+    margin: 2rem 0 2rem 0;
+    border-radius: 1rem;
+    padding: 1rem 1rem 0 1rem;
+}
 
 /* End blog stuff */
 
