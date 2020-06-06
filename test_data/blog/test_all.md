@@ -20,11 +20,19 @@ Strikethrough uses two tildes. ~~Scratch this.~~
 
 ## Paragraphs
 
-Fugit quam molestiae reiciendis doloremque sed. In est animi occaecati dolores dolore beatae illum aut. Ut repellendus aut sunt. Officiis quia tempore ratione quo eos. Non et eos.
+Fugit quam molestiae reiciendis doloremque sed. In est animi occaecati
+dolores dolore beatae illum aut. Ut repellendus aut sunt. Officiis quia
+tempore ratione quo eos. Non et eos.
 
-Iste veritatis voluptatem et. Quisquam minus eligendi facilis est assumenda expedita officia fugit consequatur. Occaecati dolorem laborum non corporis cumque excepturi. Aliquid velit pariatur molestiae aut temporibus laborum aut et et. Sint ut magni autem libero.
+Iste veritatis voluptatem et. Quisquam minus eligendi facilis est assumenda
+expedita officia fugit consequatur. Occaecati dolorem laborum non corporis
+cumque excepturi. Aliquid velit pariatur molestiae aut temporibus laborum aut
+et et. Sint ut magni autem libero.
 
-Fuga quo voluptatibus saepe illum qui id excepturi ut et. Ut molestiae perspiciatis saepe. Ipsam nesciunt qui voluptatem dolores voluptas iusto. Magnam qui repudiandae vel excepturi aliquid ducimus culpa nisi consequatur. Veritatis sint eius suscipit ut qui sit et.
+Fuga quo voluptatibus saepe illum qui id excepturi ut et. Ut molestiae
+perspiciatis saepe. Ipsam nesciunt qui voluptatem dolores voluptas iusto.
+Magnam qui repudiandae vel excepturi aliquid ducimus culpa nisi consequatur.
+Veritatis sint eius suscipit ut qui sit et.
 
 ## Some bullet points
 
@@ -97,11 +105,8 @@ HTML code
 
 Here's our logo (hover to see the title text):
 
-Inline-style: 
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
-
-Reference-style: 
-![alt text][logo]
+Inline-style:
+![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png)
 
 [logo]: https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 2"
 
@@ -117,5 +122,3 @@ Three or more...
 > This line is part of the same quote.
 
 Quote break.
-
-> This is a very long line that will still be quoted properly when it wraps. Oh boy let's keep writing to make sure this is long enough to actually wrap for everyone. Oh, you can *put* **Markdown** into a blockquote.
