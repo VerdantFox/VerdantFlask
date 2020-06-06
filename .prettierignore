@@ -1,3 +1,4 @@
+# Virtual environment files
 venv/*
 # Prettier does not currently handle jinja properly
 root/templates/*
@@ -7,3 +8,5 @@ root/static/css/blog/codehighlight.css
 root/static/js/core/intercoolers.js
 # Ignore test data
 test_data/*
+# Others
+.mypy_cache/*
