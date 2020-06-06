@@ -13,4 +13,4 @@
 # B311: blacklist of all calls to `random` module.
 # This skip is safe because we do not need cryptographically secure random numbers.
 exclude_dirs: venv
-skips: ['B101', 'B311']
+skips: ["B101", "B311"]
