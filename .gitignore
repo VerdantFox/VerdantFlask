@@ -20,12 +20,15 @@ ipython_config.py
 celerybeat-schedule
 celerybeat.pid
 
-# Environments
+# Python virtual environment
 venv/
 
-# Secrets
-secrets.yaml
+# Environment variables
+.env
 
 # Static files to not track
 avatars_uploaded/
 blog_uploaded/
+
+# Mypy
+.mypy_cache/

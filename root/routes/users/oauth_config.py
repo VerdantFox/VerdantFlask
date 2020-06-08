@@ -1,37 +1,43 @@
+"""Authomatic Oauth configuration file
+
+Pull secret ids and keys from environment variables set in .env
+"""
+
+import os
+
 from authomatic import Authomatic
 from authomatic.providers import oauth2
-
-from root.utils import extract_secret, get_secrets
-
-secrets = get_secrets()
-oauth_secrets = extract_secret(secrets, "OAUTH")
 
 OAUTH_CONFIG = {
     "Facebook": {
         "id": 1,
         "class_": oauth2.Facebook,
-        "consumer_key": extract_secret(oauth_secrets, "FACEBOOK_ID"),
-        "consumer_secret": extract_secret(oauth_secrets, "FACEBOOK_SECRET"),
-    },
-    "GitHub": {
-        "id": 2,
-        "class_": oauth2.GitHub,
-        "access_headers": {"User-Agent": "VerdantFox"},
-        "consumer_key": extract_secret(oauth_secrets, "GITHUB_ID"),
-        "consumer_secret": extract_secret(oauth_secrets, "GITHUB_SECRET"),
+        "consumer_key": os.getenv("FACEBOOK_ID"),
+        "consumer_secret": os.getenv("FACEBOOK_SECRET"),
     },
     "Google": {
-        "id": 3,
+        "id": 1,
         "class_": oauth2.Google,
-        "consumer_key": extract_secret(oauth_secrets, "GOOGLE_ID"),
-        "consumer_secret": extract_secret(oauth_secrets, "GOOGLE_SECRET"),
+        "consumer_key": os.getenv("GOOGLE_ID"),
+        "consumer_secret": os.getenv("GOOGLE_SECRET"),
+        # Google requires a scope be specified to work properly
         "scope": ["profile", "email"],
+    },
+    "GitHub": {
+        "id": 3,
+        "class_": oauth2.GitHub,
+        # GitHub requires a special header to work properly
+        "access_headers": {"User-Agent": "VerdantFox"},
+        "consumer_key": os.getenv("GITHUB_ID"),
+        "consumer_secret": os.getenv("GITHUB_SECRET"),
     },
 }
 
+report_errors = (
+    True if os.getenv("REPORT_ERRORS", "0").lower() in ("1", "true") else False
+)
+
 # Instantiate Authomatic.
 authomatic = Authomatic(
-    OAUTH_CONFIG,
-    extract_secret(oauth_secrets, "AUTHOMATIC_SECRET"),
-    report_errors=extract_secret(oauth_secrets, "REPORT_ERRORS"),
+    OAUTH_CONFIG, os.getenv("AUTHOMATIC_SECRET"), report_errors=True,
 )

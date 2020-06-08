@@ -1,6 +1,8 @@
+import os
 from datetime import datetime
 
 from bson import ObjectId, json_util
+from dotenv import load_dotenv
 from flask import Flask
 from flask.json import JSONEncoder
 
@@ -9,7 +11,6 @@ from root.routes.blog.views import blog
 from root.routes.core.views import core
 from root.routes.error_pages.handlers import error_pages
 from root.routes.users.views import users
-from root.utils import extract_secret, get_secrets, set_environment_variables
 
 
 class MongoJsonEncoder(JSONEncoder):
@@ -29,18 +30,39 @@ def register_blueprints(app):
     app.register_blueprint(error_pages, url_prefix="/error")
 
 
-def create_app():
+def load_environment():
+    """Load environment variables"""
+    load_dotenv()
+    if os.getenv("PYTEST", "").lower() in ("1", "true"):
+        pass  # Change environment variables for pytest
 
-    secrets = get_secrets()
-    set_environment_variables(extract_secret(secrets, "ENV_VARS"))
-    config = extract_secret(secrets, "APP")
+
+def set_app_config(app):
+    """Set app config items from environment variables"""
+    # Flask stuff
+    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+
+    # DB stuff
+    app.config["MONGODB_SETTINGS"] = {
+        "authentication_source": "admin",
+        "host": os.getenv("MONGODB_HOST"),
+        "port": int(os.getenv("MONGODB_PORT")),
+        "username": os.getenv("MONGODB_USERNAME"),
+        "password": os.getenv("MONGODB_PASSWORD"),
+    }
+
+
+def create_app():
+    """Create the Flask app and set its configuration"""
+
+    load_environment()
 
     # Initiate app
     app = Flask(__name__)
     app.json_encoder = MongoJsonEncoder
 
-    # Update config from file
-    app.config.update(config)
+    # Update config from environment variables
+    set_app_config(app)
 
     # register blueprints
     register_blueprints(app)

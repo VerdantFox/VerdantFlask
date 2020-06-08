@@ -44,12 +44,30 @@
       <hr class="bgc-2 hr-thick">
       <div class="blog-view">
         {{ post.html_content | safe }}
+        <div>
+          <br>
+          <hr class="bgc-2">
+          <h1 class="text-center">About the author</h1>
+          <hr class="bgc-2">
+          <img width="300"
+               class="text-left"
+                 src="{{ url_for('static', filename='images/core/suit_headshot_cropped.jpg') }}"
+                 alt="Theodore Williams" title="Theodore Williams">
+        </div>
         <p>
-          If you like the post or if you have any questions or comments I'd love
-          to hear about it in the comments below. Thanks, and happy coding!
+          Hi, my name is Teddy Williams. I'm a software developer with a
+          special love for python programming. I have a wide range of
+          programming interests including web development, hobby videogame
+          development, IOT, datascience and just writing scripts to automate
+          every-day boring tasks. I'd love it if you
+          <a href="{{ url_for('blog.blog_list') }}">check out some of my other posts</a>
+          or <a href="{{ url_for('core.index') }}">take a look at my portfolio</a>! :)
         </p>
-        <h1>About the author</h1>
-        <p>blah blah blah</p>
+        <p>
+          Thanks for reading this post. If you like the post or if you have
+          any questions or comments I'd love to hear about it in the
+          comments below. Thanks, and happy coding!
+        </p>
       </div>
       <br><br><br>
       <div id="comments-section">
