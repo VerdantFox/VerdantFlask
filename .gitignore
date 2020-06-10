@@ -32,3 +32,6 @@ blog_uploaded/
 
 # Mypy
 .mypy_cache/
+
+# MongoDB
+test_data/mongodb_data/

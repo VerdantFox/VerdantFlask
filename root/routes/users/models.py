@@ -1,7 +1,7 @@
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash
 
-from root.externals import db, login_manager
+from root.globals import db, login_manager
 
 
 @login_manager.user_loader
@@ -35,20 +35,24 @@ class User(db.Document, UserMixin):
     access_level = db.IntField(min_value=1, max_value=2, default=2, index=True)
 
     # Oauth stuff
-    github_id = db.LongField(unique=True, required=False, sparse=True, index=True)
     facebook_id = db.StringField(unique=True, required=False, sparse=True, index=True)
     google_id = db.StringField(unique=True, required=False, sparse=True, index=True)
+    github_id = db.LongField(unique=True, required=False, sparse=True, index=True)
 
     meta = {
         "collection": "users",
         "indexes": [
             "username",
             "email",
+            "share_email",
             "full_name",
+            "share_name",
             "avatar_location",
             "bio",
             "birth_date",
+            "share_birth_date",
             "timezone",
+            "share_timezone",
             "access_level",
             "github_id",
             "facebook_id",
@@ -57,7 +61,7 @@ class User(db.Document, UserMixin):
     }
 
     def __repr__(self):
-        return f"Username: {self.username} id: {self.id}"
+        return f"User(username: {self.username} id: {self.id})"
 
     def check_password(self, password):
         """Checks that the pw provided hashes to the stored pw hash value"""

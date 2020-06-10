@@ -7,7 +7,7 @@ from flask_login import current_user
 from PIL import Image
 from werkzeug.utils import secure_filename
 
-from root.externals import STATIC_PATH
+from root.globals import STATIC_PATH
 
 AVATAR_UPLOAD_FOLDER = os.path.join(STATIC_PATH, "images", "avatars_uploaded")
 BLOG_UPLOAD_FOLDER = os.path.join(STATIC_PATH, "images", "blog_uploaded")

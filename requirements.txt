@@ -18,12 +18,15 @@ Flask-DebugToolbar==0.11.0
 pillow==7.0.0
 dnspython==1.16.0
 email-validator==1.1.0
-python-dotenv==0.13.0
+
+# pytest
+pytest==5.4.3
 
 # Database
 flask-mongoengine==0.9.5
 
 # Other
+python-dotenv==0.13.0
 beautifulsoup4==4.9.0
 bleach==3.1.5
 pytz==2020.1

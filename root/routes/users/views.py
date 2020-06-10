@@ -17,7 +17,7 @@ from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
 
-from root.externals import STATIC_PATH
+from root.globals import STATIC_PATH
 from root.image_handler import delete_current_avatar, upload_avatar
 from root.routes.users.forms import (
     LoginForm,

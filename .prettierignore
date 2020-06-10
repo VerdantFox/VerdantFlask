@@ -10,3 +10,4 @@ root/static/js/core/intercoolers.js
 test_data/*
 # Others
 .mypy_cache/*
+.pytest_cache/*

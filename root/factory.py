@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask.json import JSONEncoder
 
-from root.externals import db, login_manager
+from root.globals import db, login_manager
 from root.routes.blog.views import blog
 from root.routes.core.views import core
 from root.routes.error_pages.handlers import error_pages
@@ -30,13 +30,6 @@ def register_blueprints(app):
     app.register_blueprint(error_pages, url_prefix="/error")
 
 
-def load_environment():
-    """Load environment variables"""
-    load_dotenv()
-    if os.getenv("PYTEST", "").lower() in ("1", "true"):
-        pass  # Change environment variables for pytest
-
-
 def set_app_config(app):
     """Set app config items from environment variables"""
     # Flask stuff
@@ -50,12 +43,17 @@ def set_app_config(app):
         "username": os.getenv("MONGODB_USERNAME"),
         "password": os.getenv("MONGODB_PASSWORD"),
     }
+    # Adjust mongodb settings for pytest
+    if os.getenv("PYTEST", "").lower() in ("1", "true"):
+        app.config["MONGODB_SETTINGS"] = {
+            "host": "mongodb://admin:admin@localhost:27017/flask?authSource=admin",
+        }
 
 
 def create_app():
     """Create the Flask app and set its configuration"""
 
-    load_environment()
+    load_dotenv()
 
     # Initiate app
     app = Flask(__name__)

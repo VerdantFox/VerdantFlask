@@ -10,5 +10,6 @@ cd "$(dirname "$0")/.."
 ./utils/linters/jinjaninja_check.sh
 ./utils/linters/prettier_check.sh
 ./utils/linters/shellcheck_check.sh
-./utils/linters/markdownlint_check.sh
+# ./utils/linters/markdownlint_check.sh  # Too slow right now, need changes
 ./utils/linters/bandit_check.sh
+./utils/pytest.sh

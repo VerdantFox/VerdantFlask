@@ -12,5 +12,5 @@ docker run --rm \
     node bash -c \
         "cd /app && npm install --global markdownlint-cli && \
             markdownlint . \
-            -i '**/node_modules/**' -i '**/venv/**' -i '**.mypy_cache**'"
+            -i '**/node_modules/**' -i '**/venv/**' -i '**.mypy_cache**' -i **.pytest_cache**"
 echo "MarkdownLint passed on all known '.md' sources."
