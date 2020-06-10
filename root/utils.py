@@ -20,13 +20,23 @@ def setup_pagination(page, results_per_page, mongo_query):
 
 
 def get_slug(title):
-    """Generate slug from title"""
-    return re.sub(r"[^\w]+", "-", title.lower()).strip("-")
+    """Generate slug from title
+
+    remove problematic characters
+    """
+    title = re.sub("[!@#$%^&*()+=`~<>/:;.,]", "", title)
+    return re.sub(r"[^\w]+", "-", title.lower()).strip(" -")
 
 
-def list_from_string(string):
-    """Generate a list from a string"""
+def list_from_string(string, lowercase=False):
+    """Generate a list from a string
+
+    Lowercase list items
+    """
     if not string:
         string = ""
     string_list = string.strip(" []()").split(",")
-    return [item.strip().lower() for item in string_list]
+    if lowercase:
+        return [item.strip().strip("\"'").lower() for item in string_list]
+    else:
+        return [item.strip().strip("\"'") for item in string_list]
