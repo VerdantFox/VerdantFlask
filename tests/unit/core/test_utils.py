@@ -33,3 +33,11 @@ def test_list_from_string():
     for before, after in test_strings.items():
         assert list_from_string(before) == after
     assert list_from_string("Remove,UpPeR,CASE", True) == ["remove", "upper", "case"]
+
+
+def test_setup_pagination():
+    """
+    GIVEN page, results_per_page and mongo_query
+    THEN return a valid paginator object at correct page
+    """
+    pass  # TODO implement test (might require mocking mongo_query)

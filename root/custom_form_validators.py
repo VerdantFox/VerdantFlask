@@ -53,11 +53,7 @@ def has_upper(message=None):
         message = "Uppercase letter required."
 
     def validation(form, field):
-        up = False
-        for letter in field.data:
-            if letter.isupper():
-                up = True
-                break
+        up = any(letter.isupper() for letter in field.data)
         if not up:
             raise ValidationError(message)
 
@@ -70,11 +66,7 @@ def has_lower(message=None):
         message = "Lowercase letter required."
 
     def validation(form, field):
-        low = False
-        for letter in field.data:
-            if letter.islower():
-                low = True
-                break
+        low = any(letter.islower() for letter in field.data)
         if not low:
             raise ValidationError(message)
 
@@ -102,7 +94,7 @@ def has_number(message=None):
 
     def validation(form, field):
         contains_numbers = any(char.isdigit() for char in field.data)
-        if contains_numbers is False:
+        if not contains_numbers:
             raise ValidationError(message)
 
     return validation

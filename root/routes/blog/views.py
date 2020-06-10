@@ -413,11 +413,7 @@ def create_or_edit(form, title, post=None):
     """Create or edit a blog post"""
 
     next_page = form.next_page.data
-    if post is None:
-        edit = False
-    else:
-        edit = True
-
+    edit = False if post is None else True
     if edit is False:
         if post:
             flash("Post with that title already exists", category="error")
@@ -444,7 +440,6 @@ def create_or_edit(form, title, post=None):
             return redirect(url_for(f"blog.{next_page}", slug=post.slug))
         except Exception as e:
             print(f"got exception, e={e}")
-            pass
     return redirect(url_for("blog.view", slug=post.slug))
 
 
@@ -479,7 +474,7 @@ def get_current_tags(only_published=True):
     all_tags.discard(None)
     all_tags = list(all_tags)
     all_tags.sort()
-    tag_counts = dict()
+    tag_counts = {}
     for tag in all_tags:
         tag_counts[tag] = 0
     for post in posts:
@@ -506,13 +501,14 @@ def get_post_for_view(slug):
     post = BlogPost.objects(slug=slug).first()
     if not post:
         abort(404, "Blog post not found!")
-    if post.published is False:
-        if not current_user.is_authenticated or current_user.access_level != 1:
-            abort(
-                401,
-                "This post is unpublished. Only admin can view it, "
-                "sorry. Check back later!",
-            )
+    if post.published is False and (
+        not current_user.is_authenticated or current_user.access_level != 1
+    ):
+        abort(
+            401,
+            "This post is unpublished. Only admin can view it, "
+            "sorry. Check back later!",
+        )
     return post
 
 
@@ -538,7 +534,7 @@ def get_comment_authors(post):
         comment_authors = {user.id: user for user in users}
 
     else:
-        comment_authors = dict()
+        comment_authors = {}
     return comment_authors
 
 

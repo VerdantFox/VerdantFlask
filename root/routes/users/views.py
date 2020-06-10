@@ -105,14 +105,8 @@ def edit_profile():
     form = UserProfileForm()
     if form.validate_on_submit():
         current_user.username = form.username.data
-        if form.full_name.data:
-            current_user.full_name = form.full_name.data
-        else:
-            current_user.full_name = None
-        if form.bio.data:
-            current_user.bio = form.bio.data
-        else:
-            current_user.bio = None
+        current_user.full_name = form.full_name.data if form.full_name.data else None
+        current_user.bio = form.bio.data if form.bio.data else None
         if form.birth_date.data:
             current_user.birth_date = form.birth_date.data
         else:
@@ -229,10 +223,7 @@ def can_oauth_disconnect():
     has_pw = True if current_user.password_hash else False
 
     oauth_count = [has_gh, has_gg, has_fb].count(True)
-    if oauth_count > 1 or (has_email and has_pw):
-        return True
-    else:
-        return False
+    return bool(oauth_count > 1 or (has_email and has_pw))
 
 
 def oauth_disconnect(oauth_client):

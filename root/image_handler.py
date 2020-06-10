@@ -29,12 +29,14 @@ def prep_image(pic, allowed_extensions):
     return ext_type, mod_timestamp
 
 
-def upload_image(pic, path, max_pixels=1_000, allowed_extensions=ALLOWED_EXTENSIONS):
+def upload_image(
+    pic, path, prefix="", max_pixels=1_000, allowed_extensions=ALLOWED_EXTENSIONS
+):
     """Uploads a general image"""
     ext_type, mod_timestamp = prep_image(pic, allowed_extensions)
     if ext_type is None:
         return
-    storage_filename = secure_filename(f"{mod_timestamp}.{ext_type}")
+    storage_filename = secure_filename(f"{prefix}{mod_timestamp}.{ext_type}")
     filepath = os.path.join(path, storage_filename)
 
     # Some bug with gifs in pillow causes messed up colors
@@ -57,22 +59,16 @@ def upload_blog_image(pic):
 
 def upload_avatar(pic):
     """Uploads a user's avatar to static/images/avatars_uploaded"""
-    ext_type, mod_timestamp = prep_image(pic)
-    if ext_type is None:
-        return
-    storage_filename = secure_filename(f"{current_user.id}_{mod_timestamp}.{ext_type}")
-    filepath = os.path.join(AVATAR_UPLOAD_FOLDER, storage_filename)
-    delete_current_avatar()
-    pic = Image.open(pic)
-    output_size = (400, 400)
-    pic.thumbnail(output_size)
-    pic.save(filepath)
-
+    storage_filename = upload_image(
+        pic, AVATAR_UPLOAD_FOLDER, prefix=f"{current_user.id}_", max_pixels=400
+    )
+    if storage_filename is not None:
+        delete_current_avatar()
     return storage_filename
 
 
 def delete_image(rel_path, abs_path_dir):
-    """Delete image given a relative filepath"""
+    """Delete image given a relative filepath and absolute directory"""
     # Want absolute file path
     filename = ntpath.basename(rel_path)
     filepath = os.path.join(abs_path_dir, filename)

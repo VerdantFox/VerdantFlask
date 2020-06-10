@@ -33,9 +33,7 @@ def list_from_string(string, lowercase=False):
 
     Lowercase list items
     """
-    if not string:
-        string = ""
-    string_list = string.strip(" []()").split(",")
+    string_list = str(string).strip(" []()").split(",")
     if lowercase:
         return [item.strip().strip("\"'").lower() for item in string_list]
     else:
