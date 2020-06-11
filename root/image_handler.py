@@ -2,7 +2,6 @@ import ntpath
 import os
 from datetime import datetime
 
-from flask import flash
 from flask_login import current_user
 from PIL import Image
 from werkzeug.utils import secure_filename
@@ -18,13 +17,12 @@ for path in (AVATAR_UPLOAD_FOLDER, BLOG_UPLOAD_FOLDER):
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
 
 
-def prep_image(pic, allowed_extensions):
+def prep_image(pic, allowed_extensions=ALLOWED_EXTENSIONS):
     """Common first steps to image uploading"""
     filename = pic.filename
     ext_type = filename.split(".")[-1].lower()
     mod_timestamp = str(datetime.now().timestamp()).replace(".", "")
     if ext_type not in allowed_extensions:
-        flash(f"Invalid image extension type '{ext_type}'")
         return None, None
     return ext_type, mod_timestamp
 

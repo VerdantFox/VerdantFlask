@@ -10,6 +10,7 @@ SITE_WIDTH = 800  # TODO adjust this
 
 # Paths
 ROOT_PATH = os.path.abspath(os.path.dirname(__file__))
+PROJECT_ROOT_PATH = os.path.dirname(ROOT_PATH)
 STATIC_PATH = os.path.join(ROOT_PATH, "static")
 
 # Database setup

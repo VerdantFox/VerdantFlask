@@ -49,15 +49,11 @@ def client():
     app.config["BCRYPT_LOG_ROUNDS"] = 4
     app.config["WTF_CSRF_ENABLED"] = False
 
-    print("BEFORE TEST")
-
     with app.test_client() as client:
         ctx = app.app_context()
         ctx.push()
         yield client
         ctx.pop()
-
-    print("DONE WITH TEST")
 
 
 # ---------------------------------------------------------------------------

@@ -114,6 +114,7 @@ def edit_profile():
         if form.upload_avatar.data:
             avatar_image = upload_avatar(form.upload_avatar.data)
             if avatar_image is None:
+                flash(f"Invalid image extension type used!", category="error")
                 return redirect(url_for("users.edit_profile"))
             current_user.avatar_location = url_for(
                 "static", filename=f"images/avatars_uploaded/{avatar_image}"

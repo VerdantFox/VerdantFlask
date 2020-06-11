@@ -130,7 +130,9 @@ def edit_images(slug):
     form = EditImagesForm()
     if form.upload_image.data:
         blog_image = upload_blog_image(form.upload_image.data)
-        if blog_image is not None:
+        if blog_image is None:
+            flash(f"Invalid image extension type used!")
+        else:
             blog_image_location = url_for(
                 "static", filename=f"images/blog_uploaded/{blog_image}"
             )
