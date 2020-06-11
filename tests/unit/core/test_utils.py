@@ -1,4 +1,5 @@
 """Tests for root/utils methods"""
+import pytest
 from root.utils import get_slug, list_from_string
 
 
@@ -35,6 +36,7 @@ def test_list_from_string():
     assert list_from_string("Remove,UpPeR,CASE", True) == ["remove", "upper", "case"]
 
 
+@pytest.mark.skip
 def test_setup_pagination():
     """
     GIVEN page, results_per_page and mongo_query

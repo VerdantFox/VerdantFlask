@@ -75,7 +75,9 @@ def test_upload_image(example_images):
         ext_type_pre = image.filename.split(".")[-1]
         storage_filename1 = upload_image(image, IMAGE_STORAGE_PATH)
         storage_filename2 = upload_image(image, IMAGE_STORAGE_PATH, prefix="pre_")
-        storage_filename3 = upload_image(image, IMAGE_STORAGE_PATH, prefix="small_", max_pixels=20)
+        storage_filename3 = upload_image(
+            image, IMAGE_STORAGE_PATH, prefix="small_", max_pixels=20
+        )
         if ext_type_pre in ALLOWED_EXTENSIONS:
             assert isinstance(storage_filename1, str)
             assert isinstance(storage_filename2, str)
@@ -98,7 +100,7 @@ def test_upload_image(example_images):
         assert os.path.isfile(filepath)
         assert filename.startswith("small_")
         image = Image.open(filepath)
-        assert (image.width == 20 or image.height == 20)
+        assert image.width == 20 or image.height == 20
 
 
 def test_delete_image():
@@ -109,7 +111,7 @@ def test_delete_image():
     delete_image(rel_path, abs_path_dir)
     """
     for i, image_name in enumerate(os.listdir(EXAMPLE_IMAGES_PATH)):
-        ext = image_name.split('.')[-1]
+        ext = image_name.split(".")[-1]
         new_filename = f"{i}.{ext}"
         get_path = os.path.join(EXAMPLE_IMAGES_PATH, image_name)
         put_path = os.path.join(IMAGE_STORAGE_PATH, new_filename)
