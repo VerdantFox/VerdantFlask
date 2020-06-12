@@ -3,7 +3,11 @@ from root.routes.users.models import User
 from werkzeug.security import generate_password_hash
 
 
-def test_new_user_standard():
+# TODO parameterize list of good users
+# TODO new test with parameterized list of bad users
+# Should check against all model rules
+# Should check if indexes exist
+def test_new_user_standard(client):
     """
     GIVEN a User model
     WHEN a new User is created

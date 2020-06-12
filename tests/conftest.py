@@ -5,17 +5,20 @@ import pytest
 from pymongo import MongoClient
 
 from root.factory import create_app
-from tests.globals import (
-    DOCKER_CLIENT,
-    MONGODB_CONTAINER_NAME,
-    MONGODB_DATA_DIR,
-    TEST_DB_HOST,
+
+DOCKER_CLIENT = docker.from_env()
+MONGODB_CONTAINER_NAME = "mongodb_test"
+MONGODB_DATA_DIR = os.path.join(
+    os.path.abspath(os.path.dirname(os.path.dirname(__file__))),
+    "test_data",
+    "mongodb_data",
 )
+TEST_DB_HOST = "mongodb://admin:admin@localhost:27017/?authSource=admin"
 
 
 @pytest.fixture(scope="session", autouse=True)
-def mongodb_container():
-    """Create a fresh database from docker and set it up"""
+def mongodb_container(tmpdir_factory):
+    """Create a fresh, temporary database from docker and set it up"""
 
     remove_mongodb_container()
     environment = {
@@ -39,7 +42,7 @@ def mongodb_container():
     remove_mongodb_container()
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture()
 def client():
     """Create a flask client"""
     os.environ["PYTEST"] = "1"
