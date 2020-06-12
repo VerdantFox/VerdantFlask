@@ -3,19 +3,27 @@ import pytest
 from root.utils import get_slug, list_from_string
 
 
-def test_getslug():
+TEST_STRINGS = [
+    pytest.param("hello world", "hello-world", id="standard"),
+    pytest.param("My wEiRD cAPS", "my-weird-caps", id="rem_caps"),
+    pytest.param(
+        "  fix  weird\n whitespace", "fix-weird-whitespace", id="fix_whitespace"
+    ),
+    pytest.param(
+        "Bad chars )(*&^%$#@!`~?/.,<> go bye-bye",
+        "bad-chars-go-bye-bye",
+        id="rem_badchars",
+    ),
+]
+
+
+@pytest.mark.parametrize("before, after", TEST_STRINGS)
+def test_getslug(before, after):
     """
     GIVEN a string
     THEN string should turn into a slug
     """
-    test_strings = {
-        "hello world": "hello-world",
-        "My  sUpeR Cool   blog pOsT": "my-super-cool-blog-post",
-        "Even fix\nnew lines": "even-fix-new-lines",
-        "Bad chars )(*&^%$#@!`~?/.,<> go bye-bye": "bad-chars-go-bye-bye",
-    }
-    for before, after in test_strings.items():
-        assert get_slug(before) == after
+    assert get_slug(before) == after
 
 
 def test_list_from_string():
