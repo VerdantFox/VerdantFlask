@@ -1,19 +1,14 @@
 import os
 
-import docker
 import pytest
-from pymongo import MongoClient
 
 from root.factory import create_app
-
-DOCKER_CLIENT = docker.from_env()
-MONGODB_CONTAINER_NAME = "mongodb_test"
-MONGODB_DATA_DIR = os.path.join(
-    os.path.abspath(os.path.dirname(os.path.dirname(__file__))),
-    "test_data",
-    "mongodb_data",
+from tests.globals import (
+    DOCKER_CLIENT,
+    MONGODB_CONTAINER_NAME,
+    MONGODB_DATA_DIR,
 )
-TEST_DB_HOST = "mongodb://admin:admin@localhost:27017/?authSource=admin"
+from tests.mongodb_helpers import remove_mongodb_container, drop_database
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -59,20 +54,9 @@ def client():
         ctx.pop()
 
 
-# ---------------------------------------------------------------------------
-# Helper functions
-# ---------------------------------------------------------------------------
-def remove_mongodb_container():
-    """Remove the mongodb container"""
-    try:
-        container = DOCKER_CLIENT.containers.get(MONGODB_CONTAINER_NAME)
-        container.stop()
-        container.remove()
-    except docker.errors.NotFound:
-        pass  # Do nothing if container not found
-
-
-def drop_database():
-    """Drop the test database"""
-    pymongo_client = MongoClient(TEST_DB_HOST)
-    pymongo_client.drop_database("flask")
+@pytest.fixture()
+def drop_db():
+    """Drop the flask db before and after function"""
+    pymongo_client = drop_database()
+    yield pymongo_client
+    drop_database()
