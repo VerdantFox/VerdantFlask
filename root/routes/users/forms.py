@@ -70,7 +70,7 @@ class RegistrationForm(FlaskForm):
         description="Password confirm",
         validators=[
             DataRequired(),
-            EqualTo("pass_confirm", message="Passwords Must Match!"),
+            EqualTo("password", message="Passwords Must Match!"),
         ],
     )
     submit = SubmitField("Register")

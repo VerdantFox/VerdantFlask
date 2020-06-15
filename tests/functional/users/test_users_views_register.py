@@ -1,4 +1,5 @@
 """Test the user views"""
+import pytest
 
 
 def test_register_get(client):
@@ -36,7 +37,7 @@ def test_register_get(client):
 
 
 def test_register_post_happy(client, drop_db):
-    """Test the GET method on user register"""
+    """Test the POST method on user register when success expected"""
     username = "testuser"
     form_data = {
         "email": "testuser@gmail.com",
@@ -57,3 +58,146 @@ def test_register_post_happy(client, drop_db):
     assert f"Welcome {username}!" in data_decoded
     # Top right icon
     assert f"Welcome, {username}" in data_decoded
+
+
+BAD_FORMS = [
+    pytest.param(
+        {
+            "email": "",
+            "username": "testuser",
+            "password": "blah1234",
+            "pass_confirm": "blah1234",
+        },
+        b'<p class="error">This field is required.</p>',
+        id="missing_email",
+    ),
+    pytest.param(
+        {
+            "email": "test@email.com",
+            "username": "",
+            "password": "blah1234",
+            "pass_confirm": "blah1234",
+        },
+        b'<p class="error">This field is required.</p>',
+        id="missing_username",
+    ),
+    pytest.param(
+        {
+            "email": "test@email.com",
+            "username": "testuser",
+            "password": "",
+            "pass_confirm": "blah1234",
+        },
+        b'<p class="error">This field is required.</p>',
+        id="missing_password",
+    ),
+    pytest.param(
+        {
+            "email": "test@email.com",
+            "username": "testuser",
+            "password": "blah1234",
+            "pass_confirm": "",
+        },
+        b'<p class="error">This field is required.</p>',
+        id="missing_pw_confirm",
+    ),
+    pytest.param(
+        {
+            "email": "bademail",
+            "username": "testuser",
+            "password": "blah1234",
+            "pass_confirm": "blah1234",
+        },
+        b"Invalid email address.",
+        id="bad_email",
+    ),
+    pytest.param(
+        {
+            "email": "test@email.com",
+            "username": "a$21^",
+            "password": "blah1234",
+            "pass_confirm": "blah1234",
+        },
+        b'<p class="error">Must contain only letters, numbers, dashes and underscores.</p>',
+        id="bad_username_chars",
+    ),
+    pytest.param(
+        {
+            "email": "test@email.com",
+            "username": "a",
+            "password": "blah1234",
+            "pass_confirm": "blah1234",
+        },
+        b'<p class="error">Field must be between 3 and 30 characters long.</p>',
+        id="username_too_short",
+    ),
+    pytest.param(
+        {
+            "email": "test@email.com",
+            "username": "aasdfasdfasdfasdfasdfasdfasdfasd",
+            "password": "blah1234",
+            "pass_confirm": "blah1234",
+        },
+        b'<p class="error">Field must be between 3 and 30 characters long.</p>',
+        id="username_too_long",
+    ),
+    pytest.param(
+        {
+            "email": "test@email.com",
+            "username": "testuser",
+            "password": "b1",
+            "pass_confirm": "b1",
+        },
+        b'<p class="error">Field must be between 8 and 30 characters long.</p>',
+        id="password_too_short",
+    ),
+    pytest.param(
+        {
+            "email": "test@email.com",
+            "username": "testuser",
+            "password": "assdf1234asdf1234asdfasdfasdfasdfasdfas",
+            "pass_confirm": "assdf1234asdf1234asdfasdfasdfasdfasdfas",
+        },
+        b'<p class="error">Field must be between 8 and 30 characters long.</p>',
+        id="password_too_long",
+    ),
+    pytest.param(
+        {
+            "email": "test@email.com",
+            "username": "testuser",
+            "password": "pwwithoutnumbers",
+            "pass_confirm": "pwwithoutnumbers",
+        },
+        b'<p class="error">At least one number required.</p>',
+        id="password_no_nums",
+    ),
+    pytest.param(
+        {
+            "email": "test@email.com",
+            "username": "testuser",
+            "password": "1234567890",
+            "pass_confirm": "1234567890",
+        },
+        b'<p class="error">At least one letter required.</p>',
+        id="password_no_letters",
+    ),
+    pytest.param(
+        {
+            "email": "test@email.com",
+            "username": "testuser",
+            "password": "goodpw123",
+            "pass_confirm": "notmatching123",
+        },
+        b'<p class="error">Passwords Must Match!</p>',
+        id="passwords_dont_match",
+    ),
+]
+
+
+@pytest.mark.parametrize("form_data, expected", BAD_FORMS)
+def test_register_post_fail(client, drop_db, form_data, expected):
+    """Test the POST method on user register when success expected"""
+    response = client.post("/users/register", data=form_data, follow_redirects=True)
+    assert response.status_code == 200
+    data = response.data
+    assert expected in data
