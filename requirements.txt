@@ -21,6 +21,7 @@ email-validator==1.1.0
 
 # pytest
 pytest==5.4.3
+pytest-cov==2.9.0
 
 # Database
 flask-mongoengine==0.9.5
