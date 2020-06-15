@@ -7,6 +7,7 @@ cd "$(dirname "$0")/../.." || return
 
 # Normal markdownlint package does not support options
 # and we need to ignore some locations
+echo "Running markdownlint"
 docker run --rm \
     --mount "type=bind,source=$(pwd),target=/app" \
     node bash -c \

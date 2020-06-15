@@ -6,5 +6,6 @@
 set -euo pipefail
 cd "$(dirname "$0")/../.." || return
 
+echo "Running mypy"
 mypy
 echo "mypy passes all sources listed in mypy.ini"

@@ -62,7 +62,7 @@ class RegistrationForm(FlaskForm):
     )
     password = PasswordField(
         "Password",
-        description="Old password",
+        description="Password",
         validators=[DataRequired(), Length(min=8, max=30), has_letter(), has_number()],
     )
     pass_confirm = PasswordField(

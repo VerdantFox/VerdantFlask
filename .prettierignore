@@ -12,3 +12,4 @@ test_data/*
 .mypy_cache/*
 .pytest_cache/*
 htmlcov/*
+tmp/*
