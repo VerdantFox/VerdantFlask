@@ -5,6 +5,7 @@ __pycache__/
 .cache
 .pytest_cache/
 .coverage
+htmlcov/
 
 # Flask stuff:
 instance/
@@ -12,8 +13,6 @@ instance/
 
 # Jupyter Notebook
 .ipynb_checkpoints
-
-# IPython
 profile_default/
 ipython_config.py
 

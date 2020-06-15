@@ -11,3 +11,4 @@ test_data/*
 # Others
 .mypy_cache/*
 .pytest_cache/*
+htmlcov/*

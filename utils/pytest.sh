@@ -3,5 +3,5 @@
 set -euo pipefail
 cd "$(dirname "$0")/.." || return
 
-pytest tests/ "$@"
+pytest "$@"
 echo "pytest passes..."

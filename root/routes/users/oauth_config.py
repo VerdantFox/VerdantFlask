@@ -39,5 +39,5 @@ report_errors = (
 
 # Instantiate Authomatic.
 authomatic = Authomatic(
-    OAUTH_CONFIG, os.getenv("AUTHOMATIC_SECRET"), report_errors=True,
+    OAUTH_CONFIG, os.getenv("AUTHOMATIC_SECRET"), report_errors=report_errors,
 )
