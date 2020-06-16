@@ -1,3 +1,4 @@
+"""Tests global fixture file"""
 import os
 
 import pytest
@@ -37,7 +38,7 @@ def mongodb_container(tmpdir_factory):
     remove_mongodb_container()
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def client():
     """Create a flask client"""
     os.environ["PYTEST"] = "1"

@@ -13,3 +13,4 @@ cd "$(dirname "$0")/.."
 # ./utils/linters/markdownlint_check.sh  # Too slow right now, need changes
 ./utils/linters/bandit_check.sh
 ./utils/pytest.sh --cov=root --cov-report=html
+echo "Open coverage report at ./htmlcov/index.html"

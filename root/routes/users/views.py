@@ -69,7 +69,6 @@ def login():
             user = User.objects(username=username_or_email).first()
         # User validates
         if user is not None and user.check_password(form.password.data):
-            flash(f"Welcome {user.username}!")
             return login_and_redirect(user)
         else:
             flash(
@@ -315,7 +314,7 @@ def oauth_generalized(oauth_client):
 def login_and_redirect(user):
     """Logs in user and redirects to 'next' in session, or index otherwise"""
     login_user(user)
-    flash(f"Welcome {user.username}!")
+    flash(f"Welcome {user.username}!", category="success")
     next_page = session.pop("next", None)
     if isinstance(next_page, str):
         for path in ("login", "register"):
