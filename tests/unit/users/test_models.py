@@ -1,9 +1,9 @@
 """Most basic pytest"""
 from datetime import datetime
 
-from werkzeug.security import generate_password_hash
-import pytest
 import mongoengine
+import pytest
+from werkzeug.security import generate_password_hash
 
 from root.routes.users.models import User
 from tests.mongodb_helpers import list_indexes

@@ -63,26 +63,26 @@
   <!-- Submit -->
   <div class="text-center">
     {% if post %}
-      {{ 
+      {{
         form.submit(
           class="btn btn-lg btn-green",
           value="Submit and View",
           onclick="$('#next_page').val('view')",
-        ) 
+        )
       }}
-      {{ 
+      {{
         form.submit(
           class="btn btn-lg btn-green",
           value="Refresh",
           onclick="$('#next_page').val('edit')",
-        ) 
+        )
       }}
-      {{ 
+      {{
         form.submit(
           class="btn btn-lg btn-green",
           value="Edit Images",
           onclick="$('#next_page').val('edit_images')",
-        ) 
+        )
       }}
       <a onclick="return confirm('Are you sure you want to delete post?')"
          class="btn btn-lg btn-danger"
@@ -92,19 +92,19 @@
       <br><br>
       {% include "blog/list_images.html" %}
     {% else %}
-      {{ 
+      {{
         form.submit(
           class="btn btn-lg btn-green",
           value="Submit and View",
           onclick="$('#next_page').val('view')",
-        ) 
+        )
       }}
-      {{ 
+      {{
         form.submit(
           class="btn btn-lg btn-green",
           value="Submit and Edit",
           onclick="$('#next_page').val('edit')",
-        ) 
+        )
       }}
       <br><br>
       <p>

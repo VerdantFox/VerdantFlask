@@ -1,8 +1,8 @@
 """Helper functions for working with mongodb for tests"""
-from pymongo import MongoClient
 import docker
+from pymongo import MongoClient
 
-from tests.globals import DOCKER_CLIENT, MONGODB_CONTAINER_NAME, TEST_DB_HOST, DB_NAME
+from tests.globals import DB_NAME, DOCKER_CLIENT, MONGODB_CONTAINER_NAME, TEST_DB_HOST
 
 
 def remove_mongodb_container():

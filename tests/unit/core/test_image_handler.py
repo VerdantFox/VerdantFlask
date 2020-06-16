@@ -2,17 +2,16 @@
 import os
 
 import pytest
-from werkzeug.datastructures import FileStorage
 from PIL import Image
+from werkzeug.datastructures import FileStorage
 
 from root.globals import PROJECT_ROOT_PATH
 from root.image_handler import (
-    delete_image,
-    upload_image,
-    prep_image,
     ALLOWED_EXTENSIONS,
+    delete_image,
+    prep_image,
+    upload_image,
 )
-
 
 TEST_IMAGES_PATH = os.path.join(PROJECT_ROOT_PATH, "test_data", "images")
 # IMAGE_STORAGE_PATH = os.path.join(TEST_IMAGES_PATH, "image_storage")

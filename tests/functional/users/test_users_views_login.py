@@ -1,7 +1,7 @@
 """Test users login view"""
 import pytest
 
-from tests.functional.users.conftest import USERNAME, EMAIL, PASSWORD
+from tests.functional.users.conftest import EMAIL, PASSWORD, USERNAME
 
 
 def test_login_get(client):
@@ -32,11 +32,9 @@ def test_login_get(client):
 
 GOOD_LOGINS = [
     pytest.param(
-        {"username_or_email": USERNAME, "password": PASSWORD,}, id="username_login",
+        {"username_or_email": USERNAME, "password": PASSWORD}, id="username_login",
     ),
-    pytest.param(
-        {"username_or_email": EMAIL, "password": PASSWORD,}, id="email_login",
-    ),
+    pytest.param({"username_or_email": EMAIL, "password": PASSWORD}, id="email_login",),
 ]
 
 
@@ -54,9 +52,9 @@ def test_login_post_happy(client, user, form_data):
 
 BAD_LOGINS = [
     pytest.param(
-        {"username_or_email": USERNAME, "password": "incorrectpw",}, id="bad_combo",
+        {"username_or_email": USERNAME, "password": "incorrectpw"}, id="bad_combo",
     ),
-    pytest.param({"username_or_email": "", "password": "",}, id="empty_email",),
+    pytest.param({"username_or_email": "", "password": ""}, id="empty_email",),
 ]
 
 

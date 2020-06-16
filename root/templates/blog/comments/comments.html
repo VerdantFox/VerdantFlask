@@ -97,7 +97,7 @@
           </div>
 
         {% endif %}
-        
+
         <!-- Replies list -->
         {% if comment.replies %}
           {% for reply in comment.replies %}
@@ -122,7 +122,7 @@
                   {% include "blog/comments/edit_dropdown.html" %}
                 </div>
               </div>
-      
+
               <div class="container reply-padding">
                 <!-- Reply edit -->
                 <div id="reply_edit_{{ reply.id }}" class="row" style="display: none;">

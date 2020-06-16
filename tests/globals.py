@@ -1,5 +1,6 @@
 """Global test variables that might need to be imported"""
 import os
+
 import docker
 
 DOCKER_CLIENT = docker.from_env()

@@ -8,6 +8,7 @@ isort==4.3.21
 bandit==1.6.2
 jinjaninja==0.1.2
 mypy==0.780
+pre-commit==2.5.1
 
 # Flask
 Authomatic==1.0.0
@@ -38,4 +39,3 @@ micawber==0.5.1
 # Data
 pandas==1.0.3
 bokeh==2.0.0
-

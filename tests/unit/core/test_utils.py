@@ -1,7 +1,7 @@
 """Tests for root/utils methods"""
 import pytest
-from root.utils import get_slug, list_from_string
 
+from root.utils import get_slug, list_from_string
 
 TEST_STRINGS = [
     pytest.param("hello world", "hello-world", id="standard"),

@@ -32,7 +32,7 @@
       </h1>
       <hr class="bgc-2 hr-thick">
       <p class="text-right">
-        {{ post.created_timestamp.strftime('%B %d, %Y %I:%M %p') }} / 
+        {{ post.created_timestamp.strftime('%B %d, %Y %I:%M %p') }} /
         {% if post.tags %}
           {% for tag in post.tags %}
             <a href="{{ url_for('blog.blog_list', tag=tag) }}">{{ tag }}</a>

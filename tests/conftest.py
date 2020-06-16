@@ -4,12 +4,8 @@ import os
 import pytest
 
 from root.factory import create_app
-from tests.globals import (
-    DOCKER_CLIENT,
-    MONGODB_CONTAINER_NAME,
-    MONGODB_DATA_DIR,
-)
-from tests.mongodb_helpers import remove_mongodb_container, drop_database
+from tests.globals import DOCKER_CLIENT, MONGODB_CONTAINER_NAME, MONGODB_DATA_DIR
+from tests.mongodb_helpers import drop_database, remove_mongodb_container
 
 
 @pytest.fixture(scope="session", autouse=True)

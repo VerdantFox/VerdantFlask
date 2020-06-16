@@ -34,7 +34,7 @@
         {{ user.full_name }}
       </h4>
     {% endif %}
-    
+
     <!-- Avatar -->
     <h4>Avatar:</h4>
     {% if user.avatar_location %}
@@ -81,14 +81,14 @@
 
     <!-- Timezone -->
     {% if is_current_user %}
-      <h4>Timezone: 
+      <h4>Timezone:
         {{ user.timezone if user.timezone else "UTC"}}
         {% if not user.share_timezone %}
           <span class="text-muted">(hidden to public)</span>
         {% endif %}
       </h4>
     {% elif user.share_timezone %}
-      <h4>Timezone: 
+      <h4>Timezone:
         {{ user.timezone if user.timezone else "UTC"}}
         {% if not user.share_timezone %}
           <span class="text-muted">(hidden to public)</span>

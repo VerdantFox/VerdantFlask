@@ -1,6 +1,7 @@
 """Users functional tests fixture file"""
 import pytest
 from werkzeug.security import generate_password_hash
+
 from root.routes.users.models import User
 
 USERNAME = "testuser"
