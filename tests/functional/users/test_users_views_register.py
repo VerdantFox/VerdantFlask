@@ -48,7 +48,7 @@ def test_register_post_happy(client, drop_db):
     response = client.post("/users/register", data=form_data, follow_redirects=True)
     assert response.status_code == 200
     data = response.data
-    data_decoded = data.decode("utf-8")
+    data_decoded = data.decode()
     # Flash messages
     assert f"Thanks for registering, {username}" in data_decoded
     assert (

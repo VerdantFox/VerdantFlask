@@ -43,7 +43,7 @@ def test_login_post_happy(client, user, form_data):
     """Test the POST method on user register when success expected"""
     response = client.post("/users/login", data=form_data, follow_redirects=True)
     assert response.status_code == 200
-    data_decoded = response.data.decode("utf-8")
+    data_decoded = response.data.decode()
     # banner
     assert f"Welcome {USERNAME}!" in data_decoded
     # top right corner
@@ -63,6 +63,6 @@ def test_login_post_fail(client, user, form_data):
     """Test the POST method on user register when success expected"""
     response = client.post("/users/login", data=form_data, follow_redirects=True)
     assert response.status_code == 200
-    data = response.data
-    assert b"Welcome testuser!" not in data
-    assert b"(email or username)/password combination not found"
+    data = response.data.decode()
+    assert f"Welcome {USERNAME}!" not in data
+    assert "(email or username)/password combination not found"

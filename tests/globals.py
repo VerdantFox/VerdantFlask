@@ -10,5 +10,10 @@ MONGODB_DATA_DIR = os.path.join(
     "test_data",
     "mongodb_data",
 )
+MONGODB_USERNAME = "admin"
+MONGODB_PASSWORD = "admin"
 DB_NAME = "flask"
-TEST_DB_HOST = f"mongodb://admin:admin@localhost:27017/{DB_NAME}?authSource=admin"
+TEST_DB_HOST = (
+    f"mongodb://{MONGODB_USERNAME}:{MONGODB_PASSWORD}"
+    f"@localhost:27017/{DB_NAME}?authSource=admin"
+)

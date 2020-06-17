@@ -34,15 +34,22 @@ def mongodb_container(tmpdir_factory):
     remove_mongodb_container()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture
 def client():
-    """Create a flask client"""
-    os.environ["PYTEST"] = "1"
-    app = create_app()
+    """Create a fresh flask client for a function"""
+    app = start_app()
 
-    app.config["TESTING"] = True
-    app.config["BCRYPT_LOG_ROUNDS"] = 4
-    app.config["WTF_CSRF_ENABLED"] = False
+    with app.test_client() as client:
+        ctx = app.app_context()
+        ctx.push()
+        yield client
+        ctx.pop()
+
+
+@pytest.fixture(scope="module")
+def client_module():
+    """Create a fresh, separate flask client for a module"""
+    app = start_app()
 
     with app.test_client() as client:
         ctx = app.app_context()
@@ -57,3 +64,14 @@ def drop_db():
     pymongo_client = drop_database()
     yield pymongo_client
     drop_database()
+
+
+def start_app():
+    """start flask app"""
+    os.environ["PYTEST"] = "1"
+    app = create_app()
+
+    app.config["TESTING"] = True
+    app.config["BCRYPT_LOG_ROUNDS"] = 4
+    app.config["WTF_CSRF_ENABLED"] = False
+    return app
