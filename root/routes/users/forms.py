@@ -81,7 +81,7 @@ class UserSettingsForm(FlaskForm):
         "Email",
         description="Email",
         validators=[
-            DataRequired(),
+            Optional(),
             Email(),
             unique_or_current_user_field("Email is already registered."),
         ],

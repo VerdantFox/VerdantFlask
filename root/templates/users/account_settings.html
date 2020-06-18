@@ -97,6 +97,7 @@
   <br><br><br>
 
   <div class="text-center">
+    {% set no_diconnect_msg = "You must set an email and password before disconnecting oauth." %}
 
     <!-- Social media connections -->
     <h2>Social media connections</h2><br>
@@ -116,8 +117,7 @@
           Disconnect from Facebook
         </button>
         <p style="color: red">
-          You must have defined an email and password
-          for your account before disconnecting from Facebook.
+          {{ no_diconnect_msg }}
         </p>
       {% endif %}
     {% else %}
@@ -140,8 +140,7 @@
           Disconnect from Google
         </button>
         <p style="color: red">
-          You must have defined an email and password
-          for your account before disconnecting from Google.
+          {{ no_diconnect_msg }}
         </p>
       {% endif %}
     {% else %}
@@ -164,8 +163,7 @@
           Disconnect from GitHub
         </button>
         <p style="color: red">
-          You must have defined an email and password
-          for your account before disconnecting from Github.
+          {{ no_diconnect_msg }}
         </p>
       {% endif %}
     {% else %}

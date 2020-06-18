@@ -148,7 +148,8 @@ def account_settings():
 
     form = UserSettingsForm()
     if form.validate_on_submit():
-        current_user.email = form.email.data
+        if form.email.data:
+            current_user.email = form.email.data
         current_user.timezone = form.timezone.data
         if form.new_pass.data:
             new_hash = generate_password_hash(form.new_pass.data)
