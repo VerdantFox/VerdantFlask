@@ -1,4 +1,5 @@
 """Test users profile view"""
+from tests.functional.users.conftest import date_str_fmt
 
 
 def test_profile_filled_logged_in(client, logged_in_user1_mod):
@@ -87,8 +88,3 @@ def test_profile_user_doesnt_exist(client, logged_in_user1_mod):
     response = client.get(f"/users/profile/fake_user", follow_redirects=True)
     assert response.status_code == 404
     assert b"User not found." in response.data
-
-
-def date_str_fmt(datetime_obj):
-    """Conver datetime to a string object in the format used in this page"""
-    return datetime_obj.strftime("%B %d, %Y")

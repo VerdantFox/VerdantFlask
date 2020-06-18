@@ -116,7 +116,7 @@ class UserProfileForm(FlaskForm):
         ],
     )
     full_name = StringField(
-        "Full Name", description="John Smith", validators=[Optional(), Length(max=60)],
+        "Full Name", description="Your Name", validators=[Optional(), Length(max=60)],
     )
     share_name = BooleanField("Share Name", description="Share Name", default=False)
     upload_avatar = FileField(

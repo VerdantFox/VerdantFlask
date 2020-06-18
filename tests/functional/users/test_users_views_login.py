@@ -66,3 +66,29 @@ def test_login_post_fail(client, user1_mod, form_data):
     data = response.data.decode()
     assert f"Welcome {USERNAME}!" not in data
     assert "(email or username)/password combination not found"
+
+
+REDIRECTS = [
+    pytest.param("%2F", ">Welcome to Verdant Fox!</h1>", id="index"),
+    pytest.param("%2Fusers%2Flogin", ">Welcome to Verdant Fox!</h1>", id="login"),
+    pytest.param("%2Fusers%2Flogin", ">Welcome to Verdant Fox!</h1>", id="register"),
+    pytest.param("%2Fblog%2F", "Blog Posts by Date", id="blog"),
+]
+
+
+@pytest.mark.parametrize("redirect, expected", REDIRECTS)
+def test_login_redirects(client, user1_mod, redirect, expected):
+    """Test the POST method redirects to correct location"""
+    form_data = {"username_or_email": USERNAME, "password": PASSWORD}
+    response = client.post(
+        f"/users/login?next={redirect}", data=form_data, follow_redirects=True
+    )
+    assert response.status_code == 200
+    data_decoded = response.data.decode()
+    # banner
+    assert f"Welcome {USERNAME}!" in data_decoded
+    # top right corner
+    assert f"Welcome, {USERNAME}" in data_decoded
+    # page specific
+    print(data_decoded)
+    assert expected in data_decoded

@@ -56,6 +56,14 @@ def user2_mod(client_module):
     new_user.delete()
 
 
+@pytest.fixture
+def revert_user1(user1_mod):
+    """Revert the state of user1 before and after function"""
+    save_user_fields(user1_mod, USER1)
+    yield user1_mod
+    save_user_fields(user1_mod, USER1)
+
+
 @pytest.fixture()
 def logged_in_user1_mod(client, user1_mod):
     """Log in the created user"""
@@ -71,13 +79,19 @@ def logged_in_user2_mod(client, user2_mod):
 # --------------------------------------------------------------------------
 # Helpers
 # --------------------------------------------------------------------------
+def save_user_fields(user, user_dict):
+    """Save a user's fields to fields defined by dictionary"""
+    for key, val in user_dict.items():
+        user[key] = val
+    user.save()
+    for key, val in user_dict.items():
+        assert user[key] == val
+    return user
+
+
 def setup_create_user(user_dict):
     """Common setup for create user"""
-    new_user = User(**user_dict)
-    new_user.save()
-    for key, val in user_dict.items():
-        assert new_user[key] == val
-    return new_user
+    return save_user_fields(User(), user_dict)
 
 
 def login_user(cl, usr):
@@ -87,3 +101,13 @@ def login_user(cl, usr):
     assert response.status_code == 200
     assert f"Welcome {usr.username}!" in response.data.decode()
     return usr
+
+
+def date_str_fmt(datetime_obj):
+    """Conver datetime to a string object in the format displayed on pages"""
+    return datetime_obj.strftime("%B %d, %Y")
+
+
+def date_str_fmt_forms(datetime_obj):
+    """Conver datetime to a string object in the format used in forms"""
+    return datetime_obj.strftime("%Y-%m-%d")
