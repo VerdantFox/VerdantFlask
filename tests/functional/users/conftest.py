@@ -41,42 +41,49 @@ USER2 = {
 
 
 @pytest.fixture(scope="module")
-def user(client_module):
+def user1_mod(client_module):
     """Create a fresh user for testing"""
-    new_user = User(**USER1)
-    new_user.save()
-    for key, val in USER1.items():
-        assert new_user[key] == val
+    new_user = setup_create_user(USER1)
     yield new_user
     new_user.delete()
 
 
 @pytest.fixture(scope="module")
-def user2(client_module):
+def user2_mod(client_module):
     """Create a fresh user for testing with sharing == False"""
-    new_user = User(**USER2)
-    new_user.save()
-    for key, val in USER2.items():
-        assert new_user[key] == val
+    new_user = setup_create_user(USER2)
     yield new_user
     new_user.delete()
 
 
 @pytest.fixture()
-def logged_in_user(client, user):
+def logged_in_user1_mod(client, user1_mod):
     """Log in the created user"""
-    form_data = {"username_or_email": user.username, "password": PASSWORD}
-    response = client.post("/users/login", data=form_data, follow_redirects=True)
-    assert response.status_code == 200
-    assert f"Welcome {user.username}!" in response.data.decode()
-    yield user
+    yield login_user(client, user1_mod)
 
 
 @pytest.fixture()
-def logged_in_user2(client, user2):
+def logged_in_user2_mod(client, user2_mod):
     """Log in the created user"""
-    form_data = {"username_or_email": user2.username, "password": PASSWORD}
-    response = client.post("/users/login", data=form_data, follow_redirects=True)
+    yield login_user(client, user2_mod)
+
+
+# --------------------------------------------------------------------------
+# Helpers
+# --------------------------------------------------------------------------
+def setup_create_user(user_dict):
+    """Common setup for create user"""
+    new_user = User(**user_dict)
+    new_user.save()
+    for key, val in user_dict.items():
+        assert new_user[key] == val
+    return new_user
+
+
+def login_user(cl, usr):
+    """Common setup for loggin in user"""
+    form_data = {"username_or_email": usr.username, "password": PASSWORD}
+    response = cl.post("/users/login", data=form_data, follow_redirects=True)
     assert response.status_code == 200
-    assert f"Welcome {user2.username}!" in response.data.decode()
-    yield user2
+    assert f"Welcome {usr.username}!" in response.data.decode()
+    return usr

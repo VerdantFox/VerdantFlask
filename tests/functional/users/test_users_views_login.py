@@ -39,7 +39,7 @@ GOOD_LOGINS = [
 
 
 @pytest.mark.parametrize("form_data", GOOD_LOGINS)
-def test_login_post_happy(client, user, form_data):
+def test_login_post_happy(client, user1_mod, form_data):
     """Test the POST method on user register when success expected"""
     response = client.post("/users/login", data=form_data, follow_redirects=True)
     assert response.status_code == 200
@@ -59,7 +59,7 @@ BAD_LOGINS = [
 
 
 @pytest.mark.parametrize("form_data", BAD_LOGINS)
-def test_login_post_fail(client, user, form_data):
+def test_login_post_fail(client, user1_mod, form_data):
     """Test the POST method on user register when success expected"""
     response = client.post("/users/login", data=form_data, follow_redirects=True)
     assert response.status_code == 200

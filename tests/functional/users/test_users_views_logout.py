@@ -1,7 +1,7 @@
 """Test users logout view"""
 
 
-def test_logout_basic(client, logged_in_user):
+def test_logout_basic(client, logged_in_user1_mod):
     """Test logging out a logged in user"""
     response = client.get("/users/logout", follow_redirects=True)
     assert response.status_code == 200

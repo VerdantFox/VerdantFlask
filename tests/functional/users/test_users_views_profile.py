@@ -1,87 +1,88 @@
 """Test users profile view"""
 
 
-def test_profile_filled_logged_in(client, logged_in_user):
+def test_profile_filled_logged_in(client, logged_in_user1_mod):
     """Test showing profile of filled out user from user perspective"""
-    response = client.get(f"/users/profile/{logged_in_user.username}")
+    response = client.get(f"/users/profile/{logged_in_user1_mod.username}")
     assert response.status_code == 200
     data = response.data.decode()
     data_no_spaces = "".join(data.split())
-    assert f"<h1>{logged_in_user.username} User Profile</h1>" in data
+    assert f"<h1>{logged_in_user1_mod.username} User Profile</h1>" in data
     assert (
-        f"<h4>Name:{logged_in_user.full_name.replace(' ', '')}</h4>" in data_no_spaces
-    )
-    assert f'<img src="{logged_in_user.avatar_location}"' in data
-    assert f"<h4>Email:{logged_in_user.email}</h4>" in data_no_spaces
-    assert f'<p>{logged_in_user.bio.replace(" ", "")}</p>' in data_no_spaces
-    assert (
-        f'<h4>BirthDate:{date_str_fmt(logged_in_user.birth_date).replace(" ", "")}</h4>'
+        f"<h4>Name:{logged_in_user1_mod.full_name.replace(' ', '')}</h4>"
         in data_no_spaces
     )
-    assert f"<h4>Timezone:{logged_in_user.timezone}</h4>" in data_no_spaces
+    assert f'<img src="{logged_in_user1_mod.avatar_location}"' in data
+    assert f"<h4>Email:{logged_in_user1_mod.email}</h4>" in data_no_spaces
+    assert f'<p>{logged_in_user1_mod.bio.replace(" ", "")}</p>' in data_no_spaces
+    assert (
+        f'<h4>BirthDate:{date_str_fmt(logged_in_user1_mod.birth_date).replace(" ", "")}</h4>'
+        in data_no_spaces
+    )
+    assert f"<h4>Timezone:{logged_in_user1_mod.timezone}</h4>" in data_no_spaces
 
 
-def test_profile_filled_logged_out(client, user, logged_in_user2):
+def test_profile_filled_logged_out(client, user1_mod, logged_in_user2_mod):
     """Test showing profile of filled out user from other user perspective"""
-    response = client.get(f"/users/profile/{user.username}", follow_redirects=True)
+    response = client.get(f"/users/profile/{user1_mod.username}", follow_redirects=True)
     assert response.status_code == 200
     data = response.data.decode()
     data_no_spaces = "".join(data.split())
-    assert f"<h1>{user.username} User Profile</h1>" in data
-    assert f"<h4>Name:{user.full_name.replace(' ', '')}</h4>" in data_no_spaces
-    assert f'<img src="{user.avatar_location}"' in data
-    assert f"<h4>Email:{user.email}</h4>" in data_no_spaces
-    assert f'<p>{user.bio.replace(" ", "")}</p>' in data_no_spaces
+    assert f"<h1>{user1_mod.username} User Profile</h1>" in data
+    assert f"<h4>Name:{user1_mod.full_name.replace(' ', '')}</h4>" in data_no_spaces
+    assert f'<img src="{user1_mod.avatar_location}"' in data
+    assert f"<h4>Email:{user1_mod.email}</h4>" in data_no_spaces
+    assert f'<p>{user1_mod.bio.replace(" ", "")}</p>' in data_no_spaces
     assert (
-        f'<h4>BirthDate:{date_str_fmt(user.birth_date).replace(" ", "")}</h4>'
+        f'<h4>BirthDate:{date_str_fmt(user1_mod.birth_date).replace(" ", "")}</h4>'
         in data_no_spaces
     )
-    assert f"<h4>Timezone:{user.timezone}</h4>" in data_no_spaces
+    assert f"<h4>Timezone:{user1_mod.timezone}</h4>" in data_no_spaces
 
 
-def test_profile_unfilled_logged_in(client, logged_in_user2):
+def test_profile_unfilled_logged_in(client, logged_in_user2_mod):
     """Test showing profile of un-filled out user from user's perspective"""
-    response = client.get(f"/users/profile/{logged_in_user2.username}")
+    response = client.get(f"/users/profile/{logged_in_user2_mod.username}")
     assert response.status_code == 200
     data = response.data.decode()
     data_no_spaces = "".join(data.split())
-    assert f"<h1>{logged_in_user2.username} User Profile</h1>" in data
+    assert f"<h1>{logged_in_user2_mod.username} User Profile</h1>" in data
     assert (
-        f'<h4>Name:{logged_in_user2.full_name.replace(" ", "")}'
+        f'<h4>Name:{logged_in_user2_mod.full_name.replace(" ", "")}'
         f'<spanclass="text-muted">(hiddentopublic)</span></h4>' in data_no_spaces
     )
-    assert f'<img src="{logged_in_user2.avatar_location}"' in data
+    assert f'<img src="{logged_in_user2_mod.avatar_location}"' in data
     assert (
-        f'<h4>Email:{logged_in_user2.email.replace(" ", "")}'
+        f'<h4>Email:{logged_in_user2_mod.email.replace(" ", "")}'
         f'<spanclass="text-muted">(hiddentopublic)</span>' in data_no_spaces
     )
-    assert f'<p>{logged_in_user2.bio.replace(" ", "")}</p>' in data_no_spaces
+    assert f'<p>{logged_in_user2_mod.bio.replace(" ", "")}</p>' in data_no_spaces
     assert (
-        f'<h4>BirthDate:{date_str_fmt(logged_in_user2.birth_date).replace(" ", "")}'
+        f'<h4>BirthDate:{date_str_fmt(logged_in_user2_mod.birth_date).replace(" ", "")}'
         f'<spanclass="text-muted">(hiddentopublic)</span></h4>' in data_no_spaces
     )
     assert (
-        f'<h4>Timezone:{logged_in_user2.timezone.replace(" ", "")}'
+        f'<h4>Timezone:{logged_in_user2_mod.timezone.replace(" ", "")}'
         f'<spanclass="text-muted">(hiddentopublic)</span></h4>' in data_no_spaces
     )
 
 
-def test_profile_unfilled_logged_out(client, user2, logged_in_user):
+def test_profile_unfilled_logged_out(client, user2_mod, logged_in_user1_mod):
     """Test showing profile of un-filled out user from other user's perspective"""
-    response = client.get(f"/users/profile/{user2.username}")
+    response = client.get(f"/users/profile/{user2_mod.username}")
     assert response.status_code == 200
     data = response.data.decode()
     data_no_spaces = "".join(data.split())
-    assert f"<h1>{user2.username} User Profile</h1>" in data
-    assert user2.full_name not in data
-    assert f'<img src="{user2.avatar_location}"' in data
-    assert user2.email not in data
-    assert f'<p>{user2.bio.replace(" ", "")}</p>' in data_no_spaces
-    assert date_str_fmt(user2.birth_date) not in data
-    assert user2.timezone not in data
+    assert f"<h1>{user2_mod.username} User Profile</h1>" in data
+    assert user2_mod.full_name not in data
+    assert f'<img src="{user2_mod.avatar_location}"' in data
+    assert user2_mod.email not in data
+    assert f'<p>{user2_mod.bio.replace(" ", "")}</p>' in data_no_spaces
+    assert date_str_fmt(user2_mod.birth_date) not in data
+    assert user2_mod.timezone not in data
 
 
-def test_profile_user_doesnt_exist(client, logged_in_user):
+def test_profile_user_doesnt_exist(client, logged_in_user1_mod):
     """Test trying to get profile of non-existent user"""
     response = client.get(f"/users/profile/fake_user", follow_redirects=True)
     assert response.status_code == 404
