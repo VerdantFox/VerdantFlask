@@ -87,7 +87,6 @@ def logout():
 
 
 @users.route("/profile/<username>", methods=["GET", "POST"])
-@login_required
 def profile(username):
     user = User.objects(username=username).first()
     if not user:
