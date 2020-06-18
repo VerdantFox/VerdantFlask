@@ -36,7 +36,7 @@ def test_register_get(client):
     )
 
 
-def test_register_post_happy(client, drop_db):
+def test_register_post_happy(client, delete_users):
     """Test the POST method on user register when success expected"""
     username = "testuser"
     form_data = {
@@ -195,7 +195,7 @@ BAD_FORMS = [
 
 
 @pytest.mark.parametrize("form_data, expected", BAD_FORMS)
-def test_register_post_fail(client, drop_db, form_data, expected):
+def test_register_post_fail(client, delete_users, form_data, expected):
     """Test the POST method on user register when success expected"""
     response = client.post("/users/register", data=form_data, follow_redirects=True)
     assert response.status_code == 200

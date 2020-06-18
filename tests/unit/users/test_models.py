@@ -64,7 +64,7 @@ GOOD_USERS = [
 
 
 @pytest.mark.parametrize("user_dict", GOOD_USERS)
-def test_new_user_good_succeeds(client, drop_db, user_dict):
+def test_new_user_good_succeeds(client, delete_users, user_dict):
     """
     GIVEN a User model
     WHEN a new User is created
@@ -125,7 +125,7 @@ BAD_USERS = [
 
 
 @pytest.mark.parametrize("user_dict", BAD_USERS)
-def test_new_user_bad_fails(client, drop_db, user_dict):
+def test_new_user_bad_fails(client, delete_users, user_dict):
     """
     GIVEN a User model
     WHEN a new User is created
@@ -137,7 +137,7 @@ def test_new_user_bad_fails(client, drop_db, user_dict):
         new_user.save()
 
 
-def test_user_check_password(client, drop_db):
+def test_user_check_password(client, delete_users):
     """Check the user model check_password method"""
     password = "somepassword"
     password_hash = generate_password_hash(password)

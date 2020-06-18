@@ -22,6 +22,13 @@ def drop_database():
     return pymongo_client
 
 
+def delete_all_docs(collection_name):
+    """Delete all documents in a database"""
+    pymongo_client = MongoClient(TEST_DB_HOST)
+    db = pymongo_client["flask"]
+    db[collection_name].remove({})
+
+
 def list_indexes(collection):
     """List fields indexed in the flask database"""
     pymongo_client = MongoClient(TEST_DB_HOST)

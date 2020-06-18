@@ -5,12 +5,16 @@ import pytest
 
 from root.factory import create_app
 from tests.globals import DOCKER_CLIENT, MONGODB_CONTAINER_NAME, MONGODB_DATA_DIR
-from tests.mongodb_helpers import drop_database, remove_mongodb_container
+from tests.mongodb_helpers import (
+    delete_all_docs,
+    drop_database,
+    remove_mongodb_container,
+)
 
 
 @pytest.fixture(scope="session", autouse=True)
 def mongodb_container(tmpdir_factory):
-    """Create a fresh, temporary database from docker and set it up"""
+    """Create a fresh mongodb container and db"""
 
     remove_mongodb_container()
     environment = {
@@ -58,14 +62,32 @@ def client_module():
         ctx.pop()
 
 
-@pytest.fixture()
+@pytest.fixture
 def drop_db():
-    """Drop the flask db before and after function"""
+    """Drop the flask db before and after function
+
+    Consider dropping documents instead to preserve expensive indexes
+    """
     pymongo_client = drop_database()
     yield pymongo_client
     drop_database()
 
 
+@pytest.fixture
+def delete_users():
+    """Delete all users in collection
+
+    This is preferable to dropping the collection entirely as the indexes
+    (which are slow to create) will remain intact.
+    """
+    delete_all_docs("users")
+    yield
+    delete_all_docs("users")
+
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
 def start_app():
     """start flask app"""
     os.environ["PYTEST"] = "1"

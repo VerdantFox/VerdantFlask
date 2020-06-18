@@ -64,13 +64,13 @@ def revert_user1(user1_mod):
     save_user_fields(user1_mod, USER1)
 
 
-@pytest.fixture()
+@pytest.fixture
 def logged_in_user1_mod(client, user1_mod):
     """Log in the created user"""
     yield login_user(client, user1_mod)
 
 
-@pytest.fixture()
+@pytest.fixture
 def logged_in_user2_mod(client, user2_mod):
     """Log in the created user"""
     yield login_user(client, user2_mod)
