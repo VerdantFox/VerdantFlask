@@ -130,5 +130,5 @@ class SimpleModel(db.Document):
     field = db.StringField(index=False)
     meta = {"collection": "simplemodels"}
 
-    def __repr__(self):
+    def __str__(self):
         return f"SimpleModel(field: {self.field})"
