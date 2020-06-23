@@ -4,6 +4,7 @@ import os
 import pytest
 
 from root.factory import create_app
+from root.routes.users.models import User
 from tests.globals import DOCKER_CLIENT, MONGODB_CONTAINER_NAME, MONGODB_DATA_DIR
 from tests.mongodb_helpers import (
     delete_all_docs,
@@ -11,7 +12,49 @@ from tests.mongodb_helpers import (
     remove_mongodb_container,
 )
 
+# ---------------------------------------------------------------------------
+# Globals
+# ---------------------------------------------------------------------------
+STANDARD_USER = {"username": "testuser", "full_name": "Test User", "access_level": 2}
 
+ADMIN_USER = {"username": "adminuser", "full_name": "Admin User", "access_level": 1}
+
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+def start_app():
+    """start flask app"""
+    os.environ["PYTEST"] = "1"
+    app = create_app()
+
+    app.config["TESTING"] = True
+    app.config["BCRYPT_LOG_ROUNDS"] = 4
+    app.config["WTF_CSRF_ENABLED"] = False
+    return app
+
+
+def bool_field_val(boolean):
+    """Convert a boolean to its html value equivalent"""
+    return "y" if bool(boolean) else "n"
+
+
+def mock_current_user(mocker, user_dict):
+    """Mock a current user"""
+    user = User(**user_dict)
+
+    def fake_get_user():
+        """Get a fake user"""
+        return user
+
+    mocker.patch("flask_login.utils._get_user", fake_get_user)
+
+    return user
+
+
+# ---------------------------------------------------------------------------
+# Fixtures
+# ---------------------------------------------------------------------------
 @pytest.fixture(scope="session", autouse=True)
 def mongodb_container(tmpdir_factory):
     """Create a fresh mongodb container and db"""
@@ -85,20 +128,13 @@ def delete_users():
     delete_all_docs("users")
 
 
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
-def start_app():
-    """start flask app"""
-    os.environ["PYTEST"] = "1"
-    app = create_app()
-
-    app.config["TESTING"] = True
-    app.config["BCRYPT_LOG_ROUNDS"] = 4
-    app.config["WTF_CSRF_ENABLED"] = False
-    return app
+@pytest.fixture
+def current_user_standard(mocker):
+    """Get a standard mocked current user"""
+    return mock_current_user(mocker, STANDARD_USER)
 
 
-def bool_field_val(boolean):
-    """Convert a boolean to its html value equivalent"""
-    return "y" if bool(boolean) else "n"
+@pytest.fixture
+def current_user_admin(mocker):
+    """Get an admin mocked current user"""
+    return mock_current_user(mocker, ADMIN_USER)
