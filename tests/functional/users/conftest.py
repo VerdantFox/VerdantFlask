@@ -58,16 +58,22 @@ def user2_mod(client_module):
 
 @pytest.fixture
 def revert_user1(user1_mod):
-    """Revert the state of user1 before and after function"""
-    save_user_fields(user1_mod, USER1)
-    yield user1_mod
-    save_user_fields(user1_mod, USER1)
+    """Revert the state of user1 before and after function
+
+    Have to GET user from database before save every time or stale user
+    won't save properly.
+    """
+    user = User.objects(id=user1_mod.id).first()
+    save_user_fields(user, USER1)
+    yield user
+    user = User.objects(id=user1_mod.id).first()
+    save_user_fields(user, USER1)
 
 
 @pytest.fixture
-def logged_in_user1_mod(client, user1_mod):
-    """Log in the created user"""
-    yield login_user(client, user1_mod)
+def logged_in_user1_mod(client, revert_user1):
+    """Log in the created user (in reverted state)"""
+    yield login_user(client, revert_user1)
 
 
 @pytest.fixture
@@ -84,9 +90,10 @@ def save_user_fields(user, user_dict):
     for key, val in user_dict.items():
         user[key] = val
     user.save()
+    user_check = User.objects(id=user.id).first()
     for key, val in user_dict.items():
-        assert user[key] == val
-    return user
+        assert user_check[key] == val
+    return user_check
 
 
 def setup_create_user(user_dict):
@@ -111,3 +118,8 @@ def date_str_fmt(datetime_obj):
 def date_str_fmt_forms(datetime_obj):
     """Conver datetime to a string object in the format used in forms"""
     return datetime_obj.strftime("%Y-%m-%d")
+
+
+def no_whitespace(string):
+    """Remove whitespace from string"""
+    return "".join(string.split())

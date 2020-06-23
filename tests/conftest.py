@@ -97,3 +97,8 @@ def start_app():
     app.config["BCRYPT_LOG_ROUNDS"] = 4
     app.config["WTF_CSRF_ENABLED"] = False
     return app
+
+
+def bool_field_val(boolean):
+    """Convert a boolean to its html value equivalent"""
+    return "y" if bool(boolean) else "n"

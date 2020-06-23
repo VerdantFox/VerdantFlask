@@ -77,7 +77,7 @@ def tags():
 def create():
     """Create a new blogpost"""
     if current_user.access_level != 1:
-        abort(401, f"Blog create page requires admin access.")
+        abort(401, "Blog create page requires admin access.")
 
     form = CreateBlogPostForm()
     if form.validate_on_submit():
@@ -131,7 +131,7 @@ def edit_images(slug):
     if form.upload_image.data:
         blog_image = upload_blog_image(form.upload_image.data)
         if blog_image is None:
-            flash(f"Invalid image extension type used!")
+            flash("Invalid image extension type used!")
         else:
             blog_image_location = url_for(
                 "static", filename=f"images/blog_uploaded/{blog_image}"
@@ -494,7 +494,7 @@ def get_post_for_update_delete(slug):
     if not post:
         abort(404, "Blog post not found!")
     if post.author != current_user.id:
-        abort(403, f"Only blogpost author can edit post.")
+        abort(403, "Only blogpost author can edit post.")
     return post
 
 
