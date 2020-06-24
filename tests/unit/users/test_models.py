@@ -77,6 +77,7 @@ def test_new_user_good_succeeds(client, delete_users, user_dict):
     hash_user_pw(user_dict)
     new_user = User(**user_dict)
     new_user.save()
+    new_user = User.objects(id=new_user.id).first()
     assert str(new_user) == f"User(username: {new_user.username}, id: {new_user.id})"
     for key in user_dict:
         assert new_user[key] == user_dict[key]

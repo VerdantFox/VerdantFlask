@@ -150,8 +150,8 @@ def account_settings():
         if form.email.data:
             current_user.email = form.email.data
         current_user.timezone = form.timezone.data
-        if form.new_pass.data:
-            new_hash = generate_password_hash(form.new_pass.data)
+        if form.password.data:
+            new_hash = generate_password_hash(form.password.data)
             current_user.password_hash = new_hash
         current_user.share_email = form.share_email.data
         current_user.share_timezone = form.share_timezone.data

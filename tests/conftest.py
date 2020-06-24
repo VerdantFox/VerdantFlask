@@ -34,11 +34,6 @@ def start_app():
     return app
 
 
-def bool_field_val(boolean):
-    """Convert a boolean to its html value equivalent"""
-    return "y" if bool(boolean) else "n"
-
-
 def mock_current_user(mocker, user_dict):
     """Mock a current user"""
     user = User(**user_dict)

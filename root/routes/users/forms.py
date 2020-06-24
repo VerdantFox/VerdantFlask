@@ -87,7 +87,7 @@ class UserSettingsForm(FlaskForm):
         ],
     )
     share_email = BooleanField("Share Email", description="Share Email", default=False)
-    new_pass = PasswordField(
+    password = PasswordField(
         "New Password",
         description="New password",
         validators=[Optional(), Length(min=8, max=30), has_letter(), has_number()],
@@ -95,7 +95,7 @@ class UserSettingsForm(FlaskForm):
     pass_confirm = PasswordField(
         "Confirm password",
         description="Confirm password",
-        validators=[Optional(), EqualTo("new_pass", message="Passwords Must Match!")],
+        validators=[Optional(), EqualTo("password", message="Passwords Must Match!")],
     )
     timezone = SelectField("Timezone", choices=timezone_list, default="UTC")
     share_timezone = BooleanField(

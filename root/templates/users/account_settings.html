@@ -46,9 +46,9 @@
 
     <!-- Password -->
     <div class="form-group">
-      {{ form.new_pass.label() }}
-      {{ form.new_pass(class="form-control", placeholder=form.new_pass.description) }}
-      {% for error in form.new_pass.errors %}
+      {{ form.password.label() }}
+      {{ form.password(class="form-control", placeholder=form.password.description) }}
+      {% for error in form.password.errors %}
         <p class="error">{{ error }}</p>
       {% endfor %}
       <small id="passwordHelpBlock" class="form-text text-muted">

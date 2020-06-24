@@ -1,12 +1,12 @@
 """Test users edit profile view"""
+import datetime
 import os
-from datetime import date
 
 import pytest
 from werkzeug.datastructures import FileStorage
 
 from root.globals import PROJECT_ROOT_PATH
-from tests.conftest import bool_field_val
+from root.routes.users.models import User
 from tests.functional.users.conftest import date_str_fmt_forms
 
 
@@ -27,9 +27,8 @@ def test_users_edit_profile_get(client, logged_in_user1_mod, revert_user1):
         f'placeholder="Your Name" type="text" value="{revert_user1.full_name}">' in data
     )
     assert (
-        f'<input checked class="form-check-input" id="share_name" name="share_name" '
-        f'placeholder="Share Name" type="checkbox" value="{bool_field_val(revert_user1.share_name)}">'
-        in data
+        '<input checked class="form-check-input" id="share_name" name="share_name" '
+        'placeholder="Share Name" type="checkbox" value="y">' in data
     )
     assert f'<img src="{revert_user1.avatar_location}"' in data
     assert (
@@ -47,9 +46,9 @@ def test_users_edit_profile_get(client, logged_in_user1_mod, revert_user1):
         in data
     )
     assert (
-        f'<input checked class="form-check-input" id="share_birth_date" '
-        f'name="share_birth_date" placeholder="Share Birthdate" type="checkbox" '
-        f'value="{bool_field_val(revert_user1.share_birth_date)}">' in data
+        '<input checked class="form-check-input" id="share_birth_date" '
+        'name="share_birth_date" placeholder="Share Birthdate" type="checkbox" '
+        'value="y">' in data
     )
     assert (
         '<input class="btn btn-lg btn-green" id="submit" name="submit" '
@@ -62,11 +61,11 @@ UPDATED_USERS = [
         {
             "username": "new_username",
             "full_name": "New Name",
-            "share_name": bool_field_val(False),
+            "share_name": False,
             "upload_avatar": "REPLACE",
             "bio": "New bio!",
-            "birth_date": date(2011, 3, 18),
-            "share_birth_date": bool_field_val(False),
+            "birth_date": datetime.date(2011, 3, 18),
+            "share_birth_date": False,
         },
         id="change_all",
     ),
@@ -74,11 +73,11 @@ UPDATED_USERS = [
         {
             "username": "second_username",
             "full_name": "Second Name",
-            "share_name": bool_field_val(True),
+            "share_name": True,
             "select_avatar": "new_loc2.jpeg",
             "bio": "New bio 2!",
-            "birth_date": date(2014, 1, 1),
-            "share_birth_date": bool_field_val(True),
+            "birth_date": datetime.date(2014, 1, 1),
+            "share_birth_date": True,
         },
         id="select_avatar",
     ),
@@ -86,10 +85,10 @@ UPDATED_USERS = [
         {
             "username": "third_username",
             "full_name": "",
-            "share_name": bool_field_val(False),
+            "share_name": False,
             "bio": "",
             "birth_date": None,
-            "share_birth_date": bool_field_val(False),
+            "share_birth_date": False,
         },
         id="fields_removed",
     ),
@@ -107,52 +106,36 @@ def test_users_edit_profile_post_happy(
     mocker,
 ):
     """Test that editing a profile changes user values"""
+    # Prepare the form
     image_storage_path = tmpdir.mkdir("image_storage")
     mocker.patch("root.image_handler.AVATAR_UPLOAD_FOLDER", str(image_storage_path))
     if form_data.get("upload_avatar") == "REPLACE":
         form_data["upload_avatar"] = filesystem_image_jpg
+    form_copy = dict(form_data)
+    for key, val in form_copy.items():
+        if val is False:
+            form_data.pop(key)
+
+    # Submit the form
     response = client.post("/users/edit_profile", data=form_data, follow_redirects=True)
     assert response.status_code == 200
     assert b"User Profile Updated" in response.data
-    response = client.get("/users/edit_profile")
-    assert response.status_code == 200
-    data = response.data.decode()
-    assert (
-        f'<input class="form-control text-center" id="username" name="username" '
-        f'placeholder="Username" required type="text" value="{form_data["username"]}">'
-        in data
-    )
-    assert (
-        '<input class="form-control text-center" id="full_name" name="full_name" '
-        f'placeholder="Your Name" type="text" value="{form_data["full_name"]}">' in data
-    )
-    assert (
-        f'<input checked class="form-check-input" id="share_name" name="share_name" '
-        f'placeholder="Share Name" type="checkbox" '
-        f'value="{bool_field_val(form_data["share_name"])}">' in data
-    )
-    if form_data.get("upload_avatar"):
-        assert (
-            f'<img src="/static/images/avatars_uploaded/{logged_in_user1_mod.id}'
-            in data
-        )
-    elif loc := form_data.get("select_avatar"):
-        assert f'<img src="/static/images/avatars_default/{loc}' in data
-    else:
-        assert f'<img src="{logged_in_user1_mod.avatar_location}' in data
-    assert f'{form_data["bio"]}</textarea>' in data
-    birth_date = (
-        date_str_fmt_forms(form_data["birth_date"]) if form_data["birth_date"] else ""
-    )
-    assert (
-        f'<input class="form-control text-center" id="birth_date" name="birth_date" '
-        f'placeholder="" type="date" value="{birth_date}">' in data
-    )
-    assert (
-        '<input checked class="form-check-input" id="share_birth_date" '
-        'name="share_birth_date" placeholder="Share Birthdate" type="checkbox" '
-        f'value="{bool_field_val(form_data["share_birth_date"])}">' in data
-    )
+
+    # Check changes took place
+    user = User.objects(id=revert_user1.id).first()
+    for key, val in form_copy.items():
+        if key == "select_avatar":
+            val = f"/static/images/avatars_default/{form_data[key]}"
+            key = "avatar_location"
+        elif key == "upload_avatar":
+            val = f"/static/images/avatars_uploaded/{logged_in_user1_mod.id}"
+            assert val in user.avatar_location
+            continue
+        elif key == "birth_date" and val is not None:
+            val = datetime.datetime.combine(val, datetime.datetime.min.time())
+        if val == "":
+            val = None
+        assert user[key] == val
 
 
 def test_users_edit_profile_post_bad_image_extension_fails(
@@ -162,22 +145,20 @@ def test_users_edit_profile_post_bad_image_extension_fails(
     form_data = {
         "username": "new_username",
         "full_name": "New Name",
-        "share_name": bool_field_val(False),
+        "share_name": True,
         "upload_avatar": filesystem_image_gif,
         "bio": "New bio!",
-        "birth_date": date(2011, 3, 18),
-        "share_birth_date": bool_field_val(False),
+        "birth_date": datetime.date(2011, 3, 18),
+        "share_birth_date": True,
     }
     response = client.post("/users/edit_profile", data=form_data, follow_redirects=True)
     assert response.status_code == 200
     data = response.data.decode()
     assert "User Profile Updated" not in data
     assert "Invalid image extension type used!" in data
-    assert (
-        f'<input class="form-control text-center" id="username" name="username" '
-        f'placeholder="Username" required type="text" value="{revert_user1.username}">'
-        in data
-    )
+    user = User.objects(id=revert_user1.id).first()
+    assert user.username != form_data["username"]
+    assert user.username == revert_user1.username
 
 
 # --------------------------------------------------------------------------
