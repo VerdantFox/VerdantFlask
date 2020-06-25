@@ -161,6 +161,64 @@ def test_users_edit_profile_post_bad_image_extension_fails(
     assert user.username == revert_user1.username
 
 
+BAD_FORMS = [
+    pytest.param(
+        {
+            "username": "ab",
+            "full_name": "New Name",
+            "bio": "New bio!",
+            "birth_date": datetime.date(2011, 3, 18),
+        },
+        "Field must be between 3 and 30 characters long.",
+        id="username_short",
+    ),
+    pytest.param(
+        {
+            "username": "abcdefghijabcdefghijabcdefghijk",
+            "full_name": "New Name",
+            "bio": "New bio!",
+            "birth_date": datetime.date(2011, 3, 18),
+        },
+        "Field must be between 3 and 30 characters long.",
+        id="username_long",
+    ),
+    pytest.param(
+        {
+            "username": "newusername",
+            "full_name": "abcdefghijabcdefghijabcdefghijkabcdefghijabcdefghijabcdefghijk",
+            "bio": "New bio!",
+            "birth_date": datetime.date(2011, 3, 18),
+        },
+        "Field cannot be longer than 60 characters.",
+        id="name_long",
+    ),
+    pytest.param(
+        {
+            "username": "newusername",
+            "full_name": "New Name",
+            "bio": "longest bio " * 100,
+            "birth_date": datetime.date(2011, 3, 18),
+        },
+        "Field cannot be longer than 1000 characters.",
+        id="bio_long",
+    ),
+]
+
+
+@pytest.mark.parametrize("form_data, err_msg", BAD_FORMS)
+def test_users_edit_profile_invalid_fields_fail(
+    client, logged_in_user1_mod, revert_user1, form_data, err_msg,
+):
+    """Test that form submission fails for invalid form fields"""
+    response = client.post("/users/edit_profile", data=form_data, follow_redirects=True)
+    assert response.status_code == 200
+    data = response.data.decode()
+    assert "User Profile Updated" not in data
+    assert err_msg in data
+    user = User.objects(id=revert_user1.id).first()
+    assert user == revert_user1
+
+
 # --------------------------------------------------------------------------
 # Helpers
 # --------------------------------------------------------------------------

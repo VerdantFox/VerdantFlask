@@ -2,6 +2,7 @@
 import pytest
 
 from root.routes.users.models import User
+from tests.functional.users.conftest import USER2
 
 
 def test_users_account_settings_get(client, logged_in_user1_mod, revert_user1):
@@ -100,3 +101,76 @@ def test_users_account_settings_post_happy(
             assert user.email == revert_user1.email
             continue
         assert user[key] == val
+
+
+BAD_FORMS = [
+    pytest.param(
+        {
+            "email": ("longemailer" * 20) + "@yahoo.com",
+            "password": "mynewpass12345",
+            "pass_confirm": "mynewpass12345",
+            "timezone": "UTC",
+        },
+        "Field cannot be longer than 200 characters.",
+        id="email_long",
+    ),
+    pytest.param(
+        {"email": USER2["email"], "timezone": "UTC"},
+        "Email is already registered.",
+        id="email_taken",
+    ),
+    pytest.param(
+        {"email": "notanemail", "timezone": "UTC"},
+        "Invalid email address.",
+        id="email_invalid",
+    ),
+    pytest.param(
+        {
+            "password": "mynewpass12345",
+            "pass_confirm": "missmatchpass",
+            "timezone": "UTC",
+        },
+        "Passwords Must Match!",
+        id="pws_dont_match",
+    ),
+    pytest.param(
+        {"password": "newpass", "pass_confirm": "newpass", "timezone": "UTC"},
+        "Field must be between 8 and 30 characters long.",
+        id="pw_short",
+    ),
+    pytest.param(
+        {
+            "password": "passs123456" * 3,
+            "pass_confirm": "passs123456" * 3,
+            "timezone": "UTC",
+        },
+        "Field must be between 8 and 30 characters long.",
+        id="pw_long",
+    ),
+    pytest.param(
+        {"password": "123456789", "pass_confirm": "123456789", "timezone": "UTC"},
+        "At least one letter required.",
+        id="pw_no_letter",
+    ),
+    pytest.param(
+        {"password": "abcdefghij", "pass_confirm": "abcdefghij", "timezone": "UTC"},
+        "At least one number required.",
+        id="pw_no_number",
+    ),
+]
+
+
+@pytest.mark.parametrize("form_data, err_msg", BAD_FORMS)
+def test_users_account_settings_invalid_fields_fail(
+    client, user2_mod, logged_in_user1_mod, revert_user1, form_data, err_msg,
+):
+    """Test that form submission fails for invalid form fields"""
+    response = client.post(
+        "/users/account_settings", data=form_data, follow_redirects=True
+    )
+    assert response.status_code == 200
+    data = response.data.decode()
+    assert "User Account Updated" not in data
+    assert err_msg in data
+    user = User.objects(id=revert_user1.id).first()
+    assert user == revert_user1
