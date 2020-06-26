@@ -171,7 +171,8 @@ def account_settings():
     )
 
 
-@users.route("/delete_account", methods=["GET", "POST"])
+@users.route("/delete_account")
+@login_required
 def delete_account():
     """Delete current user's account"""
     current_user.delete()
@@ -180,33 +181,33 @@ def delete_account():
     return redirect(url_for("core.index"))
 
 
-@users.route("/facebook_oauth", methods=["GET", "POST"])
+@users.route("/facebook_oauth")
 def facebook_oauth():
     return oauth_generalized("Facebook")
 
 
-@users.route("/google_oauth", methods=["GET", "POST"])
+@users.route("/google_oauth")
 def google_oauth():
     return oauth_generalized("Google")
 
 
-@users.route("/github_oauth", methods=["GET", "POST"])
+@users.route("/github_oauth")
 def github_oauth():
     """Perform github oauth register, login, or account association"""
     return oauth_generalized("GitHub")
 
 
-@users.route("/facebook_oauth_disconnect", methods=["GET", "POST"])
+@users.route("/facebook_oauth_disconnect")
 def facebook_oauth_disconnect():
     return oauth_disconnect("Facebook")
 
 
-@users.route("/google_oauth_disconnect", methods=["GET", "POST"])
+@users.route("/google_oauth_disconnect")
 def google_oauth_disconnect():
     return oauth_disconnect("Google")
 
 
-@users.route("/github_oauth_disconnect", methods=["GET", "POST"])
+@users.route("/github_oauth_disconnect")
 def github_oauth_disconnect():
     return oauth_disconnect("GitHub")
 

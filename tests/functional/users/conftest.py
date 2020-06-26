@@ -40,9 +40,23 @@ USER2 = {
 }
 
 
+@pytest.fixture()
+def user1(client):
+    """Create a fresh user for testing individual function"""
+    new_user = setup_create_user(USER1)
+    yield new_user
+    new_user.delete()
+
+
+@pytest.fixture
+def logged_in_user1(client, user1):
+    """Log in the created user"""
+    yield login_user(client, user1)
+
+
 @pytest.fixture(scope="module")
 def user1_mod(client_module):
-    """Create a fresh user for testing"""
+    """Create a fresh user for testing whole module"""
     new_user = setup_create_user(USER1)
     yield new_user
     new_user.delete()
