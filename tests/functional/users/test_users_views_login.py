@@ -43,11 +43,11 @@ def test_login_post_happy(client, user1_mod, form_data):
     """Test the POST method on user register when success expected"""
     response = client.post("/users/login", data=form_data, follow_redirects=True)
     assert response.status_code == 200
-    data_decoded = response.data.decode()
+    data = response.data.decode()
     # banner
-    assert f"Welcome {USERNAME}!" in data_decoded
+    assert f"Welcome {USERNAME}!" in data
     # top right corner
-    assert f"Welcome, {USERNAME}" in data_decoded
+    assert f"Welcome, {USERNAME}" in data
 
 
 BAD_LOGINS = [
@@ -84,11 +84,10 @@ def test_login_redirects(client, user1_mod, redirect, expected):
         f"/users/login?next={redirect}", data=form_data, follow_redirects=True
     )
     assert response.status_code == 200
-    data_decoded = response.data.decode()
+    data = response.data.decode()
     # banner
-    assert f"Welcome {USERNAME}!" in data_decoded
+    assert f"Welcome {USERNAME}!" in data
     # top right corner
-    assert f"Welcome, {USERNAME}" in data_decoded
+    assert f"Welcome, {USERNAME}" in data
     # page specific
-    print(data_decoded)
-    assert expected in data_decoded
+    assert expected in data

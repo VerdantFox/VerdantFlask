@@ -2,7 +2,7 @@
 from tests.functional.users.conftest import date_str_fmt, no_whitespace
 
 
-def test_profile_filled_logged_in(client, logged_in_user1_mod):
+def test_profile_filled_logged_in(client, logged_in_user1_mod, delete_users_mod):
     """Test showing profile of filled out user from user perspective"""
     response = client.get(f"/users/profile/{logged_in_user1_mod.username}")
     assert response.status_code == 200
@@ -23,7 +23,9 @@ def test_profile_filled_logged_in(client, logged_in_user1_mod):
     assert f"<h4>Timezone:{logged_in_user1_mod.timezone}</h4>" in data_no_spaces
 
 
-def test_profile_filled_logged_out(client, user1_mod, logged_in_user2_mod):
+def test_profile_filled_logged_out(
+    client, user1_mod, logged_in_user2_mod, delete_users_mod
+):
     """Test showing profile of filled out user from other user perspective"""
     response = client.get(f"/users/profile/{user1_mod.username}", follow_redirects=True)
     assert response.status_code == 200
@@ -41,7 +43,7 @@ def test_profile_filled_logged_out(client, user1_mod, logged_in_user2_mod):
     assert f"<h4>Timezone:{user1_mod.timezone}</h4>" in data_no_spaces
 
 
-def test_profile_unfilled_logged_in(client, logged_in_user2_mod):
+def test_profile_unfilled_logged_in(client, logged_in_user2_mod, delete_users_mod):
     """Test showing profile of un-filled out user from user's perspective"""
     response = client.get(f"/users/profile/{logged_in_user2_mod.username}")
     assert response.status_code == 200
@@ -68,7 +70,9 @@ def test_profile_unfilled_logged_in(client, logged_in_user2_mod):
     )
 
 
-def test_profile_unfilled_logged_out(client, user2_mod, logged_in_user1_mod):
+def test_profile_unfilled_logged_out(
+    client, user2_mod, logged_in_user1_mod, delete_users_mod
+):
     """Test showing profile of un-filled out user from other user's perspective"""
     response = client.get(f"/users/profile/{user2_mod.username}")
     assert response.status_code == 200

@@ -5,7 +5,9 @@ from root.routes.users.models import User
 from tests.functional.users.conftest import USER2
 
 
-def test_users_account_settings_get(client, logged_in_user1_mod, revert_user1):
+def test_users_account_settings_get(
+    client, delete_users_mod, logged_in_user1_mod, revert_user1
+):
     """Test the GET method for users account settings view"""
     response = client.get("/users/account_settings")
     assert response.status_code == 200
@@ -74,7 +76,7 @@ UPDATES_SET1 = [
 
 @pytest.mark.parametrize("form_data", UPDATES_SET1)
 def test_users_account_settings_post_happy(
-    client, logged_in_user1_mod, revert_user1, form_data,
+    client, delete_users_mod, logged_in_user1_mod, revert_user1, form_data,
 ):
     """Test that editing a profile changes user values"""
     form_copy = dict(form_data)
@@ -162,7 +164,13 @@ BAD_FORMS = [
 
 @pytest.mark.parametrize("form_data, err_msg", BAD_FORMS)
 def test_users_account_settings_invalid_fields_fail(
-    client, user2_mod, logged_in_user1_mod, revert_user1, form_data, err_msg,
+    client,
+    delete_users_mod,
+    user2_mod,
+    logged_in_user1_mod,
+    revert_user1,
+    form_data,
+    err_msg,
 ):
     """Test that form submission fails for invalid form fields"""
     response = client.post(

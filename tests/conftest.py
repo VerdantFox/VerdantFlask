@@ -111,6 +111,18 @@ def drop_db():
     drop_database()
 
 
+@pytest.fixture(scope="module")
+def delete_users_mod():
+    """Delete all users in collection per module
+
+    This is preferable to dropping the collection entirely as the indexes
+    (which are slow to create) will remain intact.
+    """
+    delete_all_docs("users")
+    yield
+    delete_all_docs("users")
+
+
 @pytest.fixture
 def delete_users():
     """Delete all users in collection

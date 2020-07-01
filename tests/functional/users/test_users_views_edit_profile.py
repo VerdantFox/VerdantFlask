@@ -10,7 +10,9 @@ from root.routes.users.models import User
 from tests.functional.users.conftest import date_str_fmt_forms
 
 
-def test_users_edit_profile_get(client, logged_in_user1_mod, revert_user1):
+def test_users_edit_profile_get(
+    client, logged_in_user1_mod, revert_user1, delete_users_mod
+):
     """Test the GET method for users edit profile view"""
     response = client.get("/users/edit_profile")
     assert response.status_code == 200
@@ -98,6 +100,7 @@ UPDATED_USERS = [
 @pytest.mark.parametrize("form_data", UPDATED_USERS)
 def test_users_edit_profile_post_happy(
     client,
+    delete_users_mod,
     logged_in_user1_mod,
     revert_user1,
     form_data,
@@ -139,7 +142,7 @@ def test_users_edit_profile_post_happy(
 
 
 def test_users_edit_profile_post_bad_image_extension_fails(
-    client, logged_in_user1_mod, revert_user1, filesystem_image_gif,
+    client, delete_users_mod, logged_in_user1_mod, revert_user1, filesystem_image_gif,
 ):
     """Test that a bad image extension fails with flash message"""
     form_data = {
@@ -207,7 +210,7 @@ BAD_FORMS = [
 
 @pytest.mark.parametrize("form_data, err_msg", BAD_FORMS)
 def test_users_edit_profile_invalid_fields_fail(
-    client, logged_in_user1_mod, revert_user1, form_data, err_msg,
+    client, delete_users_mod, logged_in_user1_mod, revert_user1, form_data, err_msg,
 ):
     """Test that form submission fails for invalid form fields"""
     response = client.post("/users/edit_profile", data=form_data, follow_redirects=True)

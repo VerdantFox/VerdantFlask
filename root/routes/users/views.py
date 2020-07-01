@@ -227,10 +227,12 @@ def can_oauth_disconnect():
     return bool(oauth_count > 1 or (has_email and has_pw))
 
 
+@login_required
 def oauth_disconnect(oauth_client):
     """Generalized oauth disconnect"""
-    if not current_user.is_authenticated:
-        return redirect(url_for("users.login"))
+    if not can_oauth_disconnect():
+        flash("Must set up email and password before disconnecting.", category="error")
+        redirect(url_for("users.account_settings"))
 
     db_oauth_key = str(oauth_client).lower() + "_id"
 
@@ -280,6 +282,7 @@ def oauth_generalized(oauth_client):
         else:
             current_user[db_oauth_key] = client_oauth_id
             current_user.save()
+            flash(f"Connected to {oauth_client}!", category="success")
         # Should only get here from "settings" so return there
         return redirect(url_for("users.account_settings"))
 
@@ -289,13 +292,12 @@ def oauth_generalized(oauth_client):
         base_username = client_name.lower().split()[0]
         username = base_username
         attempts = 0
-        while True:
+        user = User()
+        while user:
             user = User.objects(username=username).first()
             if user:
                 attempts += 1
                 username = base_username + str(attempts)
-            else:
-                break
         # Create user and save to database
         user_data = {
             "username": username,

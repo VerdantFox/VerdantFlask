@@ -7,6 +7,7 @@ from werkzeug.security import generate_password_hash
 from root.routes.users.models import User
 
 USERNAME = "testuser"
+FULL_NAME = "Test User"
 EMAIL = "testuser@email.com"
 PASSWORD = "testuserpass1"
 PASSWORD_HASH = generate_password_hash(PASSWORD)
@@ -15,7 +16,7 @@ USER1 = {
     "email": EMAIL,
     "share_email": True,
     "password_hash": PASSWORD_HASH,
-    "full_name": "Test User",
+    "full_name": FULL_NAME,
     "share_name": True,
     "avatar_location": "/some/av/location.png",
     "bio": "Some fake bio.",
@@ -25,7 +26,7 @@ USER1 = {
     "share_timezone": True,
 }
 USER2 = {
-    "username": "user2",
+    "username": "usernametwo",
     "email": "user2@gmail.com",
     "share_email": False,
     "password_hash": PASSWORD_HASH,
@@ -37,6 +38,14 @@ USER2 = {
     "share_birth_date": False,
     "timezone": "US/Pacific",
     "share_timezone": False,
+    "facebook_id": "somefakefacebookid",
+    "google_id": "somefakegoogleid",
+    "github_id": 123456789,
+}
+
+USER3 = {
+    "username": USERNAME + "1",
+    "full_name": FULL_NAME + "ophegus",
 }
 
 
@@ -44,6 +53,22 @@ USER2 = {
 def user1(client):
     """Create a fresh user for testing individual function"""
     new_user = setup_create_user(USER1)
+    yield new_user
+    new_user.delete()
+
+
+@pytest.fixture()
+def user2(client):
+    """Create a fresh user for testing individual function"""
+    new_user = setup_create_user(USER2)
+    yield new_user
+    new_user.delete()
+
+
+@pytest.fixture()
+def user3(client):
+    """Create a fresh user for testing individual function"""
+    new_user = setup_create_user(USER3)
     yield new_user
     new_user.delete()
 
