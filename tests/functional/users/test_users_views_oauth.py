@@ -203,3 +203,51 @@ def test_no_result_user_fails(mocker, client, oauth_client):
     assert response.status_code == 200
     data = response.data.decode()
     assert "Login failed, try again with another method." in data
+
+
+@pytest.mark.parametrize("oauth_client", OAUTH_CLIENTS)
+def test_oauth_disconnect_success(client, oauth_client, logged_in_user2):
+    """Test oauth disconnect success"""
+    oauth_lower = oauth_client.lower()
+    user = User.objects(id=logged_in_user2.id).first()
+    assert user[f"{oauth_lower}_id"] == logged_in_user2[f"{oauth_lower}_id"]
+    response = client.get(
+        f"/users/{oauth_lower}_oauth_disconnect", follow_redirects=True
+    )
+    assert response.status_code == 200
+    data = response.data.decode()
+    assert f"Disconnected from {oauth_client}!" in data
+    user = User.objects(id=logged_in_user2.id).first()
+    assert user[f"{oauth_lower}_id"] is None
+
+
+@pytest.mark.parametrize("oauth_client", OAUTH_CLIENTS)
+def test_oauth_disconnect_with_orphaned_login_fails(
+    mocker, client, oauth_client, user3
+):
+    """Test oauth disconnect fails if disconnect would orphan user login"""
+    mocker.patch(
+        "root.routes.users.views.authomatic.login", fake_authomatic_login_success
+    )
+    oauth_user = fake_authomatic_login_success(None, oauth_client).user.update()
+    oauth_lower = oauth_client.lower()
+    # Save oauth id to account that will be retrieved for login
+    user3 = User.objects(id=user3.id).first()
+    user3[f"{oauth_lower}_id"] = oauth_user.id
+    user3.save()
+    # Login user with oauth id just saved to account
+    response = client.get(f"/users/{oauth_lower}_oauth", follow_redirects=True)
+    assert response.status_code == 200
+    # Attempt to disconnect but fail because "can_oauth_disconnect()" returns False
+    response = client.get(
+        f"/users/{oauth_lower}_oauth_disconnect", follow_redirects=True
+    )
+    assert response.status_code == 200
+    data = response.data.decode()
+    assert f"Disconnected from {oauth_client}!" not in data
+    assert (
+        data.count("You must set an email and password before disconnecting oauth.")
+        == 2
+    )
+    user = User.objects(id=user3.id).first()
+    assert user[f"{oauth_lower}_id"] is not None

@@ -79,6 +79,12 @@ def logged_in_user1(client, user1):
     yield login_user(client, user1)
 
 
+@pytest.fixture
+def logged_in_user2(client, user2):
+    """Log in the created user"""
+    yield login_user(client, user2)
+
+
 @pytest.fixture(scope="module")
 def user1_mod(client_module):
     """Create a fresh user for testing whole module"""

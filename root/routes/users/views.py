@@ -231,8 +231,11 @@ def can_oauth_disconnect():
 def oauth_disconnect(oauth_client):
     """Generalized oauth disconnect"""
     if not can_oauth_disconnect():
-        flash("Must set up email and password before disconnecting.", category="error")
-        redirect(url_for("users.account_settings"))
+        flash(
+            "You must set an email and password before disconnecting oauth.",
+            category="error",
+        )
+        return redirect(url_for("users.account_settings"))
 
     db_oauth_key = str(oauth_client).lower() + "_id"
 
