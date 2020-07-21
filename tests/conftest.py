@@ -136,6 +136,18 @@ def delete_users():
 
 
 @pytest.fixture
+def delete_blogposts():
+    """Delete all blog posts in collection
+
+    This is preferable to dropping the collection entirely as the indexes
+    (which are slow to create) will remain intact.
+    """
+    delete_all_docs("blog")
+    yield
+    delete_all_docs("blog")
+
+
+@pytest.fixture
 def current_user_standard(mocker):
     """Get a standard mocked current user"""
     return mock_current_user(mocker, STANDARD_USER)

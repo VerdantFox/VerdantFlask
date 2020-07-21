@@ -82,12 +82,14 @@ def test_new_user_good_succeeds(client, delete_users, user_dict):
     for key in user_dict:
         assert new_user[key] == user_dict[key]
     for key in USER_MODEL_DEFAULTS:
-        if not user_dict.get(key):
-            assert new_user[key] == USER_MODEL_DEFAULTS[key][0]
+        default_value = USER_MODEL_DEFAULTS[key][0]
+        if user_dict.get(key) is None and default_value is not None:
+            # Assert the default value was set properly
+            assert new_user[key] == default_value
     indexed_fields = {
         key
         for key, value in USER_MODEL_DEFAULTS.items()
-        if value[1] is True and user_dict.get(key)
+        if value[1] is True and user_dict.get(key) is not None
     }
     indexs_found = set(list_indexes(USERS_COLLECTION))
     assert indexed_fields.issubset(indexs_found)

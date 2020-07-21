@@ -13,31 +13,29 @@ class User(db.Document, UserMixin):
     """User model"""
 
     # User editable fields
-    username = db.StringField(required=True, unique=True, max_length=40, index=True)
-    email = db.EmailField(
-        unique=True, required=False, sparse=True, max_length=80, index=True
-    )
-    share_email = db.BooleanField(default=False, index=True)
-    password_hash = db.StringField(required=False, index=True)
-    full_name = db.StringField(required=False, max_length=80, index=True)
-    share_name = db.BooleanField(default=False, index=True)
-    avatar_location = db.StringField(required=False, max_length=400, index=True)
-    bio = db.StringField(required=False, max_length=1000, index=True)
-    birth_date = db.DateTimeField(required=False, index=True)
-    share_birth_date = db.BooleanField(default=False, index=True)
-    timezone = db.StringField(required=False, max_length=80, index=True)
-    share_timezone = db.BooleanField(default=False, index=True)
+    username = db.StringField(required=True, unique=True, max_length=40)
+    email = db.EmailField(unique=True, required=False, sparse=True, max_length=80)
+    share_email = db.BooleanField(default=False)
+    password_hash = db.StringField(required=False)
+    full_name = db.StringField(required=False, max_length=80)
+    share_name = db.BooleanField(default=False)
+    avatar_location = db.StringField(required=False, max_length=400)
+    bio = db.StringField(required=False, max_length=1000)
+    birth_date = db.DateTimeField(required=False)
+    share_birth_date = db.BooleanField(default=False)
+    timezone = db.StringField(required=False, max_length=80)
+    share_timezone = db.BooleanField(default=False)
 
     # Access Levels (mostly for blog)
     # For now only editable by an admin with database access
     # 1. Admin
     # 2. Regular Users
-    access_level = db.IntField(min_value=1, max_value=2, default=2, index=True)
+    access_level = db.IntField(min_value=1, max_value=2, default=2)
 
     # Oauth stuff
-    facebook_id = db.StringField(unique=True, required=False, sparse=True, index=True)
-    google_id = db.StringField(unique=True, required=False, sparse=True, index=True)
-    github_id = db.LongField(unique=True, required=False, sparse=True, index=True)
+    facebook_id = db.StringField(unique=True, required=False, sparse=True)
+    google_id = db.StringField(unique=True, required=False, sparse=True)
+    github_id = db.LongField(unique=True, required=False, sparse=True)
 
     meta = {
         "collection": "users",

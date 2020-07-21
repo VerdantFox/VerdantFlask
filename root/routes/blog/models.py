@@ -12,48 +12,45 @@ from root.globals import db
 class Reply(db.EmbeddedDocument):
     """Reply to comment embedded document"""
 
-    id = db.ObjectIdField(default=lambda: ObjectId(), index=True)
-    author = db.ObjectIdField(required=True, index=True)
+    id = db.ObjectIdField(default=lambda: ObjectId())
+    author = db.ObjectIdField(required=True)
     content = db.StringField(required=True, max_length=500)
-    created_timestamp = db.DateTimeField(required=True, index=True)
-    updated_timestamp = db.DateTimeField(required=True, index=True)
-    likes = db.IntField(default=0, index=True)
-
-    meta = {"indexes": ["author"]}
+    created_timestamp = db.DateTimeField(required=True)
+    updated_timestamp = db.DateTimeField(required=True)
+    likes = db.IntField(default=0)
 
 
 class Comment(db.EmbeddedDocument):
     """Comment embedded document"""
 
-    id = db.ObjectIdField(default=lambda: ObjectId(), index=True)
-    author = db.ObjectIdField(required=True, index=True)
+    id = db.ObjectIdField(default=lambda: ObjectId())
+    author = db.ObjectIdField(required=True)
     content = db.StringField(required=True, max_length=500)
-    created_timestamp = db.DateTimeField(required=True, index=True)
-    updated_timestamp = db.DateTimeField(required=True, index=True)
-    likes = db.IntField(default=0, index=True)
-    replies = db.EmbeddedDocumentListField(Reply, required=False, index=True)
-
-    meta = {"indexes": ["author", "replies"]}
+    created_timestamp = db.DateTimeField(required=True)
+    updated_timestamp = db.DateTimeField(required=True)
+    likes = db.IntField(default=0)
+    replies = db.EmbeddedDocumentListField(Reply, required=False)
 
 
 class BlogPost(db.Document):
     """Blog post model"""
 
-    title = db.StringField(required=True, unique=True, max_length=80, index=True)
-    slug = db.StringField(required=True, unique=True, max_length=80, index=True)
-    author = db.ObjectIdField(required=True, index=True)
-    published = db.BooleanField(required=True, default=False, index=True)
-    tags = db.ListField(db.StringField(index=True), required=False, index=True)
+    title = db.StringField(required=True, unique=True, max_length=80)
+    slug = db.StringField(required=True, unique=True, max_length=80)
+    author = db.ObjectIdField(required=True)
+    published = db.BooleanField(required=True, default=False)
+    tags = db.ListField(db.StringField(), required=False)
     markdown_description = db.StringField(required=True, max_length=50_000)
     markdown_content = db.StringField(required=True, max_length=500_000)
     html_description = db.StringField(required=True)
     html_content = db.StringField(required=True)
     image_locations = db.ListField(db.StringField(), required=False)
-    created_timestamp = db.DateTimeField(required=True, index=True)
-    updated_timestamp = db.DateTimeField(required=True, index=True)
-    likes = db.IntField(default=0, index=True)
-    can_comment = db.BooleanField(default=True, index=True)
-    comments = db.EmbeddedDocumentListField(Comment, required=False, index=True)
+    created_timestamp = db.DateTimeField(required=True)
+    updated_timestamp = db.DateTimeField(required=True)
+    likes = db.IntField(default=0)
+    views = db.IntField(default=0)
+    can_comment = db.BooleanField(default=True)
+    comments = db.EmbeddedDocumentListField(Comment, required=False)
 
     meta = {
         "collection": "blog",
@@ -70,17 +67,24 @@ class BlogPost(db.Document):
             },
             "title",
             "slug",
-            "published",
             "author",
+            "published",
+            "tags",
             "created_timestamp",
             "updated_timestamp",
-            "tags",
             "likes",
+            "views",
             "can_comment",
-            "comments",
+            "comments.id",
             "comments.author",
-            "comments.replies",
+            "comments.created_timestamp",
+            "comments.updated_timestamp",
+            "comments.likes",
+            "comments.replies.id",
             "comments.replies.author",
+            "comments.replies.created_timestamp",
+            "comments.replies.updated_timestamp",
+            "comments.replies.likes",
         ],
     }
 
