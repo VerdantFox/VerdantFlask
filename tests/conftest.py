@@ -135,6 +135,18 @@ def delete_users():
     delete_all_docs("users")
 
 
+@pytest.fixture(scope="module")
+def delete_blogposts_mod():
+    """Delete all blog posts in collection per module
+
+    This is preferable to dropping the collection entirely as the indexes
+    (which are slow to create) will remain intact.
+    """
+    delete_all_docs("blog")
+    yield
+    delete_all_docs("blog")
+
+
 @pytest.fixture
 def delete_blogposts():
     """Delete all blog posts in collection
