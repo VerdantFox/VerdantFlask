@@ -13,9 +13,9 @@ BP1_PUBLISHED = {
     "author": ObjectId(),
     "tags": ["tag1", "tag2"],
     "markdown_description": "# BP 1 description",
-    "markdown_content": "# BP 1 content",
-    "html_description": "<h1>BP 1 description</h1>",
-    "html_content": "<h1>BP 1 content</h1>",
+    "markdown_content": "# BP 1 content. Reasonable.",
+    "html_description": "<h1>BP 1 description.</h1>",
+    "html_content": "<h1>BP 1 content. Reasonable.</h1>",
     "created_timestamp": DATE,
     "updated_timestamp": DATE,
     "published": True,
@@ -42,9 +42,9 @@ BP2_PUBLISHED = {
     "author": ObjectId(),
     "tags": ["tag2", "tag3"],
     "markdown_description": "# BP 2 description",
-    "markdown_content": "# BP 2 content",
+    "markdown_content": "# BP 2 content. Crazy.",
     "html_description": "<h1>BP 2 description</h1>",
-    "html_content": "<h1>BP 2 content</h1>",
+    "html_content": "<h1>BP 2 content. Crazy.</h1>",
     "created_timestamp": DATE + datetime.timedelta(1),
     "updated_timestamp": DATE + datetime.timedelta(1),
     "published": True,
@@ -60,7 +60,7 @@ BP3_UNPUBLISHED = {
     "html_content": "<h1>BP 3 content</h1>",
     "created_timestamp": DATE + datetime.timedelta(2),
     "updated_timestamp": DATE + datetime.timedelta(2),
-    # "published": False,
+    "published": False,
 }
 
 
