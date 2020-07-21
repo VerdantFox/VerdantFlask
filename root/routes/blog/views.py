@@ -67,7 +67,7 @@ def blog_list():
 def tags():
     """List tags and associated counts of blogs"""
 
-    tag_counts = get_current_tags(False)
+    tag_counts = get_current_tags()
 
     return render_template("blog/tags.html", tag_counts=tag_counts)
 
@@ -463,7 +463,7 @@ def markdown_to_html(markdown_content, table=False):
     return Markup(oembed_content)
 
 
-def get_current_tags(only_published=True):
+def get_current_tags():
     """Return an ordered dictionary """
     query = {"published": True}
     if current_user.is_authenticated and current_user.access_level == 1:
