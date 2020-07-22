@@ -2,6 +2,7 @@
 import os
 
 import pytest
+from bson.objectid import ObjectId
 
 from root.factory import create_app
 from root.routes.users.models import User
@@ -15,9 +16,19 @@ from tests.mongodb_helpers import (
 # ---------------------------------------------------------------------------
 # Globals
 # ---------------------------------------------------------------------------
-STANDARD_USER = {"username": "testuser", "full_name": "Test User", "access_level": 2}
+STANDARD_USER = {
+    "id": ObjectId(),
+    "username": "testuser",
+    "full_name": "Test User",
+    "access_level": 2,
+}
 
-ADMIN_USER = {"username": "adminuser", "full_name": "Admin User", "access_level": 1}
+ADMIN_USER = {
+    "id": ObjectId(),
+    "username": "adminuser",
+    "full_name": "Admin User",
+    "access_level": 1,
+}
 
 
 # ---------------------------------------------------------------------------

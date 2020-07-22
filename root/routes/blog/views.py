@@ -81,7 +81,7 @@ def create():
 
     form = CreateBlogPostForm()
     if form.validate_on_submit():
-        return create_or_edit(form=form, title=form.title.data)
+        return create_or_edit(form=form)
     elif form.errors:
         flash("Error creating post!", category="error")
 
@@ -107,7 +107,7 @@ def edit(slug):
     form = EditBlogPostForm()
 
     if form.validate_on_submit():
-        return create_or_edit(form=form, title=form.title.data, post=post)
+        return create_or_edit(form=form, post=post)
     elif form.errors:
         flash("Error editing post!", category="error")
 
@@ -411,15 +411,12 @@ def query_and_paginate_blog(query=None, search=None, page=1, results_per_page=3)
     return setup_pagination(page, results_per_page, posts)
 
 
-def create_or_edit(form, title, post=None):
+def create_or_edit(form, post=None):
     """Create or edit a blog post"""
 
     next_page = form.next_page.data
     edit = False if post is None else True
     if edit is False:
-        if post:
-            flash("Post with that title already exists", category="error")
-            return render_template("blog/create_post.html", form=form)
         post = BlogPost()
 
     post.title = form.title.data

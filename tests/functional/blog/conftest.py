@@ -66,7 +66,7 @@ BP3_UNPUBLISHED = {
 
 @pytest.fixture(scope="module")
 def load_3_bp_mod(client_module):
-    """Loads 2 blogposts into database"""
+    """Loads 3 blogposts into database"""
     bp1 = BlogPost(**BP1_PUBLISHED)
     bp1.save()
     bp2 = BlogPost(**BP2_PUBLISHED)
@@ -82,3 +82,15 @@ def load_3_bp_mod(client_module):
     bp2.delete()
     bp3 = BlogPost.objects(id=bp3.id)
     bp3.delete()
+
+
+@pytest.fixture
+def bp1():
+    """Load blogpost 1"""
+    bp1 = BlogPost(**BP1_PUBLISHED)
+    bp1.save()
+
+    yield bp1
+
+    bp1 = BlogPost.objects(id=bp1.id)
+    bp1.delete()
