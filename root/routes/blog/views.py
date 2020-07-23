@@ -490,8 +490,8 @@ def get_post_for_update_delete(slug):
     post = BlogPost.objects(slug=slug).first()
     if not post:
         abort(404, "Blog post not found!")
-    if post.author != current_user.id:
-        abort(403, "Only blogpost author can edit post.")
+    if not current_user.is_authenticated or current_user.access_level != 1:
+        abort(403, "Only admin can edit post.")
     return post
 
 
