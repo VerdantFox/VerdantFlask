@@ -26,7 +26,7 @@ def test_blog_edit_get_not_logged_in_fails(client, delete_blogposts, bp1):
 def test_blog_edit_get_no_admin_fails(
     client, current_user_standard, delete_blogposts, bp1
 ):
-    """Test GET of blogpost edit fails with 401 for non-admin user"""
+    """Test GET of blogpost edit fails with 403 for non-admin user"""
     response = client.get(f"/blog/edit/{bp1.slug}", follow_redirects=True)
     assert response.status_code == 403
     data = response.data.decode()
@@ -44,7 +44,7 @@ def test_blog_edit_get_non_existant_post_fails(
 
 
 def test_blog_edit_get_admin_happy(client, current_user_admin, delete_blogposts, bp1):
-    """Test GET of the blog edit route as admin user who owns post succeeds"""
+    """Test GET of the blog edit route as admin user succeeds"""
     response = client.get(f"/blog/edit/{bp1.slug}", follow_redirects=True)
     assert response.status_code == 200
     data = response.data.decode()
