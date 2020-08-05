@@ -1,4 +1,4 @@
-"""Test blog create view"""
+"""Test blog edit view"""
 import pytest
 
 from root.routes.blog.models import BlogPost

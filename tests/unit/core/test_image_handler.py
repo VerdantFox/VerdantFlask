@@ -3,38 +3,14 @@ import os
 
 import pytest
 from PIL import Image
-from werkzeug.datastructures import FileStorage
 
-from root.globals import PROJECT_ROOT_PATH
 from root.image_handler import (
     ALLOWED_EXTENSIONS,
     delete_image,
     prep_image,
     upload_image,
 )
-
-TEST_IMAGES_PATH = os.path.join(PROJECT_ROOT_PATH, "test_data", "images")
-# IMAGE_STORAGE_PATH = os.path.join(TEST_IMAGES_PATH, "image_storage")
-EXAMPLE_IMAGES_DIR = os.path.join(TEST_IMAGES_PATH, "example_images")
-EXAMPLE_IMAGE_PATHS = [
-    os.path.join(EXAMPLE_IMAGES_DIR, image) for image in os.listdir(EXAMPLE_IMAGES_DIR)
-]
-
-
-@pytest.fixture(params=EXAMPLE_IMAGE_PATHS)
-def example_image(request):
-    """Prepare example images for testing"""
-    fp = open(request.param, "rb")
-    yield FileStorage(fp)
-    fp.close()
-
-
-@pytest.fixture(params=EXAMPLE_IMAGE_PATHS)
-def example_image_path(request):
-    """Prepare example images for testing"""
-    fp = open(request.param, "rb")
-    yield FileStorage(fp)
-    fp.close()
+from tests.conftest import EXAMPLE_IMAGE_PATHS
 
 
 def test_prep_image(example_image):

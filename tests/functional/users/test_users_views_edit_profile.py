@@ -1,12 +1,11 @@
 """Test users edit profile view"""
 import datetime
-import os
 
 import pytest
 from werkzeug.datastructures import FileStorage
 
-from root.globals import PROJECT_ROOT_PATH
 from root.routes.users.models import User
+from tests.conftest import get_image_path
 from tests.functional.users.conftest import date_str_fmt_forms
 
 
@@ -239,10 +238,3 @@ def filesystem_image_gif():
     fp = open(get_image_path("test_gif.gif"), "rb")
     yield FileStorage(fp)
     fp.close()
-
-
-def get_image_path(image):
-    """Get filesystem image path"""
-    return os.path.join(
-        PROJECT_ROOT_PATH, "test_data", "images", "example_images", image
-    )

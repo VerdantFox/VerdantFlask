@@ -44,13 +44,14 @@ def upload_image(
         output_size = (max_pixels, max_pixels)
         pic.thumbnail(output_size)
     pic.save(filepath)
+    pic.close()
 
     return storage_filename
 
 
 def upload_blog_image(pic):
     """Upload a blog image"""
-    allowed_extensions = ALLOWED_EXTENSIONS
+    allowed_extensions = ALLOWED_EXTENSIONS.copy()
     allowed_extensions.add("gif")
     return upload_image(pic, BLOG_UPLOAD_FOLDER, allowed_extensions=allowed_extensions)
 

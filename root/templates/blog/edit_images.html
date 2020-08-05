@@ -22,6 +22,7 @@
     <div id="image_div">
       {% if post %}
         <div class="text-center">
+          <h1>Edit Blog Post Images</h1>
           <a class="btn btn-green btn-block" href="{{ url_for('blog.edit', slug=post.slug) }}">Go To Edit</a>
         </div>
         <br>

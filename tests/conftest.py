@@ -3,8 +3,10 @@ import os
 
 import pytest
 from bson.objectid import ObjectId
+from werkzeug.datastructures import FileStorage
 
 from root.factory import create_app
+from root.globals import PROJECT_ROOT_PATH
 from root.routes.users.models import User
 from tests.globals import DOCKER_CLIENT, MONGODB_CONTAINER_NAME, MONGODB_DATA_DIR
 from tests.mongodb_helpers import (
@@ -16,6 +18,14 @@ from tests.mongodb_helpers import (
 # ---------------------------------------------------------------------------
 # Globals
 # ---------------------------------------------------------------------------
+TEST_IMAGES_PATH = os.path.join(PROJECT_ROOT_PATH, "test_data", "images")
+EXAMPLE_IMAGES_DIR = os.path.join(TEST_IMAGES_PATH, "example_images")
+EXAMPLE_IMAGE_PATHS = [
+    os.path.join(EXAMPLE_IMAGES_DIR, image)
+    for image in os.listdir(EXAMPLE_IMAGES_DIR)
+    if image.split(".")[-1] in ("jpg", "jpeg", "png", "gif")
+]
+
 STANDARD_USER = {
     "id": ObjectId(),
     "username": "testuser",
@@ -56,6 +66,13 @@ def mock_current_user(mocker, user_dict):
     mocker.patch("flask_login.utils._get_user", fake_get_user)
 
     return user
+
+
+def get_image_path(image):
+    """Get filesystem image path"""
+    return os.path.join(
+        PROJECT_ROOT_PATH, "test_data", "images", "example_images", image
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -180,3 +197,19 @@ def current_user_standard(mocker):
 def current_user_admin(mocker):
     """Get an admin mocked current user"""
     return mock_current_user(mocker, ADMIN_USER)
+
+
+@pytest.fixture(params=EXAMPLE_IMAGE_PATHS)
+def example_image(request):
+    """Prepare example images for testing"""
+    fp = open(request.param, "rb")
+    yield FileStorage(fp)
+    fp.close()
+
+
+@pytest.fixture
+def bad_image_type():
+    """Yields gif filesystem image for testing"""
+    fp = open(get_image_path("test_svg.svg"), "rb")
+    yield FileStorage(fp)
+    fp.close()
