@@ -5,6 +5,7 @@
   <hr class="bgc-2">
   <br>
 
+  {% include 'core/base/flash_messages.html' %}
   {% if post.can_comment and current_user.is_authenticated %}
     <!-- Top comment create -->
     <div class="container">

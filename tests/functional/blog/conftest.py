@@ -62,6 +62,20 @@ BP3_UNPUBLISHED = {
     "updated_timestamp": DATE + datetime.timedelta(2),
     "published": False,
 }
+BP4_PUBLISHED_COMMENTS_LOCKED = {
+    "title": "Post 4",
+    "slug": "post-4",
+    "author": ObjectId(),
+    "tags": ["tag2", "tag3"],
+    "markdown_description": "# BP 4 description",
+    "markdown_content": "# BP 4 content. Crazy.",
+    "html_description": "<h1>BP 4 description</h1>",
+    "html_content": "<h1>BP 4 content. Crazy.</h1>",
+    "created_timestamp": DATE + datetime.timedelta(1),
+    "updated_timestamp": DATE + datetime.timedelta(1),
+    "published": True,
+    "can_comment": False,
+}
 
 
 @pytest.fixture(scope="module")
@@ -94,3 +108,27 @@ def bp1():
 
     bp1 = BlogPost.objects(id=bp1.id)
     bp1.delete()
+
+
+@pytest.fixture
+def bp2():
+    """Load blogpost 2"""
+    bp2 = BlogPost(**BP2_PUBLISHED)
+    bp2.save()
+
+    yield bp2
+
+    bp2 = BlogPost.objects(id=bp2.id)
+    bp2.delete()
+
+
+@pytest.fixture
+def bp4():
+    """Load blogpost 4"""
+    bp4 = BlogPost(**BP4_PUBLISHED_COMMENTS_LOCKED)
+    bp4.save()
+
+    yield bp4
+
+    bp4 = BlogPost.objects(id=bp4.id)
+    bp4.delete()
