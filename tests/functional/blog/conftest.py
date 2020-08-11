@@ -5,6 +5,7 @@ import pytest
 from bson.objectid import ObjectId
 
 from root.routes.blog.models import BlogPost
+from tests.conftest import STANDARD_USER
 
 DATE = datetime.datetime.now() - datetime.timedelta(7)
 BP1_PUBLISHED = {
@@ -21,13 +22,13 @@ BP1_PUBLISHED = {
     "published": True,
     "comments": [
         {
-            "author": ObjectId(),
+            "author": STANDARD_USER["id"],
             "content": "BP comment",
             "created_timestamp": DATE + datetime.timedelta(1),
             "updated_timestamp": DATE + datetime.timedelta(1),
             "replies": [
                 {
-                    "author": ObjectId(),
+                    "author": STANDARD_USER["id"],
                     "content": "BP reply",
                     "created_timestamp": DATE + datetime.timedelta(2),
                     "updated_timestamp": DATE + datetime.timedelta(2),
@@ -75,6 +76,36 @@ BP4_PUBLISHED_COMMENTS_LOCKED = {
     "updated_timestamp": DATE + datetime.timedelta(1),
     "published": True,
     "can_comment": False,
+}
+BP5_BP1_BUT_COMMENTS_LOCKED = {
+    "title": "Post 1",
+    "slug": "post-1",
+    "author": ObjectId(),
+    "tags": ["tag1", "tag2"],
+    "markdown_description": "# BP 1 description",
+    "markdown_content": "# BP 1 content. Reasonable.",
+    "html_description": "<h1>BP 1 description.</h1>",
+    "html_content": "<h1>BP 1 content. Reasonable.</h1>",
+    "created_timestamp": DATE,
+    "updated_timestamp": DATE,
+    "published": True,
+    "can_comment": False,
+    "comments": [
+        {
+            "author": STANDARD_USER["id"],
+            "content": "BP comment",
+            "created_timestamp": DATE + datetime.timedelta(1),
+            "updated_timestamp": DATE + datetime.timedelta(1),
+            "replies": [
+                {
+                    "author": STANDARD_USER["id"],
+                    "content": "BP reply",
+                    "created_timestamp": DATE + datetime.timedelta(2),
+                    "updated_timestamp": DATE + datetime.timedelta(2),
+                }
+            ],
+        }
+    ],
 }
 
 
@@ -132,3 +163,15 @@ def bp4():
 
     bp4 = BlogPost.objects(id=bp4.id)
     bp4.delete()
+
+
+@pytest.fixture
+def bp5():
+    """Load blogpost 4"""
+    bp5 = BlogPost(**BP5_BP1_BUT_COMMENTS_LOCKED)
+    bp5.save()
+
+    yield bp5
+
+    bp5 = BlogPost.objects(id=bp5.id)
+    bp5.delete()

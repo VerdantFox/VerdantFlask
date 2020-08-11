@@ -204,11 +204,11 @@ def edit_comment(slug, comment_id):
     if post.can_comment:
         if form.validate_on_submit() and form.comment.data:
             for comment in post.comments:
-                if comment.author != current_user.id:
-                    failed_comment_id = comment_id
-                    comment_error = "Can only edit your own comment!"
-                    break
                 if str(comment.id) == comment_id:
+                    if comment.author != current_user.id:
+                        failed_comment_id = comment_id
+                        comment_error = "Can only edit your own comment!"
+                        break
                     comment.content = str(form.comment.data).strip()
                     comment.updated_timestamp = datetime.now()
                     post.save()

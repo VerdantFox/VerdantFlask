@@ -28,10 +28,10 @@ def test_blog_create_comment_non_existant_post_fails(
     assert "Blog post not found!" in data
 
 
-def test_blog_comment_too_long_fail(
+def test_blog_comment_too_long_fails(
     client, current_user_standard, delete_blogposts, bp2
 ):
-    """Test too long comment fails fails"""
+    """Test too long comment fails"""
     form_data = {"comment": "A" * 501}
     response = client.post(
         f"/blog/comment/{bp2.slug}", data=form_data, follow_redirects=True
