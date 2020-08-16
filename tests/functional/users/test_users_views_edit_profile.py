@@ -4,7 +4,7 @@ import datetime
 import pytest
 from werkzeug.datastructures import FileStorage
 
-from root.routes.users.models import User
+from src.routes.users.models import User
 from tests.conftest import get_image_path
 from tests.functional.users.conftest import date_str_fmt_forms
 
@@ -110,7 +110,7 @@ def test_users_edit_profile_post_happy(
     """Test that editing a profile changes user values"""
     # Prepare the form
     image_storage_path = tmpdir.mkdir("image_storage")
-    mocker.patch("root.image_handler.AVATAR_UPLOAD_FOLDER", str(image_storage_path))
+    mocker.patch("src.image_handler.AVATAR_UPLOAD_FOLDER", str(image_storage_path))
     if form_data.get("upload_avatar") == "REPLACE":
         form_data["upload_avatar"] = filesystem_image_jpg
     form_copy = dict(form_data)

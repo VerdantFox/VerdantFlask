@@ -2,7 +2,7 @@
 
 This is the main file called to run the flask application
 """
-from root.factory import create_app
+from src.factory import create_app
 
 if __name__ == "__main__":
 

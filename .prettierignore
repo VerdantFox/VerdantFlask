@@ -1,11 +1,11 @@
 # Virtual environment files
 venv/*
 # Prettier does not currently handle jinja properly
-root/templates/*
+src/templates/*
 # Prettier messes up code highlight commenting
-root/static/css/blog/codehighlight.css
+src/static/css/blog/codehighlight.css
 # Ignore minified files
-root/static/js/core/intercoolers.js
+src/static/js/core/intercoolers.js
 # Ignore test data
 test_data/*
 # Others

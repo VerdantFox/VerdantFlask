@@ -5,9 +5,9 @@ import pytest
 from bson.objectid import ObjectId
 from werkzeug.datastructures import FileStorage
 
-from root.factory import create_app
-from root.globals import PROJECT_ROOT_PATH
-from root.routes.users.models import User
+from src.factory import create_app
+from src.globals import PROJECT_ROOT_PATH
+from src.routes.users.models import User
 from tests.globals import DOCKER_CLIENT, MONGODB_CONTAINER_NAME, MONGODB_DATA_DIR
 from tests.mongodb_helpers import (
     delete_all_docs,

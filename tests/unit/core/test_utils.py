@@ -1,10 +1,10 @@
-"""Tests for root/utils methods"""
+"""Tests for src/utils methods"""
 import math
 
 import pytest
 
-from root.globals import db
-from root.utils import get_slug, list_from_string, setup_pagination
+from src.globals import db
+from src.utils import get_slug, list_from_string, setup_pagination
 from tests.mongodb_helpers import delete_all_docs
 
 TEST_STRINGS = [

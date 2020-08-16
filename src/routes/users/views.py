@@ -17,16 +17,16 @@ from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
 
-from root.globals import STATIC_PATH
-from root.image_handler import delete_current_avatar, upload_avatar
-from root.routes.users.forms import (
+from src.globals import STATIC_PATH
+from src.image_handler import delete_current_avatar, upload_avatar
+from src.routes.users.forms import (
     LoginForm,
     RegistrationForm,
     UserProfileForm,
     UserSettingsForm,
 )
-from root.routes.users.models import User
-from root.routes.users.oauth_config import authomatic
+from src.routes.users.models import User
+from src.routes.users.oauth_config import authomatic
 
 users = Blueprint("users", __name__)
 

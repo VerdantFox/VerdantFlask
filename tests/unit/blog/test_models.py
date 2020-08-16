@@ -5,7 +5,7 @@ import mongoengine
 import pytest
 from bson.objectid import ObjectId
 
-from root.routes.blog.models import BlogPost
+from src.routes.blog.models import BlogPost
 from tests.mongodb_helpers import list_indexes
 
 BLOG_COLLECTION = "blog"

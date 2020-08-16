@@ -15,7 +15,7 @@ from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, Optional
 
 # User Based Imports
-from root.custom_form_validators import (
+from src.custom_form_validators import (
     has_letter,
     has_number,
     safe_string,

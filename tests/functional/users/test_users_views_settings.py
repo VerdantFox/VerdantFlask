@@ -1,7 +1,7 @@
 """Test users edit profile view"""
 import pytest
 
-from root.routes.users.models import User
+from src.routes.users.models import User
 from tests.functional.users.conftest import USER2
 
 

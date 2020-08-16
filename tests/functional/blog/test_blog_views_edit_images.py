@@ -53,7 +53,7 @@ def test_blog_edit_images_submit_upload_happy(
 ):
     """Test POST of blog image with happy upload form"""
     image_storage_path = tmpdir.mkdir("image_storage_tmp")
-    mocker.patch("root.image_handler.BLOG_UPLOAD_FOLDER", image_storage_path)
+    mocker.patch("src.image_handler.BLOG_UPLOAD_FOLDER", image_storage_path)
 
     form_data = {
         "upload_image": example_image,
@@ -79,7 +79,7 @@ def test_blog_edit_images_submit_delete_happy(
     image = Image.open(get_path)
     image.save(put_path)
     assert os.path.isfile(put_path)
-    mocker.patch("root.image_handler.BLOG_UPLOAD_FOLDER", image_storage_path)
+    mocker.patch("src.image_handler.BLOG_UPLOAD_FOLDER", image_storage_path)
     form_data = {
         "delete_image": new_filename,
     }
@@ -98,7 +98,7 @@ def test_blog_edit_images_submit_delete_bad_type(
 ):
     """Test POST of blog image with bad type"""
     image_storage_path = tmpdir.mkdir("image_storage_tmp")
-    mocker.patch("root.image_handler.BLOG_UPLOAD_FOLDER", image_storage_path)
+    mocker.patch("src.image_handler.BLOG_UPLOAD_FOLDER", image_storage_path)
 
     form_data = {
         "upload_image": bad_image_type,

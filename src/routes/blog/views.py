@@ -19,17 +19,17 @@ from markdown.extensions.toc import TocExtension
 from micawber import bootstrap_basic, parse_html
 from micawber.cache import Cache as OEmbedCache
 
-from root.globals import SITE_WIDTH
-from root.image_handler import delete_blog_image, upload_blog_image
-from root.routes.blog.forms import (
+from src.globals import SITE_WIDTH
+from src.image_handler import delete_blog_image, upload_blog_image
+from src.routes.blog.forms import (
     CommentForm,
     CreateBlogPostForm,
     EditBlogPostForm,
     EditImagesForm,
 )
-from root.routes.blog.models import BlogPost, Comment, Reply
-from root.routes.users.models import User
-from root.utils import get_slug, list_from_string, setup_pagination
+from src.routes.blog.models import BlogPost, Comment, Reply
+from src.routes.users.models import User
+from src.utils import get_slug, list_from_string, setup_pagination
 
 blog = Blueprint("blog", __name__)
 

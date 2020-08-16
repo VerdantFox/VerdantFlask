@@ -1,15 +1,10 @@
-"""Tests for root/utils methods"""
+"""Tests for src/utils methods"""
 import os
 
 import pytest
 from PIL import Image
 
-from root.image_handler import (
-    ALLOWED_EXTENSIONS,
-    delete_image,
-    prep_image,
-    upload_image,
-)
+from src.image_handler import ALLOWED_EXTENSIONS, delete_image, prep_image, upload_image
 from tests.conftest import EXAMPLE_IMAGE_PATHS
 
 

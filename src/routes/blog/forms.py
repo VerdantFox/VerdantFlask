@@ -10,7 +10,7 @@ from wtforms import (
 )
 from wtforms.validators import DataRequired, Length, Optional
 
-from root.custom_form_validators import unique_blog_title
+from src.custom_form_validators import unique_blog_title
 
 
 class CommentForm(FlaskForm):

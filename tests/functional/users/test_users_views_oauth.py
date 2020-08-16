@@ -1,7 +1,7 @@
 """Test users oauth views"""
 import pytest
 
-from root.routes.users.models import User
+from src.routes.users.models import User
 from tests.functional.users.conftest import USER1, USER2
 
 # -------------------------------------------------------------------------
@@ -94,7 +94,7 @@ def test_logged_in_connect_fresh_oauth_succeeds(
 ):
     """Test connecting to fresh oauth while logged in succeeds"""
     mocker.patch(
-        "root.routes.users.views.authomatic.login", fake_authomatic_login_success
+        "src.routes.users.views.authomatic.login", fake_authomatic_login_success
     )
     oauth_lower = oauth_client.lower()
     response = client.get(f"/users/{oauth_lower}_oauth", follow_redirects=True)
@@ -110,7 +110,7 @@ def test_logged_in_connect_fresh_oauth_succeeds(
 def test_register_user_fresh_oauth_succeeds(mocker, delete_users, client, oauth_client):
     """Test registering via oauth with fresh oauth id succeeds"""
     mocker.patch(
-        "root.routes.users.views.authomatic.login", fake_authomatic_login_success
+        "src.routes.users.views.authomatic.login", fake_authomatic_login_success
     )
     oauth_lower = oauth_client.lower()
     response = client.get(f"/users/{oauth_lower}_oauth", follow_redirects=True)
@@ -130,7 +130,7 @@ def test_register_user_repeat_username_oauth_succeeds(
 ):
     """Test registering via oauth with fresh oauth id succeeds"""
     mocker.patch(
-        "root.routes.users.views.authomatic.login", fake_authomatic_login_name_taken
+        "src.routes.users.views.authomatic.login", fake_authomatic_login_name_taken
     )
     oauth_lower = oauth_client.lower()
     response = client.get(f"/users/{oauth_lower}_oauth", follow_redirects=True)
@@ -151,7 +151,7 @@ def test_login_registered_oauth_user_succeeds(
 ):
     """Test logging in registered user via oauth succeeds"""
     mocker.patch(
-        "root.routes.users.views.authomatic.login", fake_authomatic_login_id_taken
+        "src.routes.users.views.authomatic.login", fake_authomatic_login_id_taken
     )
     oauth_lower = oauth_client.lower()
     response = client.get(f"/users/{oauth_lower}_oauth", follow_redirects=True)
@@ -166,7 +166,7 @@ def test_logged_in_connect_existing_oauth_fails(
 ):
     """Test connecting to existing oauth while logged in fails"""
     mocker.patch(
-        "root.routes.users.views.authomatic.login", fake_authomatic_login_id_taken
+        "src.routes.users.views.authomatic.login", fake_authomatic_login_id_taken
     )
     oauth_lower = oauth_client.lower()
     response = client.get(f"/users/{oauth_lower}_oauth", follow_redirects=True)
@@ -184,9 +184,7 @@ def test_logged_in_connect_existing_oauth_fails(
 @pytest.mark.parametrize("oauth_client", OAUTH_CLIENTS)
 def test_no_result_returns_response_obj(mocker, client, oauth_client):
     """Test no oauth result object returns response object"""
-    mocker.patch(
-        "root.routes.users.views.authomatic.login", fake_authomatic_result_fail
-    )
+    mocker.patch("src.routes.users.views.authomatic.login", fake_authomatic_result_fail)
     oauth_lower = oauth_client.lower()
     response = client.get(f"/users/{oauth_lower}_oauth", follow_redirects=True)
     assert response.status_code == 200
@@ -197,7 +195,7 @@ def test_no_result_returns_response_obj(mocker, client, oauth_client):
 @pytest.mark.parametrize("oauth_client", OAUTH_CLIENTS)
 def test_no_result_user_fails(mocker, client, oauth_client):
     """Test oauth result object without returned user fails"""
-    mocker.patch("root.routes.users.views.authomatic.login", fake_authomatic_user_fail)
+    mocker.patch("src.routes.users.views.authomatic.login", fake_authomatic_user_fail)
     oauth_lower = oauth_client.lower()
     response = client.get(f"/users/{oauth_lower}_oauth", follow_redirects=True)
     assert response.status_code == 200
@@ -227,7 +225,7 @@ def test_oauth_disconnect_with_orphaned_login_fails(
 ):
     """Test oauth disconnect fails if disconnect would orphan user login"""
     mocker.patch(
-        "root.routes.users.views.authomatic.login", fake_authomatic_login_success
+        "src.routes.users.views.authomatic.login", fake_authomatic_login_success
     )
     oauth_user = fake_authomatic_login_success(None, oauth_client).user.update()
     oauth_lower = oauth_client.lower()

@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 
-from root.routes.blog.views import query_and_paginate_blog
+from src.routes.blog.views import query_and_paginate_blog
 
 core = Blueprint("core", __name__)
 

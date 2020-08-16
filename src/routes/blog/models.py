@@ -6,7 +6,7 @@ https://charlesleifer.com/blog/how-to-make-a-flask-blog-in-one-hour-or-less/
 
 from bson.objectid import ObjectId
 
-from root.globals import db
+from src.globals import db
 
 
 class Reply(db.EmbeddedDocument):

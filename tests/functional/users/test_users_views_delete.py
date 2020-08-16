@@ -1,5 +1,5 @@
 """Test users delete view"""
-from root.routes.users.models import User
+from src.routes.users.models import User
 
 
 def test_delete_account_succeeds(client, logged_in_user1):

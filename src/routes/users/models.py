@@ -1,7 +1,7 @@
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash
 
-from root.globals import db, login_manager
+from src.globals import db, login_manager
 
 
 @login_manager.user_loader

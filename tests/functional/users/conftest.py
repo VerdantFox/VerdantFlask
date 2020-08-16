@@ -4,7 +4,7 @@ from datetime import datetime
 import pytest
 from werkzeug.security import generate_password_hash
 
-from root.routes.users.models import User
+from src.routes.users.models import User
 
 USERNAME = "testuser"
 FULL_NAME = "Test User"

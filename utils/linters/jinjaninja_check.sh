@@ -4,5 +4,5 @@ set -euo pipefail
 cd "$(dirname "$0")/../.." || return
 
 echo "Running jinjaninja"
-jinja-ninja root/templates "$@"
+jinja-ninja src/templates "$@"
 echo "jinjaninja passes..."

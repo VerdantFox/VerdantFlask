@@ -4,7 +4,7 @@ import datetime
 import pytest
 from bson.objectid import ObjectId
 
-from root.routes.blog.models import BlogPost
+from src.routes.blog.models import BlogPost
 from tests.conftest import STANDARD_USER
 
 DATE = datetime.datetime.now() - datetime.timedelta(7)

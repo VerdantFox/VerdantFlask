@@ -2,7 +2,7 @@
 import pytest
 from flask import abort
 
-from root.routes.core import views
+from src.routes.core import views
 
 
 def test_404(client):

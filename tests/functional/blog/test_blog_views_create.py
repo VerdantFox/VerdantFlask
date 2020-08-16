@@ -1,8 +1,8 @@
 """Test blog create view"""
 import pytest
 
-from root.routes.blog.models import BlogPost
-from root.utils import get_slug, list_from_string
+from src.routes.blog.models import BlogPost
+from src.utils import get_slug, list_from_string
 from tests.functional.blog.conftest import BP1_PUBLISHED
 
 form_model_mapper = {

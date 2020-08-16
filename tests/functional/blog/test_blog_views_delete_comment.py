@@ -1,5 +1,5 @@
 """Test blog delete comment view"""
-from root.routes.blog.models import BlogPost
+from src.routes.blog.models import BlogPost
 
 
 def test_blog_delete_comment_not_logged_in_fails(client, delete_blogposts, bp1):

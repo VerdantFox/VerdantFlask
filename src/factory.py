@@ -6,11 +6,11 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask.json import JSONEncoder
 
-from root.globals import db, login_manager
-from root.routes.blog.views import blog
-from root.routes.core.views import core
-from root.routes.error_pages.handlers import error_pages
-from root.routes.users.views import users
+from src.globals import db, login_manager
+from src.routes.blog.views import blog
+from src.routes.core.views import core
+from src.routes.error_pages.handlers import error_pages
+from src.routes.users.views import users
 
 
 class MongoJsonEncoder(JSONEncoder):
