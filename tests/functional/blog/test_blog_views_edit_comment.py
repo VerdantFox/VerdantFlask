@@ -1,4 +1,4 @@
-"""Test blog edit view"""
+"""Test blog edit comment view"""
 from root.routes.blog.models import BlogPost
 
 
@@ -95,7 +95,7 @@ def test_blog_edit_comment_comments_locked_fails(
 def test_blog_comment_edit_wrong_user_fails(
     client, current_user_admin, delete_blogposts, bp1
 ):
-    """Test too long comment fails"""
+    """Test edit comment as non-owner fails"""
     comment_edit = "Updated comment"
     form_data = {"comment": comment_edit}
     comment_id = bp1.comments[0].id
@@ -112,7 +112,7 @@ def test_blog_comment_edit_wrong_user_fails(
 
 
 def test_blog_edit_comment_happy(client, current_user_standard, delete_blogposts, bp1):
-    """Test comment create succeeds"""
+    """Test comment edit succeeds"""
     comment_edit = "Updated comment"
     form_data = {"comment": comment_edit}
     comment_id = bp1.comments[0].id
