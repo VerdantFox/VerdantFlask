@@ -154,6 +154,18 @@ def bp2():
 
 
 @pytest.fixture
+def bp3():
+    """Load blogpost 3"""
+    bp3 = BlogPost(**BP3_UNPUBLISHED)
+    bp3.save()
+
+    yield bp3
+
+    bp3 = BlogPost.objects(id=bp3.id)
+    bp3.delete()
+
+
+@pytest.fixture
 def bp4():
     """Load blogpost 4"""
     bp4 = BlogPost(**BP4_PUBLISHED_COMMENTS_LOCKED)
