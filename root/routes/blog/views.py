@@ -245,7 +245,7 @@ def delete_comment(slug, comment_id):
                     index = i
                 else:
                     failed_comment_id = comment_id
-                    comment_error = "Can only edit your own comment!"
+                    comment_error = "Can only delete your own comment!"
                 break
         if index is not None:
             post.comments.pop(index)
@@ -339,9 +339,7 @@ def edit_reply(slug, comment_id, reply_id):
     )
 
 
-@blog.route(
-    "/blog/comment/<slug>/reply/<comment_id>/delete/<reply_id>", methods=["POST"]
-)
+@blog.route("/comment/<slug>/reply/<comment_id>/delete/<reply_id>", methods=["POST"])
 @login_required
 def delete_reply(slug, comment_id, reply_id):
     """Delete reply to comment"""

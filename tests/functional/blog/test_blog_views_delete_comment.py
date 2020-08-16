@@ -69,7 +69,7 @@ def test_blog_comment_delete_wrong_user_fails(
     )
     assert response.status_code == 200
     data = response.data.decode()
-    assert "Can only edit your own comment!" in data
+    assert "Can only delete your own comment!" in data
     bp1 = BlogPost.objects(id=bp1.id).first()
     assert bp1.comments
 
