@@ -1,4 +1,4 @@
-"""Test blog create view"""
+"""Test blog edit images view"""
 import os
 
 import pytest

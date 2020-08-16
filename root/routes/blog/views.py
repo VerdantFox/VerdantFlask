@@ -264,6 +264,7 @@ def delete_comment(slug, comment_id):
 
 
 @blog.route("/comment/<slug>/reply/<comment_id>", methods=["POST"])
+@login_required
 def create_reply(slug, comment_id):
     """Reply to comment"""
     form = CommentForm()
@@ -300,6 +301,7 @@ def create_reply(slug, comment_id):
 
 
 @blog.route("/comment/<slug>/reply/<comment_id>/edit/<reply_id>", methods=["POST"])
+@login_required
 def edit_reply(slug, comment_id, reply_id):
     """Edit reply to comment"""
     form = CommentForm()
@@ -340,6 +342,7 @@ def edit_reply(slug, comment_id, reply_id):
 @blog.route(
     "/blog/comment/<slug>/reply/<comment_id>/delete/<reply_id>", methods=["POST"]
 )
+@login_required
 def delete_reply(slug, comment_id, reply_id):
     """Delete reply to comment"""
     form = CommentForm()

@@ -1,4 +1,4 @@
-"""Test blog edit view"""
+"""Test blog delete view"""
 from root.routes.blog.models import BlogPost
 
 
