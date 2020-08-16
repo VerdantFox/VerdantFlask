@@ -5,8 +5,7 @@ from root.routes.blog.models import BlogPost
 def test_blog_create_reply_not_logged_in_fails(client, delete_blogposts, bp1):
     """Test reply create while not logged in fails with login redirect"""
     reply_count_before = len(bp1.comments[0].replies)
-    reply_edit = "New reply"
-    form_data = {"comment": reply_edit}
+    form_data = {"comment": "New reply"}
     comment_id = bp1.comments[0].id
     response = client.post(
         f"/blog/comment/{bp1.slug}/reply/{comment_id}",
@@ -26,8 +25,7 @@ def test_blog_create_reply_non_existant_post_fails(
 ):
     """Test comment create fails with 404 if slug not found"""
     reply_count_before = len(bp1.comments[0].replies)
-    reply_edit = "New reply"
-    form_data = {"comment": reply_edit}
+    form_data = {"comment": "New reply"}
     comment_id = bp1.comments[0].id
     response = client.post(
         f"/blog/comment/some-nonexistant-post/reply/{comment_id}",
@@ -67,8 +65,7 @@ def test_blog_create_reply_comments_locked_fails(
 ):
     """Test reply fails if comments locked"""
     reply_count_before = len(bp5.comments[0].replies)
-    reply_edit = "New reply"
-    form_data = {"comment": reply_edit}
+    form_data = {"comment": "New reply"}
     comment_id = bp5.comments[0].id
     response = client.post(
         f"/blog/comment/{bp5.slug}/reply/{comment_id}",
@@ -87,8 +84,7 @@ def test_blog_create_reply_comments_locked_fails(
 def test_blog_create_reply_happy(client, current_user_standard, delete_blogposts, bp1):
     """Test reply create succeeds"""
     reply_count_before = len(bp1.comments[0].replies)
-    reply_edit = "New reply"
-    form_data = {"comment": reply_edit}
+    form_data = {"comment": "New reply"}
     comment_id = bp1.comments[0].id
     response = client.post(
         f"/blog/comment/{bp1.slug}/reply/{comment_id}",
@@ -97,7 +93,7 @@ def test_blog_create_reply_happy(client, current_user_standard, delete_blogposts
     )
     assert response.status_code == 200
     data = response.data.decode()
-    assert reply_edit in data
+    assert "New reply" in data
     bp1 = BlogPost.objects(id=bp1.id).first()
     reply_count_after = len(bp1.comments[0].replies)
     assert reply_count_after == reply_count_before + 1
