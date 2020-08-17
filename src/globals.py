@@ -1,8 +1,14 @@
 """Globals"""
 import os
+from typing import Union
 
 from flask_login import LoginManager
 from flask_mongoengine import MongoEngine
+from werkzeug.wrappers import Response
+
+# Type hint globals
+FlaskResponse = Union[str, Response]
+
 
 # General Globals
 SITE_WIDTH = 800  # TODO adjust this

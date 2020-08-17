@@ -22,7 +22,7 @@ class MongoJsonEncoder(JSONEncoder):
         return json_util.default(obj, json_util.CANONICAL_JSON_OPTIONS)
 
 
-def register_blueprints(app):
+def register_blueprints(app: Flask) -> None:
     """Register app blueprints with url prefix locations"""
     app.register_blueprint(core, url_prefix="")
     app.register_blueprint(users, url_prefix="/users")
@@ -30,7 +30,7 @@ def register_blueprints(app):
     app.register_blueprint(error_pages, url_prefix="/error")
 
 
-def set_app_config(app):
+def set_app_config(app: Flask) -> None:
     """Set app config items from environment variables"""
     # Flask stuff
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
@@ -39,7 +39,7 @@ def set_app_config(app):
     app.config["MONGODB_SETTINGS"] = {
         "authentication_source": "admin",
         "host": os.getenv("MONGODB_HOST"),
-        "port": int(os.getenv("MONGODB_PORT")),
+        "port": int(os.getenv("MONGODB_PORT", "5000")),
         "username": os.getenv("MONGODB_USERNAME"),
         "password": os.getenv("MONGODB_PASSWORD"),
     }
@@ -50,7 +50,7 @@ def set_app_config(app):
         }
 
 
-def create_app():
+def create_app() -> Flask:
     """Create the Flask app and set its configuration"""
 
     load_dotenv()

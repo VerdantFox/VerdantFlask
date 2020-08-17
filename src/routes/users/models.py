@@ -62,6 +62,6 @@ class User(db.Document, UserMixin):
     def __str__(self):
         return f"User(username: {self.username}, id: {self.id})"
 
-    def check_password(self, password):
+    def check_password(self, password: str) -> bool:
         """Checks that the pw provided hashes to the stored pw hash value"""
         return check_password_hash(self.password_hash, password)

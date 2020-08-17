@@ -1,6 +1,8 @@
 from collections import OrderedDict
 from datetime import datetime
+from typing import Any, Dict, Iterable, List, Optional, Union
 
+from bson.objectid import ObjectId
 from flask import (
     Blueprint,
     Markup,
@@ -12,6 +14,8 @@ from flask import (
     url_for,
 )
 from flask_login import current_user, login_required
+from flask_mongoengine import BaseQuerySet
+from flask_mongoengine.pagination import Pagination
 from markdown import markdown
 from markdown.extensions.codehilite import CodeHiliteExtension
 from markdown.extensions.extra import ExtraExtension
@@ -19,7 +23,7 @@ from markdown.extensions.toc import TocExtension
 from micawber import bootstrap_basic, parse_html
 from micawber.cache import Cache as OEmbedCache
 
-from src.globals import SITE_WIDTH
+from src.globals import SITE_WIDTH, FlaskResponse
 from src.image_handler import delete_blog_image, upload_blog_image
 from src.routes.blog.forms import (
     CommentForm,
@@ -40,7 +44,7 @@ oembed_providers = bootstrap_basic(OEmbedCache())
 
 
 @blog.route("/", methods=["GET"])
-def blog_list():
+def blog_list() -> FlaskResponse:
     """Get a timestamp ordered list of blog posts to display with search"""
     search = request.args.get("search")
     tag = request.args.get("tag")
@@ -49,7 +53,7 @@ def blog_list():
         query["tags"] = tag
 
     try:
-        page = int(request.args.get("page"))
+        page = int(request.args.get("page", 0))
     except (ValueError, TypeError):
         page = 0
     results_per_page = 20  # Maybe set with form in future
@@ -64,7 +68,7 @@ def blog_list():
 
 
 @blog.route("/tags", methods=["GET"])
-def tags():
+def tags() -> FlaskResponse:
     """List tags and associated counts of blogs"""
 
     tag_counts = get_current_tags()
@@ -74,7 +78,7 @@ def tags():
 
 @blog.route("/create", methods=["GET", "POST"])
 @login_required
-def create():
+def create() -> FlaskResponse:
     """Create a new blogpost"""
     if current_user.access_level != 1:
         abort(401, "Blog create page requires admin access.")
@@ -89,7 +93,7 @@ def create():
 
 
 @blog.route("/view/<slug>", methods=["GET", "POST"])
-def view(slug):
+def view(slug: str) -> FlaskResponse:
     """Display an individual blogpost"""
     form = CommentForm()
     post = get_post_for_view(slug)
@@ -101,7 +105,7 @@ def view(slug):
 
 @blog.route("/edit/<slug>", methods=["GET", "POST"])
 @login_required
-def edit(slug):
+def edit(slug: str) -> FlaskResponse:
     """Update a blogpost"""
     post = get_post_for_update_delete(slug)
     form = EditBlogPostForm()
@@ -124,7 +128,7 @@ def edit(slug):
 
 @blog.route("/edit_images/<slug>", methods=["GET", "POST"])
 @login_required
-def edit_images(slug):
+def edit_images(slug: str) -> FlaskResponse:
     """Edit images at blogpost"""
     post = get_post_for_update_delete(slug)
     form = EditImagesForm()
@@ -150,7 +154,7 @@ def edit_images(slug):
 
 @blog.route("/delete/<slug>", methods=["GET"])
 @login_required
-def delete(slug):
+def delete(slug: str) -> FlaskResponse:
     """Delete a blogpost"""
     post = get_post_for_update_delete(slug)
     post.delete()
@@ -160,7 +164,7 @@ def delete(slug):
 
 @blog.route("/comment/<slug>", methods=["POST"])
 @login_required
-def create_comment(slug):
+def create_comment(slug: str) -> FlaskResponse:
     """Comment on a blogpost"""
     form = CommentForm()
     post = get_post_for_view(slug)
@@ -195,7 +199,7 @@ def create_comment(slug):
 
 @blog.route("/comment/<slug>/edit/<comment_id>", methods=["POST"])
 @login_required
-def edit_comment(slug, comment_id):
+def edit_comment(slug: str, comment_id: str) -> FlaskResponse:
     """Edit comment"""
     form = CommentForm()
     post = get_post_for_view(slug)
@@ -231,7 +235,7 @@ def edit_comment(slug, comment_id):
 
 @blog.route("/comment/<slug>/delete/<comment_id>", methods=["POST"])
 @login_required
-def delete_comment(slug, comment_id):
+def delete_comment(slug: str, comment_id: str) -> FlaskResponse:
     """Delete comment"""
     form = CommentForm()
     post = get_post_for_view(slug)
@@ -265,7 +269,7 @@ def delete_comment(slug, comment_id):
 
 @blog.route("/comment/<slug>/reply/<comment_id>", methods=["POST"])
 @login_required
-def create_reply(slug, comment_id):
+def create_reply(slug: str, comment_id: str) -> FlaskResponse:
     """Reply to comment"""
     form = CommentForm()
     post = get_post_for_view(slug)
@@ -302,7 +306,7 @@ def create_reply(slug, comment_id):
 
 @blog.route("/comment/<slug>/reply/<comment_id>/edit/<reply_id>", methods=["POST"])
 @login_required
-def edit_reply(slug, comment_id, reply_id):
+def edit_reply(slug: str, comment_id: str, reply_id: str) -> FlaskResponse:
     """Edit reply to comment"""
     form = CommentForm()
     post = get_post_for_view(slug)
@@ -341,7 +345,7 @@ def edit_reply(slug, comment_id, reply_id):
 
 @blog.route("/comment/<slug>/reply/<comment_id>/delete/<reply_id>", methods=["POST"])
 @login_required
-def delete_reply(slug, comment_id, reply_id):
+def delete_reply(slug: str, comment_id: str, reply_id: str) -> FlaskResponse:
     """Delete reply to comment"""
     form = CommentForm()
     post = get_post_for_view(slug)
@@ -381,12 +385,19 @@ def delete_reply(slug, comment_id, reply_id):
 # ----------------------------------------------------------------------------
 # HELPER METHODS
 # ----------------------------------------------------------------------------
-def query_and_paginate_blog(query=None, search=None, page=1, results_per_page=3):
+def query_and_paginate_blog(
+    query: Optional[Dict[str, Any]] = None,
+    search: Optional[str] = None,
+    page: int = 1,
+    results_per_page: int = 3,
+) -> Pagination:
     """Query database on params and return paginator object
 
     Params:
         query: dictionary of mongoengine query parameters
         search: string used to search against database
+        page: starting page of paginator object
+        results_per_page: how many results per page of paginator object
     Returns:
         mongoengine paginator object
     """
@@ -412,13 +423,16 @@ def query_and_paginate_blog(query=None, search=None, page=1, results_per_page=3)
     return setup_pagination(page, results_per_page, posts)
 
 
-def create_or_edit(form, post=None):
+def create_or_edit(
+    form: Union[CreateBlogPostForm, EditBlogPostForm], post: Optional[BlogPost] = None
+) -> FlaskResponse:
     """Create or edit a blog post"""
 
     next_page = form.next_page.data
     edit = False if post is None else True
     if edit is False:
         post = BlogPost()
+    assert post is not None
 
     post.title = form.title.data
     post.slug = get_slug(post.title)
@@ -443,7 +457,7 @@ def create_or_edit(form, post=None):
     return redirect(url_for("blog.view", slug=post.slug))
 
 
-def markdown_to_html(markdown_content, table=False):
+def markdown_to_html(markdown_content: str, table: bool = False) -> str:
     """Generate HTML representation of the markdown-formatted blog entry
 
     Also convert any media URLs into rich media objects such as video
@@ -461,8 +475,8 @@ def markdown_to_html(markdown_content, table=False):
     return Markup(oembed_content)
 
 
-def get_current_tags():
-    """Return an ordered dictionary """
+def get_current_tags() -> OrderedDict:
+    """Return an ordered dictionary of current tags"""
     query = {"published": True}
     if current_user.is_authenticated and current_user.access_level == 1:
         query.pop("published")
@@ -470,12 +484,12 @@ def get_current_tags():
         "tags",
     ]
     posts = BlogPost.objects(**query).only(*limit_fields)
-    all_tags = set(posts.distinct("tags"))
-    all_tags.discard(None)
-    all_tags = list(all_tags)
-    all_tags.sort()
+    all_tags_set = set(posts.distinct("tags"))
+    all_tags_set.discard(None)
+    all_tags_list = list(all_tags_set)
+    all_tags_list.sort()
     tag_counts = {}
-    for tag in all_tags:
+    for tag in all_tags_list:
         tag_counts[tag] = 0
     for post in posts:
         for tag in post.tags:
@@ -485,7 +499,7 @@ def get_current_tags():
     return tag_counts
 
 
-def get_post_for_update_delete(slug):
+def get_post_for_update_delete(slug: str) -> BaseQuerySet:
     """Gets a post for update or delete and checks if it exists and is accessible"""
     # Slug is the True test of unique-ness
     post = BlogPost.objects(slug=slug).first()
@@ -496,7 +510,7 @@ def get_post_for_update_delete(slug):
     return post
 
 
-def get_post_for_view(slug):
+def get_post_for_view(slug: str) -> BaseQuerySet:
     """Gets a post for viewing and commenting"""
     post = BlogPost.objects(slug=slug).first()
     if not post:
@@ -512,7 +526,7 @@ def get_post_for_view(slug):
     return post
 
 
-def get_comment_authors(post):
+def get_comment_authors(post: BaseQuerySet) -> Dict[ObjectId, User]:
     """Gets authors of comments
 
     returns
@@ -538,6 +552,6 @@ def get_comment_authors(post):
     return comment_authors
 
 
-def sort_comments(comments):
+def sort_comments(comments: Iterable[Comment]) -> List[Comment]:
     """Sort comments (or replies) from newest to oldest"""
     return sorted(comments, key=lambda comment: comment.created_timestamp, reverse=True)

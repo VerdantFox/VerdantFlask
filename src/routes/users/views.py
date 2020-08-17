@@ -17,7 +17,7 @@ from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
 
-from src.globals import STATIC_PATH
+from src.globals import STATIC_PATH, FlaskResponse
 from src.image_handler import delete_current_avatar, upload_avatar
 from src.routes.users.forms import (
     LoginForm,
@@ -35,7 +35,7 @@ DEFAULT_PICS = sorted(os.listdir(DEFAULT_AVATARS_PATH))
 
 
 @users.route("/register", methods=["GET", "POST"])
-def register():
+def register() -> FlaskResponse:
     """Registers the user in 'flask' database, 'users' collection"""
     logout_user()
     session["next"] = request.args.get("next")
@@ -55,7 +55,7 @@ def register():
 
 
 @users.route("/login", methods=["GET", "POST"])
-def login():
+def login() -> FlaskResponse:
     """Logs the user in through username/password"""
     logout_user()
     session["next"] = request.args.get("next")
@@ -80,14 +80,14 @@ def login():
 
 @users.route("/logout")
 @login_required
-def logout():
+def logout() -> FlaskResponse:
     logout_user()
     flash("You have logged out.", category="success")
     return redirect(url_for("users.login"))
 
 
 @users.route("/profile/<username>", methods=["GET", "POST"])
-def profile(username):
+def profile(username) -> FlaskResponse:
     user = User.objects(username=username).first()
     if not user:
         abort(404, "User not found.")
@@ -99,7 +99,7 @@ def profile(username):
 
 @users.route("/edit_profile", methods=["GET", "POST"])
 @login_required
-def edit_profile():
+def edit_profile() -> FlaskResponse:
     form = UserProfileForm()
     if form.validate_on_submit():
         current_user.username = form.username.data
@@ -143,7 +143,7 @@ def edit_profile():
 
 @users.route("/account_settings", methods=["GET", "POST"])
 @login_required
-def account_settings():
+def account_settings() -> FlaskResponse:
 
     form = UserSettingsForm()
     if form.validate_on_submit():
@@ -173,7 +173,7 @@ def account_settings():
 
 @users.route("/delete_account")
 @login_required
-def delete_account():
+def delete_account() -> FlaskResponse:
     """Delete current user's account"""
     current_user.delete()
     logout_user()
@@ -182,40 +182,40 @@ def delete_account():
 
 
 @users.route("/facebook_oauth")
-def facebook_oauth():
+def facebook_oauth() -> FlaskResponse:
     return oauth_generalized("Facebook")
 
 
 @users.route("/google_oauth")
-def google_oauth():
+def google_oauth() -> FlaskResponse:
     return oauth_generalized("Google")
 
 
 @users.route("/github_oauth")
-def github_oauth():
+def github_oauth() -> FlaskResponse:
     """Perform github oauth register, login, or account association"""
     return oauth_generalized("GitHub")
 
 
 @users.route("/facebook_oauth_disconnect")
-def facebook_oauth_disconnect():
+def facebook_oauth_disconnect() -> FlaskResponse:
     return oauth_disconnect("Facebook")
 
 
 @users.route("/google_oauth_disconnect")
-def google_oauth_disconnect():
+def google_oauth_disconnect() -> FlaskResponse:
     return oauth_disconnect("Google")
 
 
 @users.route("/github_oauth_disconnect")
-def github_oauth_disconnect():
+def github_oauth_disconnect() -> FlaskResponse:
     return oauth_disconnect("GitHub")
 
 
 # ----------------------------------------------------------------------------
 # HELPER METHODS
 # ----------------------------------------------------------------------------
-def can_oauth_disconnect():
+def can_oauth_disconnect() -> bool:
     """Test to determin if oauth disconnect is allowed"""
     has_gh = True if current_user.github_id else False
     has_gg = True if current_user.google_id else False
@@ -228,7 +228,7 @@ def can_oauth_disconnect():
 
 
 @login_required
-def oauth_disconnect(oauth_client):
+def oauth_disconnect(oauth_client: str) -> FlaskResponse:
     """Generalized oauth disconnect"""
     if not can_oauth_disconnect():
         flash(
@@ -246,7 +246,7 @@ def oauth_disconnect(oauth_client):
     return redirect(url_for("users.account_settings"))
 
 
-def oauth_generalized(oauth_client):
+def oauth_generalized(oauth_client: str) -> FlaskResponse:
     """Generalized oauth login, register, and account association"""
     # Get response object for the WerkzeugAdapter.
     response = make_response()
@@ -317,7 +317,7 @@ def oauth_generalized(oauth_client):
     return login_and_redirect(user)
 
 
-def login_and_redirect(user):
+def login_and_redirect(user: User) -> FlaskResponse:
     """Logs in user and redirects to 'next' in session, or index otherwise"""
     login_user(user)
     flash(f"Welcome {user.username}!", category="success")
@@ -331,7 +331,7 @@ def login_and_redirect(user):
     return redirect(next_page)
 
 
-def flash_register_message(username):
+def flash_register_message(username: str) -> None:
     """Flash a welcome message for newly registered user"""
     flash(f"Thanks for registering, {username}!", category="success")
     flash(

@@ -1,9 +1,15 @@
 """Utility functions available throughout app"""
 import re
 from math import ceil
+from typing import List
+
+from flask_mongoengine import BaseQuerySet
+from flask_mongoengine.pagination import Pagination
 
 
-def setup_pagination(page, results_per_page, mongo_query):
+def setup_pagination(
+    page: int, results_per_page: int, mongo_query: BaseQuerySet
+) -> Pagination:
     """Validate current page and create pagination object"""
     page = int(page)
     post_count = mongo_query.count()
@@ -19,7 +25,7 @@ def setup_pagination(page, results_per_page, mongo_query):
     return paginator
 
 
-def get_slug(title):
+def get_slug(title: str) -> str:
     """Generate slug from title
 
     remove problematic characters
@@ -28,7 +34,7 @@ def get_slug(title):
     return re.sub(r"[^\w]+", "-", title.lower()).strip(" -")
 
 
-def list_from_string(string, lowercase=False):
+def list_from_string(string: str, lowercase: bool = False) -> List[str]:
     """Generate a list from a string
 
     Lowercase list items

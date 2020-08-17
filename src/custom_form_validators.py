@@ -1,4 +1,5 @@
 import re
+from typing import Callable, Optional
 
 from flask_login import current_user
 from wtforms import ValidationError
@@ -8,7 +9,7 @@ from src.routes.users.models import User
 from src.utils import get_slug
 
 
-def unique_blog_title(message=None):
+def unique_blog_title(message: Optional[str] = None) -> Callable:
     """Validates that a blog title doesn't already exist"""
     if not message:
         message = "Title must be unique"
@@ -22,7 +23,7 @@ def unique_blog_title(message=None):
     return validation
 
 
-def unique_user_field(message=None):
+def unique_user_field(message: Optional[str] = None) -> Callable:
     """Validates that a field doesn't already exist in the database"""
 
     def validation(form, field):
@@ -33,7 +34,7 @@ def unique_user_field(message=None):
     return validation
 
 
-def unique_or_current_user_field(message=None):
+def unique_or_current_user_field(message: Optional[str] = None) -> Callable:
     """Validates that a field is either equal to user's current field or doesn't exist"""
 
     def validation(form, field):
@@ -46,7 +47,7 @@ def unique_or_current_user_field(message=None):
     return validation
 
 
-def has_letter(message=None):
+def has_letter(message: Optional[str] = None) -> Callable:
     """Validates that the field has at least one letter"""
     if not message:
         message = "At least one letter required."
@@ -60,7 +61,7 @@ def has_letter(message=None):
     return validation
 
 
-def has_number(message=None):
+def has_number(message: Optional[str] = None) -> Callable:
     """Validates that the field has at least one letter"""
     if not message:
         message = "At least one number required."
@@ -73,7 +74,7 @@ def has_number(message=None):
     return validation
 
 
-def safe_string(message=None):
+def safe_string(message: Optional[str] = None) -> Callable:
     """Validates that the field matches some safe requirements
 
     Requirements:

@@ -1,10 +1,13 @@
+from typing import Tuple
+
 from flask import Blueprint, render_template
+from werkzeug.exceptions import HTTPException
 
 error_pages = Blueprint("error_pages", __name__)
 
 
 @error_pages.app_errorhandler(404)
-def error_404(error):
+def error_404(error: HTTPException) -> Tuple[str, int]:
     """Error for pages not found."""
     default = (
         "The requested URL was not found on the server. "
@@ -16,7 +19,7 @@ def error_404(error):
 
 
 @error_pages.app_errorhandler(500)
-def error_500(error):
+def error_500(error: HTTPException) -> Tuple[str, int]:
     """Error for pages not found."""
     default = (
         "The server encountered an internal error and was unable to complete your "
@@ -28,12 +31,12 @@ def error_500(error):
 
 
 @error_pages.app_errorhandler(401)
-def error_401(error):
+def error_401(error: HTTPException) -> Tuple[str, int]:
     """Error for trying to access something without authorization."""
     return render_template("error_pages/all_errors.html", error=error), 401
 
 
 @error_pages.app_errorhandler(403)
-def error_403(error):
+def error_403(error: HTTPException) -> Tuple[str, int]:
     """Error for trying to access something which is forbidden."""
     return render_template("error_pages/all_errors.html", error=error), 403
