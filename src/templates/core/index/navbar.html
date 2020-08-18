@@ -1,33 +1,20 @@
-<nav id="main-navbar" class="navbar sticky-top navbar-expand-lg navbar-light bgc-2">
-  <div class="container">
-    <!-- Brand -->
-    <a class="navbar-brand" href="#header">Verdant Fox!</a>
-    <!-- Hamburger -->
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <!-- In dropdown -->
-    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <ul class="nav nav-pills flex-lg-row flex-column">
-        <li class="nav-item">
-          <a class="nav-link" href="#blog">Blog</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#projects">Projects</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#skills">Skills</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#about">About</a>
-        </li>
-        <li class="nav-item">
-           <a class="nav-link"
-             href="{{ url_for('static', filename='documents/TheodoreWilliamsResume.pdf') }}" target="_blank">
-            <i class="fa fa-download" aria-hidden="true"></i> Resume
-          </a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
+<ul class="nav nav-pills flex-lg-row flex-column">
+  <li class="nav-item">
+    <a class="nav-link" href="#blog">Blog</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#projects">Projects</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#skills">Skills</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#about">About</a>
+  </li>
+  <li class="nav-item">
+      <a class="nav-link"
+        href="{{ url_for('static', filename='documents/TheodoreWilliamsResume.pdf') }}" target="_blank">
+      <i class="fa fa-download" aria-hidden="true"></i> Resume
+    </a>
+  </li>
+</ul>

@@ -19,7 +19,9 @@
     {% include "core/base/header_part_1.html" with context %}
     {% block breadcrumb %}{% endblock breadcrumb %}
     {% include "core/base/header_part_2.html" with context %}
+    {% include "core/base/navbar_part_1.html" %}
     {% block navbar %}{% endblock navbar %}
+    {% include "core/base/navbar_part_2.html" %}
     {% include 'core/base/flash_messages.html' %}
     {% block content %}{% endblock content %}
     <script src="{{ url_for('static', filename='js/core/master.js') }}"></script>

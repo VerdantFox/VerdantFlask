@@ -1,42 +1,27 @@
-<nav id="main-navbar" class="navbar sticky-top navbar-expand-lg navbar-light bgc-2">
-  <div class="container">
-    <!-- Brand -->
-    <a class="navbar-brand" href="{{ url_for('core.index') }}">Verdant Fox!</a>
-    <!-- Hamburger -->
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <!-- In dropdown -->
-    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-link {% if active_page == 'blog_list' %}active{% endif %}"
-              href="{{ url_for('blog.blog_list') }}">Blog</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link {% if active_page == 'tags' %}active{% endif %}"
-              href="{{ url_for('blog.tags') }}">Tags</a>
-        </li>
-        {% if current_user.access_level == 1 %}
-          <li class="nav-item">
-            <a class="nav-link {% if active_page == 'create' %}active{% endif %}"
-                href="{{ url_for('blog.create') }}">Create</a>
-          </li>
-        {% endif %}
-      </ul>
-      <!-- <form class="form-inline my-2 my-lg-0"> -->
-      <div class="form-inline my-2 my-lg-0">
-        <input name="search" id="blog-search"
-               class="form-control mr-sm-2"
-               type="search"
-               placeholder="Search"
-               aria-label="Search">
-        <button id="search-submit" class="btn btn-green my-2 my-sm-0">
-          Search
-        </button>
-      </div>
-      <!-- </form> -->
-    </div>
-  </div>
-</nav>
-<br>
+<ul class="navbar-nav mr-auto">
+  <li class="nav-item">
+    <a class="nav-link {% if active_page == 'blog_list' %}active{% endif %}"
+        href="{{ url_for('blog.blog_list') }}">Blog</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if active_page == 'tags' %}active{% endif %}"
+        href="{{ url_for('blog.tags') }}">Tags</a>
+  </li>
+  {% if current_user.access_level == 1 %}
+    <li class="nav-item">
+      <a class="nav-link {% if active_page == 'create' %}active{% endif %}"
+          href="{{ url_for('blog.create') }}">Create</a>
+    </li>
+  {% endif %}
+</ul>
+<!-- <form class="form-inline my-2 my-lg-0"> -->
+<div class="form-inline my-2 my-lg-0">
+  <input name="search" id="blog-search"
+          class="form-control mr-sm-2"
+          type="search"
+          placeholder="Search"
+          aria-label="Search">
+  <button id="search-submit" class="btn btn-green my-2 my-sm-0">
+    Search
+  </button>
+</div>
