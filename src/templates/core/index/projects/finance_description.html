@@ -1,11 +1,11 @@
 {# Makes this column show first in small screen #}
 <div class="col-xl-7 order-xl-12">
-  <a href="#">
+  <a href="{{ url_for('finance.landing') }}">
     <h4 class="text-center">Finance</h4>
   </a>
   <div class="text-justify">
     <p>
-      In this app, once <a href="#">logged in</a>,
+      In this app, once <a href="{{ url_for('users.login') }}">logged in</a>,
       you will be given virtual cash with which to "fake buy" stocks. These
       stocks, however, are representations of real stocks on the actual
       stock-market, updated in real time.
@@ -23,7 +23,7 @@
       I hope you like this introduction to stock finance. <strong>Now, let's
       trade some stocks!</strong>
     </p>
-    <a class="btn btn-green btn-block" href="#">
+    <a class="btn btn-green btn-block" href="{{ url_for('finance.landing') }}">
       Check out Finance!
     </a>
     <br>

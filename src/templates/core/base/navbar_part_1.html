@@ -1,11 +1,11 @@
 {# Part 1 start #}
-<nav id="main-navbar" class="navbar sticky-top navbar-expand-lg navbar-light bgc-2">
+<nav id="main-navbar" class="navbar sticky-top navbar-expand-lg navbar-dark bgc-4">
   <div class="container">
     <!-- Brand -->
-    <a class="navbar-brand" href="{{ url_for('core.index') }}">Verdant Fox!</a>
+    <a id="home-link" class="navbar-brand" href="{{ url_for('core.index') }}">Verdant Fox!</a>
     <!-- Hamburger -->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+      <i class="fas fa-bars c-1"></i>
     </button>
     <!-- In dropdown -->
     <div class="collapse navbar-collapse" id="navbarNavDropdown">

@@ -3,7 +3,6 @@ html {
 }
 
 body {
-  background-color: #ebe8be;
   color: #202e24;
 }
 
@@ -170,11 +169,24 @@ text {
 /* Buttons */
 .btn-green {
   color: #fff;
+  background-color: #202e24;
+  border-color: #202e24;
+}
+
+.btn-green:hover {
+  color: #fff;
+  background-color: #3f5a47;
+  border-color: #3f5a47;
+}
+
+/* Buttons */
+.btn-light-green {
+  color: #fff;
   background-color: #347a2a;
   border-color: #347a2a;
 }
 
-.btn-green:hover {
+.btn-light-green:hover {
   color: #fff;
   background-color: #369b2b;
   border-color: #369b2b;
@@ -297,11 +309,11 @@ text {
 }
 
 a {
-  color: #347a2a;
+  color: #006600;
 }
 
 a:hover {
-  color: #36a52c;
+  color: #009900;
 }
 
 a.remove-underline {
@@ -386,41 +398,21 @@ a.remove-underline {
 
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #202e24;
-}
-
-.nav-tabs .nav-link.active {
+  color: #202e24;
   background-color: #ebe8be;
-  font-weight: bold;
-  border-left: 1px solid #202e24;
-  border-top: 1px solid #202e24;
-  border-right: 1px solid #202e24;
-  border-bottom: 1px solid #ebe8be;
-}
-
-.nav-tabs .nav-link.active a {
-  color: #202e24;
-}
-
-.nav-tabs .not-active:hover {
-  background-color: #ebe8be;
-  color: #202e24;
-  font-weight: bold;
-  border-top-right-radius: 0.2rem;
-  border-top-left-radius: 0.2rem;
-  border-left: 1px solid #202e24;
-  border-top: 1px solid #202e24;
-  border-right: 1px solid #202e24;
-  border-bottom: 1px solid #ebe8be;
-}
-.nav-tabs .not-active a:hover {
-  color: #202e24;
-  border-bottom: 1px solid #ebe8be;
 }
 
 .nav-link {
-  color: #202e24;
+  color: #ebe8be;
+}
+.nav-link:hover {
+  color: #b3c87a;
+}
+#home-link {
+  color: #ebe8be;
+}
+#home-link:hover {
+  color: #b3c87a;
 }
 
 #fox-icon {
@@ -510,7 +502,7 @@ a.remove-underline {
   font-size: 1.2rem;
 }
 .blog-view hr {
-  background-color: #b3c87a;
+  background-color: #006600;
 }
 .primary-comment-padding {
   padding-left: 7rem;
@@ -541,7 +533,7 @@ h6 {
   font-weight: 500;
 }
 .toc {
-  background-color: #defbc2;
+  background-color: #ebe8be;
   border: 2px solid #347a2a;
   margin: 2rem 0 2rem 0;
   border-radius: 1rem;

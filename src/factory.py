@@ -10,6 +10,7 @@ from src.globals import db, login_manager
 from src.routes.blog.views import blog
 from src.routes.core.views import core
 from src.routes.error_pages.handlers import error_pages
+from src.routes.finance.views import finance
 from src.routes.users.views import users
 
 
@@ -27,6 +28,7 @@ def register_blueprints(app: Flask) -> None:
     app.register_blueprint(core, url_prefix="")
     app.register_blueprint(users, url_prefix="/users")
     app.register_blueprint(blog, url_prefix="/blog")
+    app.register_blueprint(finance, url_prefix="/finance")
     app.register_blueprint(error_pages, url_prefix="/error")
 
 

@@ -32,7 +32,7 @@
           <a href="{{ url_for('blog.edit', slug=post.slug) }}">* Edit *</a>
         {% endif %}
       </h1>
-      <hr class="bgc-2 hr-thick">
+      <hr class="bgc-3 hr-thick">
       <p class="text-right">
         {{ post.created_timestamp.strftime('%B %d, %Y %I:%M %p') }} /
         {% if post.tags %}
@@ -43,14 +43,14 @@
         {% endif %}
         {{ post.comments|length }} comments
       </p>
-      <hr class="bgc-2 hr-thick">
+      <hr class="bgc-3 hr-thick">
       <div class="blog-view">
         {{ post.html_content | safe }}
         <div>
           <br>
-          <hr class="bgc-2">
+          <hr class="bgc-3">
           <h1 class="text-center">About the author</h1>
-          <hr class="bgc-2">
+          <hr class="bgc-3">
           <img width="300"
                class="text-left"
                  src="{{ url_for('static', filename='images/core/suit_headshot_cropped.jpg') }}"

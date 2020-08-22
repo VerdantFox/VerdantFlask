@@ -1,4 +1,4 @@
-<ul class="navbar-nav mr-auto">
+<ul class="nav nav-pills flex-lg-row flex-column mr-auto">
   <li class="nav-item">
     <a class="nav-link {% if active_page == 'blog_list' %}active{% endif %}"
         href="{{ url_for('blog.blog_list') }}">Blog</a>
@@ -19,9 +19,10 @@
   <input name="search" id="blog-search"
           class="form-control mr-sm-2"
           type="search"
-          placeholder="Search"
+          title="Search posts"
+          placeholder="Flask"
           aria-label="Search">
-  <button id="search-submit" class="btn btn-green my-2 my-sm-0">
+  <button id="search-submit" class="btn btn-light-green my-2 my-sm-0">
     Search
   </button>
 </div>

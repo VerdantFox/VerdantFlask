@@ -2,7 +2,7 @@
   {{ form.hidden_tag() }}
 
   <h1>Comments ({{ post.comments|length }})</h1>
-  <hr class="bgc-2">
+  <hr class="bgc-3">
   <br>
 
   {% include 'core/base/flash_messages.html' %}
@@ -33,7 +33,7 @@
     <p>Commenting has been closed for this post.</p>
   {% endif %}
   <br>
-  <hr class="bgc-2">
+  <hr class="bgc-3">
 
   {% if post.comments %}
     {% for comment in post.comments %}
