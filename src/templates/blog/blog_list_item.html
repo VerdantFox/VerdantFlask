@@ -5,7 +5,7 @@
       <span class="text-muted">[unpublished]</span>
     {% endif %}
   </h1>
-  <hr class="bgc-2">
+  <hr class="bgc-3">
   <p class="text-right blog-list-stats">
     {{ post.created_timestamp.strftime('%B %d, %Y %I:%M %p') }} /
     {% if post.tags %}
@@ -16,7 +16,7 @@
     {% endif %}
     {{ post.comments|length }} comments
   </p>
-  <hr class="bgc-2">
+  <hr class="bgc-3">
   {{ post.html_description|safe }}
   <h3 class="text-right">
     <a href="{{ url_for('blog.view', slug=post.slug) }}">Read more...</a>

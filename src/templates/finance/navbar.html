@@ -1,0 +1,19 @@
+<!-- In dropdown -->
+<ul class="nav nav-pills flex-lg-row flex-column mr-auto">
+  <li class="nav-item">
+    <a class="nav-link {% if active_page == 'finance' %}active{% endif %}"
+        href="{{ url_for('finance.landing') }}">Finance</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if active_page == 'budget' %}active{% endif %}"
+        href="{{ url_for('finance.budget') }}">Budget</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if active_page == 'stocks' %}active{% endif %}"
+        href="{{ url_for('finance.stocks') }}">Stocks</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if active_page == 'net_worth' %}active{% endif %}"
+        href="{{ url_for('finance.net_worth') }}">Net Worth</a>
+  </li>
+</ul>
