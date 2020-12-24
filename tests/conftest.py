@@ -202,14 +202,12 @@ def current_user_admin(mocker):
 @pytest.fixture(params=EXAMPLE_IMAGE_PATHS)
 def example_image(request):
     """Prepare example images for testing"""
-    fp = open(request.param, "rb")
-    yield FileStorage(fp)
-    fp.close()
+    with open(request.param, "rb") as fp:
+        yield FileStorage(fp)
 
 
 @pytest.fixture
 def bad_image_type():
     """Yields gif filesystem image for testing"""
-    fp = open(get_image_path("test_svg.svg"), "rb")
-    yield FileStorage(fp)
-    fp.close()
+    with open(get_image_path("test_svg.svg"), "rb") as fp:
+        yield FileStorage(fp)
