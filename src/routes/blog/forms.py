@@ -25,7 +25,9 @@ class EditBlogPostForm(FlaskForm):
 
     next_page = HiddenField("Next Page", description="Next Page")
     title = StringField(
-        "Title", description="Title", validators=[DataRequired(), Length(max=200)],
+        "Title",
+        description="Title",
+        validators=[DataRequired(), Length(max=200)],
     )
     tags = StringField(
         "Tags",
@@ -58,6 +60,10 @@ class CreateBlogPostForm(EditBlogPostForm):
 
 
 class EditImagesForm(FlaskForm):
-    upload_image = FileField("Upload an Image", description="Upload an Image",)
+    upload_image = FileField(
+        "Upload an Image",
+        description="Upload an Image",
+    )
+    image_name = StringField("Image Name", description="Image name")
     delete_image = HiddenField("Delete Image", description="Delete Image")
     submit_image = SubmitField("Upload Image")

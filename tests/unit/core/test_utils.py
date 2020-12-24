@@ -43,7 +43,12 @@ TEST_STRINGS = [
         None,
         id="with_brackets_and_spaces",
     ),
-    pytest.param("(and, with, tuples)", ["and", "with", "tuples"], None, id="tuples",),
+    pytest.param(
+        "(and, with, tuples)",
+        ["and", "with", "tuples"],
+        None,
+        id="tuples",
+    ),
     pytest.param(
         '["double", "quoted", "list"]',
         ["double", "quoted", "list"],
@@ -56,9 +61,17 @@ TEST_STRINGS = [
         None,
         id="single_quoted",
     ),
-    pytest.param("Keep,UpPeR,CASE", ["Keep", "UpPeR", "CASE"], None, id="keep_casing",),
     pytest.param(
-        "Remove,UpPeR,CASE", ["remove", "upper", "case"], True, id="remove_upper_case",
+        "Keep,UpPeR,CASE",
+        ["Keep", "UpPeR", "CASE"],
+        None,
+        id="keep_casing",
+    ),
+    pytest.param(
+        "Remove,UpPeR,CASE",
+        ["remove", "upper", "case"],
+        True,
+        id="remove_upper_case",
     ),
 ]
 
@@ -117,7 +130,9 @@ def set_up_models(client):
     """Build some models for testing paginator"""
     models = []
     for i in range(20):
-        model = SimpleModel(field=str(i),)
+        model = SimpleModel(
+            field=str(i),
+        )
         model.save()
         models.append(model)
     yield models

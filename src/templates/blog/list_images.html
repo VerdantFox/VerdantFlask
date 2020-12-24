@@ -1,20 +1,20 @@
-{% if post.image_locations %}
+{% if post.images %}
   <h3>Uploaded Images:</h3>
-  {% for image in post.image_locations %}
+  {% for image in post.images %}
     <br><br>
     <p>
       {% if edit_images %}
       <input class="btn btn-sm btn-danger"
              id="submit_image"
              name="submit_image"
-             onclick="$('#delete_image').val('{{ image }}')"
+             onclick="$('#delete_image').val('{{ image.location }}')"
              type="submit"
              value="Delete">
       {% endif %}
-      ![image_name]({{ image }})
+      ![{{ image.name }}]({{ image.location }})
     </p>
-    <img src="{{ image }}" alt="Image not found">
+    <img src="{{ image.location }}" alt="Image not found">
   {% endfor %}
-  {% else %}
+{% else %}
   <p>No Uploaded Images Found</p>
 {% endif %}

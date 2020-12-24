@@ -6,7 +6,8 @@ def test_blog_delete_comment_not_logged_in_fails(client, delete_blogposts, bp1):
     """Test comment delete while not logged in fails with login redirect"""
     comment_id = bp1.comments[0].id
     response = client.post(
-        f"/blog/comment/{bp1.slug}/delete/{comment_id}", follow_redirects=True,
+        f"/blog/comment/{bp1.slug}/delete/{comment_id}",
+        follow_redirects=True,
     )
     assert response.status_code == 200
     data = response.data.decode()
@@ -49,7 +50,8 @@ def test_blog_delete_comment_comments_locked_fails(
     """Test delete comment fails if comments locked"""
     comment_id = bp5.comments[0].id
     response = client.post(
-        f"/blog/comment/{bp5.slug}/delete/{comment_id}", follow_redirects=True,
+        f"/blog/comment/{bp5.slug}/delete/{comment_id}",
+        follow_redirects=True,
     )
     assert response.status_code == 200
     data = response.data.decode()
@@ -65,7 +67,8 @@ def test_blog_comment_delete_wrong_user_fails(
     """Test delete comment as non-owner fails"""
     comment_id = bp1.comments[0].id
     response = client.post(
-        f"/blog/comment/{bp1.slug}/delete/{comment_id}", follow_redirects=True,
+        f"/blog/comment/{bp1.slug}/delete/{comment_id}",
+        follow_redirects=True,
     )
     assert response.status_code == 200
     data = response.data.decode()
@@ -80,7 +83,8 @@ def test_blog_delete_comment_happy(
     """Test comment delete succeeds"""
     comment_id = bp1.comments[0].id
     response = client.post(
-        f"/blog/comment/{bp1.slug}/delete/{comment_id}", follow_redirects=True,
+        f"/blog/comment/{bp1.slug}/delete/{comment_id}",
+        follow_redirects=True,
     )
     assert response.status_code == 200
     bp1 = BlogPost.objects(id=bp1.id).first()

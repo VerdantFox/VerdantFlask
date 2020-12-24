@@ -3,6 +3,7 @@
 Pull secret ids and keys from environment variables set in .env
 """
 
+
 import os
 
 from authomatic import Authomatic
@@ -33,11 +34,11 @@ OAUTH_CONFIG = {
     },
 }
 
-report_errors = (
-    True if os.getenv("REPORT_ERRORS", "0").lower() in ("1", "true") else False
-)
+report_errors = os.getenv("REPORT_ERRORS", "0").lower() in ("1", "true")
 
 # Instantiate Authomatic.
 authomatic = Authomatic(
-    OAUTH_CONFIG, os.getenv("AUTHOMATIC_SECRET"), report_errors=report_errors,
+    OAUTH_CONFIG,
+    os.getenv("AUTHOMATIC_SECRET"),
+    report_errors=report_errors,
 )

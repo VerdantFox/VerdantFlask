@@ -2,7 +2,9 @@
 
 
 def test_logout_basic(
-    client, logged_in_user1_mod, delete_users_mod,
+    client,
+    logged_in_user1_mod,
+    delete_users_mod,
 ):
     """Test logging out a logged in user"""
     response = client.get("/users/logout", follow_redirects=True)

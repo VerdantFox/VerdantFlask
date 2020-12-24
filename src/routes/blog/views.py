@@ -31,7 +31,7 @@ from src.routes.blog.forms import (
     EditBlogPostForm,
     EditImagesForm,
 )
-from src.routes.blog.models import BlogPost, Comment, Reply
+from src.routes.blog.models import BlogPost, Comment, Image, Reply
 from src.routes.users.models import User
 from src.utils import get_slug, list_from_string, setup_pagination
 
@@ -89,7 +89,10 @@ def create() -> FlaskResponse:
     elif form.errors:
         flash("Error creating post!", category="error")
 
-    return render_template("blog/create_post.html", form=form,)
+    return render_template(
+        "blog/create_post.html",
+        form=form,
+    )
 
 
 @blog.route("/view/<slug>", methods=["GET", "POST"])
@@ -137,15 +140,19 @@ def edit_images(slug: str) -> FlaskResponse:
         if blog_image is None:
             flash("Invalid image extension type used!")
         else:
-            blog_image_location = url_for(
+            image_location = url_for(
                 "static", filename=f"images/blog_uploaded/{blog_image}"
             )
-            post.image_locations.append(blog_image_location)
+            image_name = form.image_name.data or "image name"
+            image = Image(name=image_name, location=image_location)
+            post.images.append(image)
             post.save()
             return redirect(url_for("blog.edit_images", slug=slug))
     if form.delete_image.data:
-        post.update(pull__image_locations=form.delete_image.data)
-        post.save()
+        for i, image in enumerate(post.images):
+            if image.location == form.delete_image.data:
+                post.images.pop(i)
+                post.save()
         delete_blog_image(form.delete_image.data)
         return redirect(url_for("blog.edit_images", slug=slug))
 
@@ -429,8 +436,8 @@ def create_or_edit(
     """Create or edit a blog post"""
 
     next_page = form.next_page.data
-    edit = False if post is None else True
-    if edit is False:
+    edit = post is not None
+    if not edit:
         post = BlogPost()
     assert post is not None
 
@@ -444,7 +451,7 @@ def create_or_edit(
     post.html_content = markdown_to_html(post.markdown_content, table=True)
     post.markdown_description = form.description.data.strip()
     post.html_description = markdown_to_html(post.markdown_description)
-    if edit is False:
+    if not edit:
         post.created_timestamp = datetime.now()
     post.updated_timestamp = datetime.now()
     post.save()
@@ -470,7 +477,10 @@ def markdown_to_html(markdown_content: str, table: bool = False) -> str:
         markdown_content = "[TOC]\n\n" + markdown_content
     markdown_content = markdown(markdown_content, extensions=[hilite, extras, toc])
     oembed_content = parse_html(
-        markdown_content, oembed_providers, urlize_all=True, maxwidth=SITE_WIDTH,
+        markdown_content,
+        oembed_providers,
+        urlize_all=True,
+        maxwidth=SITE_WIDTH,
     )
     return Markup(oembed_content)
 
@@ -488,9 +498,7 @@ def get_current_tags() -> OrderedDict:
     all_tags_set.discard(None)
     all_tags_list = list(all_tags_set)
     all_tags_list.sort()
-    tag_counts = {}
-    for tag in all_tags_list:
-        tag_counts[tag] = 0
+    tag_counts = {tag: 0 for tag in all_tags_list}
     for post in posts:
         for tag in post.tags:
             tag_counts[tag] += 1
@@ -535,21 +543,16 @@ def get_comment_authors(post: BaseQuerySet) -> Dict[ObjectId, User]:
                 user_id: user_object # with username, id, and avatar fields
             }
     """
-    if post.comments:
-        comment_author_ids = []
-        for comment in post.comments:
-            comment_author_ids.append(comment.author)
-            if comment.replies:
-                for reply in comment.replies:
-                    comment_author_ids.append(reply.author)
-        users = User.objects(id__in=comment_author_ids).only(
-            "username", "avatar_location"
-        )
-        comment_authors = {user.id: user for user in users}
-
-    else:
-        comment_authors = {}
-    return comment_authors
+    if not post.comments:
+        return {}
+    comment_author_ids = []
+    for comment in post.comments:
+        comment_author_ids.append(comment.author)
+        if comment.replies:
+            for reply in comment.replies:
+                comment_author_ids.append(reply.author)
+    users = User.objects(id__in=comment_author_ids).only("username", "avatar_location")
+    return {user.id: user for user in users}
 
 
 def sort_comments(comments: Iterable[Comment]) -> List[Comment]:

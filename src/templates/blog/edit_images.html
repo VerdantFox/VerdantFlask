@@ -32,7 +32,7 @@
         {{ form.hidden_tag() }}
         {{ form.delete_image() }}
         <div class="row">
-          <div class="col-10">
+          <div class="col-6">
             <div class="custom-file">
               {{ form.upload_image(class='custom-file-input') }}
               {{ form.upload_image.label(class="custom-file-label") }}
@@ -40,6 +40,12 @@
                 <p class="error">{{ error }}</p>
               {% endfor %}
             </div>
+          </div>
+          <div class="col-4">
+            {{ form.image_name(class="form-control", placeholder=form.image_name.description) }}
+            {% for error in form.image_name.errors %}
+              <p class="error">{{ error }}</p>
+            {% endfor %}
           </div>
           <div class="col-2">
             {{ form.submit_image(class="btn btn-green") }}

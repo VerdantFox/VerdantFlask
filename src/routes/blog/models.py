@@ -32,6 +32,13 @@ class Comment(db.EmbeddedDocument):
     replies = db.EmbeddedDocumentListField(Reply, required=False)
 
 
+class Image(db.EmbeddedDocument):
+    """Image embedded document"""
+
+    name = db.StringField(required=False, default="image name")
+    location = db.StringField(required=True)
+
+
 class BlogPost(db.Document):
     """Blog post model"""
 
@@ -44,7 +51,7 @@ class BlogPost(db.Document):
     markdown_content = db.StringField(required=True, max_length=500_000)
     html_description = db.StringField(required=True)
     html_content = db.StringField(required=True)
-    image_locations = db.ListField(db.StringField(), required=False)
+    images = db.EmbeddedDocumentListField(Image, required=False)
     created_timestamp = db.DateTimeField(required=True)
     updated_timestamp = db.DateTimeField(required=True)
     likes = db.IntField(default=0)

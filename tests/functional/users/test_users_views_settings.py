@@ -76,7 +76,11 @@ UPDATES_SET1 = [
 
 @pytest.mark.parametrize("form_data", UPDATES_SET1)
 def test_users_account_settings_post_happy(
-    client, delete_users_mod, logged_in_user1_mod, revert_user1, form_data,
+    client,
+    delete_users_mod,
+    logged_in_user1_mod,
+    revert_user1,
+    form_data,
 ):
     """Test that editing a profile changes user values"""
     form_copy = dict(form_data)

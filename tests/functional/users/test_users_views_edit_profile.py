@@ -141,7 +141,11 @@ def test_users_edit_profile_post_happy(
 
 
 def test_users_edit_profile_post_bad_image_extension_fails(
-    client, delete_users_mod, logged_in_user1_mod, revert_user1, filesystem_image_gif,
+    client,
+    delete_users_mod,
+    logged_in_user1_mod,
+    revert_user1,
+    filesystem_image_gif,
 ):
     """Test that a bad image extension fails with flash message"""
     form_data = {
@@ -209,7 +213,12 @@ BAD_FORMS = [
 
 @pytest.mark.parametrize("form_data, err_msg", BAD_FORMS)
 def test_users_edit_profile_invalid_fields_fail(
-    client, delete_users_mod, logged_in_user1_mod, revert_user1, form_data, err_msg,
+    client,
+    delete_users_mod,
+    logged_in_user1_mod,
+    revert_user1,
+    form_data,
+    err_msg,
 ):
     """Test that form submission fails for invalid form fields"""
     response = client.post("/users/edit_profile", data=form_data, follow_redirects=True)
@@ -227,14 +236,12 @@ def test_users_edit_profile_invalid_fields_fail(
 @pytest.fixture
 def filesystem_image_jpg():
     """Yields jpg filesystem image for testing"""
-    fp = open(get_image_path("test_jpeg.jpg"), "rb")
-    yield FileStorage(fp)
-    fp.close()
+    with open(get_image_path("test_jpeg.jpg"), "rb") as fp:
+        yield FileStorage(fp)
 
 
 @pytest.fixture
 def filesystem_image_gif():
     """Yields gif filesystem image for testing"""
-    fp = open(get_image_path("test_gif.gif"), "rb")
-    yield FileStorage(fp)
-    fp.close()
+    with open(get_image_path("test_gif.gif"), "rb") as fp:
+        yield FileStorage(fp)

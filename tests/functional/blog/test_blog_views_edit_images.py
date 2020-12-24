@@ -49,27 +49,37 @@ def test_blog_edit_images_get_admin_happy(
 
 
 def test_blog_edit_images_submit_upload_happy(
-    tmpdir, mocker, client, current_user_admin, delete_blogposts, bp1, example_image,
+    tmpdir,
+    mocker,
+    client,
+    current_user_admin,
+    delete_blogposts,
+    bp1,
+    example_image,
 ):
     """Test POST of blog image with happy upload form"""
     image_storage_path = tmpdir.mkdir("image_storage_tmp")
     mocker.patch("src.image_handler.BLOG_UPLOAD_FOLDER", image_storage_path)
 
-    form_data = {
-        "upload_image": example_image,
-    }
+    form_data = {"upload_image": example_image, "image_name": "example image"}
     response = client.post(
         f"/blog/edit_images/{bp1.slug}", data=form_data, follow_redirects=True
     )
     assert response.status_code == 200
     data = response.data.decode()
     assert "No Uploaded Images Found" not in data
-    assert data.count("![image_name](/static/images/blog_uploaded/") == 1
+    assert data.count("![example image](/static/images/blog_uploaded/") == 1
 
 
 @pytest.mark.parametrize("get_path", EXAMPLE_IMAGE_PATHS)
 def test_blog_edit_images_submit_delete_happy(
-    tmpdir, mocker, client, current_user_admin, delete_blogposts, bp1, get_path,
+    tmpdir,
+    mocker,
+    client,
+    current_user_admin,
+    delete_blogposts,
+    bp1,
+    get_path,
 ):
     """Test POST of blog image with happy delete form"""
     image_storage_path = tmpdir.mkdir("image_storage")
@@ -94,7 +104,13 @@ def test_blog_edit_images_submit_delete_happy(
 
 
 def test_blog_edit_images_submit_delete_bad_type(
-    tmpdir, mocker, client, current_user_admin, delete_blogposts, bp1, bad_image_type,
+    tmpdir,
+    mocker,
+    client,
+    current_user_admin,
+    delete_blogposts,
+    bp1,
+    bad_image_type,
 ):
     """Test POST of blog image with bad type"""
     image_storage_path = tmpdir.mkdir("image_storage_tmp")

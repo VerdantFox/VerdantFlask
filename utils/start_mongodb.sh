@@ -11,6 +11,7 @@ then
 fi
 sudo rm -rf test_data/mongodb_data
 
+echo "Starting container 'mongodb_test' with username:password 'admin:admin'..."
 docker run -d \
     -p 27017:27017 \
     -v "${PWD}/test_data/mongodb_data:/data/db" \

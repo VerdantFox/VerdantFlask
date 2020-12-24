@@ -20,12 +20,13 @@ BLOG_MODEL_DEFAULTS = {
     "markdown_content": [None, False],
     "html_description": [None, False],
     "html_content": [None, False],
-    "image_locations": [[], False],
     "created_timestamp": [None, True],
     "updated_timestamp": [None, True],
     "likes": [0, True],
     "views": [0, True],
     "can_comment": [True, True],
+    "images.name": [None, False],
+    "images.location": [None, False],
     "comments.id": [ObjectId(), True],
     "comments.author": [None, True],
     "comments.content": [None, False],
@@ -52,7 +53,10 @@ GOOD_BLOGPOSTS = [
             "markdown_content": "## some other cool stuff",
             "html_description": "<h1>Cool blog post</h1>",
             "html_content": "<h2>some other cool stuff</h2>",
-            "image_locations": ["/location/1", "location/2"],
+            "images": [
+                {"location": "/location/1", "name": "first"},
+                {"location": "/location/2", "name": "second"},
+            ],
             "created_timestamp": NOW,
             "updated_timestamp": NOW,
             "likes": 5,
@@ -149,15 +153,14 @@ def get_vals_and_defaults(key, dictionary, post):
         dict_val = dictionary[key] if key in dictionary else None
         post_val = post[key] if key in post else None
     elif len(key_split) == 2:
-        if "comments" in dictionary and len(dictionary["comments"]) > 0:
+        if (key_split[0] == "comments" and len(dictionary.get("comments", [])) > 0) or (
+            key_split[0] == "images" and len(dictionary.get("images", [])) > 0
+        ):
             dict_val = dictionary[key_split[0]][-1].get(key_split[1])
+            post_val = post[key_split[0]][-1][key_split[1]]
         else:
             dict_val = "NO_CHECK"
-        post_val = (
-            post[key_split[0]][-1][key_split[1]]
-            if len(post["comments"]) > 0
-            else "NO_CHECK"
-        )
+            post_val = "NO_CHECK"
     elif len(key_split) == 3:
         if (
             "comments" in dictionary
@@ -271,7 +274,7 @@ BAD_POSTS = [
             "markdown_content": "string",
             "html_description": "string",
             "html_content": "string",
-            "image_locations": "loc1",
+            "images": "loc1",
             "created_timestamp": NOW,
             "updated_timestamp": NOW,
         },

@@ -23,9 +23,7 @@ from src.custom_form_validators import (
     unique_user_field,
 )
 
-timezone_list = []
-for timezone in pytz.common_timezones:
-    timezone_list.append((timezone, timezone))
+timezone_list = [(timezone, timezone) for timezone in pytz.common_timezones]
 
 
 class LoginForm(FlaskForm):
@@ -117,7 +115,9 @@ class UserProfileForm(FlaskForm):
         ],
     )
     full_name = StringField(
-        "Full Name", description="Your Name", validators=[Optional(), Length(max=60)],
+        "Full Name",
+        description="Your Name",
+        validators=[Optional(), Length(max=60)],
     )
     share_name = BooleanField("Share Name", description="Share Name", default=False)
     upload_avatar = FileField(

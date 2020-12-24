@@ -59,7 +59,10 @@ GOOD_USERS = [
         },
         id="standard",
     ),
-    pytest.param({"username": "testuser2"}, id="minimum",),
+    pytest.param(
+        {"username": "testuser2"},
+        id="minimum",
+    ),
 ]
 
 
@@ -96,13 +99,26 @@ def test_new_user_good_succeeds(client, delete_users, user_dict):
 
 
 BAD_USERS = [
-    pytest.param({"email": "bob"}, id="no_username",),
-    pytest.param({"username": "testuser", "email": "not_an_email"}, id="not_an_email",),
-    pytest.param({"username": "testuser", "full_name": "a" * 81}, id="name_too_long",),
     pytest.param(
-        {"username": "testuser", "avatar_location": "a" * 401}, id="name_too_long",
+        {"email": "bob"},
+        id="no_username",
     ),
-    pytest.param({"username": "testuser", "bio": "a" * 1001}, id="bio_too_long",),
+    pytest.param(
+        {"username": "testuser", "email": "not_an_email"},
+        id="not_an_email",
+    ),
+    pytest.param(
+        {"username": "testuser", "full_name": "a" * 81},
+        id="name_too_long",
+    ),
+    pytest.param(
+        {"username": "testuser", "avatar_location": "a" * 401},
+        id="name_too_long",
+    ),
+    pytest.param(
+        {"username": "testuser", "bio": "a" * 1001},
+        id="bio_too_long",
+    ),
     pytest.param(
         {"username": "testuser", "birth_date": "abc123"},
         id="birth_date_not_datetime_object",
@@ -112,18 +128,28 @@ BAD_USERS = [
         id="timezone_not_string",
     ),
     pytest.param(
-        {"username": "testuser", "access_level": "one"}, id="access_level_not_int",
+        {"username": "testuser", "access_level": "one"},
+        id="access_level_not_int",
     ),
     pytest.param(
-        {"username": "testuser", "access_level": 3}, id="access_level_outside_range",
+        {"username": "testuser", "access_level": 3},
+        id="access_level_outside_range",
     ),
     pytest.param(
-        {"username": "testuser", "access_level": 3}, id="access_level_outside_range",
+        {"username": "testuser", "access_level": 3},
+        id="access_level_outside_range",
     ),
-    pytest.param({"username": "testuser", "facebook_id": 3}, id="fb_id_not_string",),
-    pytest.param({"username": "testuser", "google_id": 3}, id="google_id_not_string",),
     pytest.param(
-        {"username": "testuser", "github_id": "asdf"}, id="github_id_not_int",
+        {"username": "testuser", "facebook_id": 3},
+        id="fb_id_not_string",
+    ),
+    pytest.param(
+        {"username": "testuser", "google_id": 3},
+        id="google_id_not_string",
+    ),
+    pytest.param(
+        {"username": "testuser", "github_id": "asdf"},
+        id="github_id_not_int",
     ),
 ]
 
