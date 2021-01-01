@@ -1,8 +1,31 @@
+// -------------------------------------------------------------------------
+// Global variables
+// -------------------------------------------------------------------------
+const domStrings = {
+  viewTimePeriod: "#budget_view",
+  summaryTotal: ".summary-total",
+  red: "in-the-red",
+  green: "in-the-green",
+  budgetSummary: "#budget-summary",
+  budgetCategory: ".budget-category",
+  categoryLabel: ".category-label",
+  categoryTotal: ".category-total",
+  itemPos: ".item-pos",
+  itemTotal: ".item-total",
+  budgetItem: ".budget-item",
+  budgetItemLabel: ".budget-item-label",
+  budgetItemInput: ".input-val",
+  budgetItemTimeperiod: ".input-timeperiod",
+}
+
+// -------------------------------------------------------------------------
+// Classes
+// -------------------------------------------------------------------------
 class BudgetSummary {
   constructor(element) {
     this.element = element
-    this.viewTimePeriod = $("#viewTimePeriod")
-    this.total = $(element).find(".summary-total")
+    this.viewTimePeriod = $(domStrings.viewTimePeriod)
+    this.total = $(element).find(domStrings.summaryTotal)
     this.categoriesArr = []
   }
 
@@ -21,20 +44,20 @@ class BudgetSummary {
   }
 
   setTotalColor() {
-    this.total.removeClass("in-the-red")
-    this.total.removeClass("in-the-green")
+    this.total.removeClass(domStrings.red)
+    this.total.removeClass(domStrings.green)
     if (this.total.text() === "$0") {
       return
     }
     if (this.total.text().charAt(0) === "-") {
-      this.total.addClass("in-the-red")
+      this.total.addClass(domStrings.red)
     } else {
-      this.total.addClass("in-the-green")
+      this.total.addClass(domStrings.green)
     }
   }
 
   createBudgetCategories() {
-    $(".budget-category").each((i, el) => {
+    $(domStrings.budgetCategory).each((i, el) => {
       let budgetCategory = new BudgetCategory(el, this)
       budgetCategory.createBudgetItems()
       this.categoriesArr.push(budgetCategory)
@@ -46,10 +69,10 @@ class BudgetCategory {
   constructor(element, summary) {
     this.summary = summary
     this.element = element
-    this.viewTimePeriod = $("#viewTimePeriod")
-    this.label = $(element).find(".category-label")
-    this.total = $(element).find(".category-total")
-    this.isPos = $(element).find(".item-pos").first()
+    this.viewTimePeriod = $(domStrings.viewTimePeriod)
+    this.label = $(element).find(domStrings.categoryLabel)
+    this.total = $(element).find(domStrings.categoryTotal)
+    this.isPos = $(element).find(domStrings.itemPos).first()
     this.itemsArr = []
   }
 
@@ -65,25 +88,26 @@ class BudgetCategory {
   }
 
   setTotalColor() {
-    this.total.removeClass("in-the-red")
-    this.total.removeClass("in-the-green")
+    this.total.removeClass(domStrings.red)
+    this.total.removeClass(domStrings.green)
     if (this.total.text() === "$0") {
       return
     }
     if (this.isPos.text() === "True") {
-      this.total.addClass("in-the-green")
+      this.total.addClass(domStrings.green)
     } else {
-      this.total.addClass("in-the-red")
+      this.total.addClass(domStrings.red)
     }
   }
 
   createBudgetItems() {
     $(this.element)
-      .find(".budget-item")
+      .find(domStrings.budgetItem)
       .each((i, el) => {
         let budgetItem = new BudgetItem(el, this)
         budgetItem.setListeners()
         this.itemsArr.push(budgetItem)
+        budgetItem.setItemTotal()
       })
   }
 }
@@ -91,12 +115,12 @@ class BudgetCategory {
 class BudgetItem {
   constructor(element, category) {
     this.category = category
-    this.viewTimePeriod = $("#viewTimePeriod")
-    this.label = $(element).find(".budget-item-label")
-    this.input = $(element).find(".input-val")
-    this.inputTimePeriod = $(element).find(".input-timeperiod")
-    this.total = $(element).find(".item-total")
-    this.isPos = $(element).find(".item-pos")
+    this.viewTimePeriod = $(domStrings.viewTimePeriod)
+    this.label = $(element).find(domStrings.budgetItemLabel)
+    this.input = $(element).find(domStrings.budgetItemInput)
+    this.inputTimePeriod = $(element).find(domStrings.budgetItemTimeperiod)
+    this.total = $(element).find(domStrings.itemTotal)
+    this.isPos = $(element).find(domStrings.itemPos)
   }
 
   setItemTotal() {
@@ -110,15 +134,15 @@ class BudgetItem {
   }
 
   setTotalColor() {
-    this.total.removeClass("in-the-red")
-    this.total.removeClass("in-the-green")
+    this.total.removeClass(domStrings.red)
+    this.total.removeClass(domStrings.green)
     if (this.total.text() === "$0") {
       return
     }
     if (this.isPos.text() === "True") {
-      this.total.addClass("in-the-green")
+      this.total.addClass(domStrings.green)
     } else {
-      this.total.addClass("in-the-red")
+      this.total.addClass(domStrings.red)
     }
   }
 
@@ -158,5 +182,5 @@ function getNumFromCurrency(currency) {
 // -------------------------------------------------------------------------
 // Entry point
 // -------------------------------------------------------------------------
-let budgetSummary = new BudgetSummary($("#budget-summary"))
+let budgetSummary = new BudgetSummary($(domStrings.budgetSummary))
 budgetSummary.createBudgetCategories()

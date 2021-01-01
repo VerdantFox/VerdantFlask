@@ -1,12 +1,3 @@
-// DEFINE FUNCTIONS
-
-// http://jquery.eisbehr.de/lazy/example_basic-usage
-$(function () {
-  $(".lazy").lazy()
-})
-
-// RUN CODE
-
 // Blog Stuff
 $(".blog-view table").addClass("table")
 $(".blog-view table").addClass("table-dark")
