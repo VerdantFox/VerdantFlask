@@ -1,0 +1,44 @@
+<div class="card">
+  {% for category in budget.budget %}
+  <div class="budget-category">
+    <div data-toggle="collapse" data-target="#{{ id_safe(category) }}-Collapse" aria-expanded="false" aria-controls="{{ id_safe(category) }}-Collapse" class="cursor-pointer card-header fs-rem-1-8">
+      <span class="category-label">{{ category }}</span>
+      <span class="float-right category-total">$0</span>
+    </div>
+    <div id="{{ id_safe(category) }}-Collapse" class="collapse fs-rem-1-4">
+      {% for item in budget.budget[category] %}
+      <div id="{{ id_safe(category) }}-{{ loop.index }}" class="row budget-item">
+        <div class="col-sm">
+          <label class="budget-item-label" for="{{ id_safe(category) }}-{{ loop.index }}-value">{{ item }}</label>
+        </div>
+        <div class="col">
+          <input class="form-control input-val" inputmode="decimal" type="number" id="{{ id_safe(category) }}-{{ loop.index }}-value">
+        </div>
+        <div class="col">
+          <select class="form-control input-timeperiod" name="{{ id_safe(category) }}-{{ loop.index }}-select" id="{{ id_safe(category) }}-{{ loop.index }}-select">
+          {% set period = budget.budget[category][item]["period"] %}
+          {% include "finance/form_timeperiod_selector.html" %}
+          </select>
+        </div>
+        <div class="col text-right">
+          <span class="item-total" id="{{ id_safe(category) }}-{{ loop.index }}-total">$0</span>
+          <span class="item-pos" hidden aria-hidden="true">{{ budget.budget[category][item].get("pos", "False") }}</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="card">
+  <div id="budget-summary">
+    <div data-toggle="collapse" data-target="#budgetSummary-Collapse" aria-expanded="false" aria-controls="budgetSummary-Collapse" class="cursor-pointer card-header fs-rem-1-8">
+      <span class="summary-label">Summary</span>
+      <span class="float-right summary-total">$0</span>
+    </div>
+    <div id="budgetSummary-Collapse" class="collapse fs-rem-1-4">
+      <h2>GRAPHS GO HERE</h2>
+    </div>
+  </div>
+</div>

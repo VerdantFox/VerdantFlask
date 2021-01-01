@@ -35,32 +35,12 @@
   <p>
     Get a link to your budget to share it with your friends. Or save your
     budget to your account so you can easily access it later and make
-    adjustments over time. Be the master of your financial destiney!
+    adjustments over time. Be the master of your financial destiny!
   </p>
-  <!-- <div class="card">
-    <div class="card-body">
-      <h2>
-        Budget name:
-        <input class="" id="budget-name" placeholder="My First Budget">
-        <button class="btn btn-lg btn-green dropdown-toggle" type="button" id="budgetDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown button
-        </button>
-        <div class="dropdown-menu" aria-labelledby="budgetDropDown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-      </h2>
-    </div>
-  </div> -->
-
   <div class="card card-body d-flex">
     <div class="form-inline">
-      <label class="fs-rem-1-8" for="budget-name">Budget name:</label>
-      <div class="form-group mx-sm-3 mb-2">
-        <label for="inputPassword2" class="sr-only">Budget Name</label>
-        <input class="form-control fs-rem-1-6" id="budget-name" placeholder="My First Budget">
-      </div>
+      <label class="fs-rem-1-8" for="budget_name">Budget name:</label>&nbsp;
+      <input class="form-control fs-rem-1-6" id="budget_name" placeholder="My First Budget">
       <div class="dropdown dropleft ml-auto">
         <i class="fas fa-2x fa-ellipsis-v"
             type="button"
@@ -75,72 +55,17 @@
         </div>
       </div>
     </div>
-  </div>
-
-  <div class="card">
-    <div data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" class="cursor-pointer card-header fs-rem-1-8">
-        Income<span class="float-right">$12,345 <i class="fas fa-chevron-down"></i></span>
-    </div>
-    <div id="collapseExample" class="collapse fs-rem-1-4">
-      <div class="row budget-item">
-        <div class="col-sm">
-          <label id="in-1-label" for="in-1">Salary</label>
-        </div>
-        <div class="col">
-          <input class="form-control" inputmode="decimal" type="text" id="in-1">
-        </div>
-        <div class="col">
-          <select class="form-control" name="in-1-period" id="in-1-period">
-            <option value="52">Weekly</option>
-            <option value="26">Fortnightly</option>
-            <option value="24">Bimonthly</option>
-            <option value="12">Monthly</option>
-            <option value="4">Quarterly</option>
-            <option value="2">Biannual</option>
-            <option value="1">Annually</option>
-          </select>
-        </div>
-        <div class="col text-right">
-          <span class="col">$45,000</span>
-        </div>
-      </div>
-      <div class="row budget-item">
-        <div class="col-sm">
-          <label id="in-1-label" for="in-1">Salary</label>
-        </div>
-        <div class="col">
-          <input class="form-control" inputmode="decimal" type="text" id="in-1">
-        </div>
-        <div class="col">
-          <select class="form-control" name="in-1-period" id="in-1-period">
-            <option value="52">Weekly</option>
-            <option value="26">Fortnightly</option>
-            <option value="24">Bimonthly</option>
-            <option value="12">Monthly</option>
-            <option value="4">Quarterly</option>
-            <option value="2">Biannual</option>
-            <option value="1">Annually</option>
-          </select>
-        </div>
-        <div class="col text-right">
-          <span class="col">$45,000</span>
-        </div>
-      </div>
+    <div class="form-inline">
+        <label class="fs-rem-1-8" for="budget_view">View:</label>&nbsp;
+        <select id="budget_view" class="form-control">
+          {% set period = budget.period %}
+          {% include "finance/form_timeperiod_selector.html" %}
+        </select>
     </div>
   </div>
-
-  <h3>Work/Salary</h3>
-  <h3>Investments</h3>
-  <h2>Expenses</h2>
-  <h3>Loans</h3>
-  <h3>Insurance</h3>
-  <h3>Groceries</h3>
-  <h3>Entertainment</h3>
-  <h3>Transportation & auto</h3>
-  <h3>Children & Dependants</h3>
-  <h3>Other Expenses</h3>
-
-  <h2>Summary</h2>
+  <div id="budge-holder">
+    {% include "finance/budget_inner.html" %}
+  </div>
 </div>
 {% endblock content %}
 {% block scripts %}

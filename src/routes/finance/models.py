@@ -4,21 +4,23 @@ Initial blog inspired by:
 https://charlesleifer.com/blog/how-to-make-a-flask-blog-in-one-hour-or-less/
 """
 
-# from bson.objectid import ObjectId
+from bson.objectid import ObjectId
 
 from src.globals import db
 
 
-class Budget(db.DynamicDocument):
+class Budget(db.Document):
     """Budget Model"""
 
-    author = db.ObjectIdField(required=True)
-    name = db.StringField(required=True, max_length=30)
-    slug = db.StringField()
+    id = db.ObjectIdField(default=lambda: ObjectId())
+    author = db.ObjectIdField(required=False)
+    name = db.StringField(required=False, max_length=30)
+    period = db.IntField(default=12)
+    budget = db.DictField()
 
     meta = {
         "collection": "budget",
-        "indexes": ["author", "name"],
+        "indexes": ["id", "author", "name"],
     }
 
     def __str__(self):
