@@ -16,7 +16,7 @@ DEFAULT_BUDGET = {
     "Income": {
         "Your take-home pay": DEFAULT_FIELD_POS,
         "Partner's take-home pay": DEFAULT_FIELD_POS,
-        "Bonuses and overtime": DEFAULT_FIELD_POS,
+        "Bonuses & overtime": DEFAULT_FIELD_POS,
         "Income from investments": DEFAULT_FIELD_POS,
         "Child support recieved": DEFAULT_FIELD_POS,
         "Stipend": DEFAULT_FIELD_POS,
@@ -64,7 +64,7 @@ DEFAULT_BUDGET = {
         "Bars & Clubs": DEFAULT_FIELD_NEG,
         "Other": DEFAULT_FIELD_NEG,
     },
-    "Medical and Personal Care": {
+    "Medical & Personal Care": {
         "Pet & vet care": DEFAULT_FIELD_NEG,
         "Doctors visits": DEFAULT_FIELD_NEG,
         "Surgery/procdures": DEFAULT_FIELD_NEG,
