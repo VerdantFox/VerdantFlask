@@ -1,4 +1,6 @@
 """budget: module for handling budget.py logic"""
+import json
+
 from .models import Budget
 
 TIME_PERIOD_CONVERTER = {
@@ -126,9 +128,32 @@ DEFAULT_BUDGET = {
 }
 
 
-def get_default_budget(current_user):
+def get_default_budget():
     """Get the default budget as a mongodb Budget model"""
     return Budget(budget=DEFAULT_BUDGET)
+
+
+def set_budget_object(
+    current_user,
+    budget_json,
+    period=12,
+    budget_name=None,
+    budget_id=None,
+    budget_period=None,
+):
+    """Return an instantiated Budget object"""
+    if isinstance(budget_json, str):
+        budget_json = json.loads(budget_json)
+    budget = Budget(budget=budget_json, period=period)
+    try:
+        budget.author = current_user.id
+    except AttributeError:
+        pass
+    if budget_id:
+        budget.id = budget_id
+    if budget_name:
+        budget.name = budget_name
+    return budget
 
 
 def save_budget():

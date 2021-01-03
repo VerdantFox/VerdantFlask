@@ -18,7 +18,20 @@
 <br>
 <div class="container">
   <h1>Finance page</h1>
-  <p>Check out my finance related web pages to get your finances in order.</p>
+  <p>
+    Check out my finance related web pages to get your finances in order.
+    With the <a href="{{ url_for('finance.budget_page') }}">budget</a> app,
+    you can create and edit budgets, complete with interactive graphs to
+    get a sense of where your money is going so you can make changes as
+    necessary. With the
+    <a href="{{ url_for('finance.stocks') }}">stock purchase planner</a>
+    you can look at current stock prices and their trends over time, as well
+    as create a portfolio of stocks to track their performance.
+    Finally with the
+    <a href="{{ url_for('finance.net_worth') }}">net worth calculator</a>
+    You can track your net worth over time, as well as estimate your
+    net worth at a later date based on your current trends or estimated gains.
+  </p>
   <div class="list-group fs-rem-1-5">
     <a class="list-group-item list-group-item-action" href="{{ url_for('finance.budget_page') }}">Budget</a>
     <a class="list-group-item list-group-item-action" href="{{ url_for('finance.stocks') }}">Stock purchase planner</a>

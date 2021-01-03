@@ -29,41 +29,22 @@
     and view your total income and expenses using the same intervals to see
     if your current budget is gaining or losing money. Look at graphs
     to get a quick look at where your money is going so you can make
-    adjustment. Take charge of your finances today by budgeting your lifestyle
+    adjustments. Export your budget to examine it offline.
+    Take charge of your finances today by budgeting your lifestyle
     to fit your means!
   </p>
   <p>
-    Get a link to your budget to share it with your friends. Or save your
+    Your budget will temporarily save to your current session, so don't worry
+    about leaving this page. If you want your budget to persist permanently
+    outside of your current session,
+    <a href="{{ url_for('users.register') }}">register an account</a>
+    and <a href="{{ url_for('users.login') }}">login</a> to save your
     budget to your account so you can easily access it later and make
-    adjustments over time. Be the master of your financial destiny!
+    adjustments over time. With an account you can create and delete multiple
+    budgets as you see fit. Once saved, get a link to your budget to share it
+    with others. Be the master of your financial destiny!
   </p>
-  <div class="card card-body d-flex">
-    <div class="form-inline">
-      <label class="fs-rem-1-8" for="budget_name">Budget name:</label>&nbsp;
-      <input class="form-control fs-rem-1-6" id="budget_name" placeholder="My First Budget">
-      <div class="dropdown dropleft ml-auto">
-        <i class="fas fa-2x fa-ellipsis-v"
-            type="button"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false">
-        </i>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <button class="dropdown-item">Select Budget</button>
-          <button class="dropdown-item">New Budget</button>
-          <button class="dropdown-item">Share</button>
-        </div>
-      </div>
-    </div>
-    <div class="form-inline">
-        <label class="fs-rem-1-8" for="budget_view">View:</label>&nbsp;
-        <select id="budget_view" class="form-control">
-          {% set period = budget.period %}
-          {% include "finance/form_timeperiod_selector.html" %}
-        </select>
-    </div>
-  </div>
-  <div id="budge-holder">
+  <div id="budget-inner">
     {% include "finance/budget_inner.html" %}
   </div>
 </div>

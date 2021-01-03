@@ -2,7 +2,9 @@
 // Global variables
 // -------------------------------------------------------------------------
 const domStrings = {
-  viewTimePeriod: "#budget_view",
+  budgetName: "#budget_name",
+  viewTimePeriod: "#budget_view_period",
+  budgetJson: "#budget_json",
   summaryTotal: ".summary-total",
   red: "in-the-red",
   green: "in-the-green",
@@ -17,6 +19,9 @@ const domStrings = {
   budgetItemInput: ".input-val",
   budgetItemTimeperiod: ".input-timeperiod",
 }
+let budgetStashTime = new Date()
+let budgetUpdatedTime = new Date()
+let budgetSummary
 
 // -------------------------------------------------------------------------
 // Classes
@@ -131,6 +136,7 @@ class BudgetItem {
     this.total.text(formatCurrency(totalVal))
     this.setTotalColor()
     this.category.setCategoryTotal()
+    budgetUpdatedTime = new Date()
   }
 
   setTotalColor() {
@@ -163,7 +169,7 @@ class BudgetItem {
 }
 
 // -------------------------------------------------------------------------
-// Helper function
+// Functions
 // -------------------------------------------------------------------------
 function formatCurrency(num) {
   let neg = ""
@@ -175,12 +181,63 @@ function formatCurrency(num) {
     .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
   return `${neg}$${numFormatted}`
 }
+
 function getNumFromCurrency(currency) {
   return parseInt(currency.replace(/,/g, "").replace(/\$/g, ""), 10)
+}
+
+function setBudgetJson() {
+  let budgetObj = {}
+  budgetSummary.categoriesArr.forEach((category) => {
+    budgetObj[category.label.text()] = {}
+    category.itemsArr.forEach((item) => {
+      let period = parseInt(item.inputTimePeriod.val(), 10)
+      let val = parseInt(item.input.val(), 10)
+      if (val === NaN) {
+        val = null
+      }
+      let isPos = false
+      if (item.isPos.text() === "True") {
+        isPos = true
+      }
+      budgetObj[category.label.text()][item.label.text()] = {
+        value: val,
+        period: period,
+        pos: isPos,
+      }
+    })
+  })
+  $(domStrings.budgetJson).val(JSON.stringify(budgetObj))
+}
+
+function stashBudget() {
+  if (budgetUpdatedTime < budgetStashTime) {
+    return
+  }
+  setBudgetJson()
+  budgetStashTime = new Date()
+  $.post("/finance/budget/stash", $("#budget-form").serialize(), function (
+    data
+  ) {
+    console.log(`Stashed budget at ${budgetStashTime}.`)
+  })
+    .done(function () {
+      console.log("Success!")
+    })
+    .fail(function () {
+      console.log("Error Stashing budget...")
+    })
 }
 
 // -------------------------------------------------------------------------
 // Entry point
 // -------------------------------------------------------------------------
-let budgetSummary = new BudgetSummary($(domStrings.budgetSummary))
+budgetSummary = new BudgetSummary($(domStrings.budgetSummary))
 budgetSummary.createBudgetCategories()
+$(domStrings.budgetName).change(() => {
+  budgetUpdatedTime = new Date()
+})
+$(domStrings.viewTimePeriod).change(() => {
+  budgetUpdatedTime = new Date()
+})
+setInterval(stashBudget, 15000)
