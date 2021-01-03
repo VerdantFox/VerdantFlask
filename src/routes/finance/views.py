@@ -34,6 +34,20 @@ def budget_page() -> str:
     )
 
 
+@finance.route("/budget/new_budget", methods=["GET"])
+def new_budget() -> str:
+    """ Create a new budget, removing old one from stash """
+    session.pop("current_budget", None)
+    form = BudgetForm()
+    return render_template(
+        "finance/budget_inner.html",
+        budget=budget.get_default_budget(),
+        form=form,
+        id_safe=id_safe,
+        refresh_js=True,
+    )
+
+
 @finance.route("/budget/stash", methods=["POST"])
 def stash_current_budget():
     """Stash the currently opened budget on the current_user object"""

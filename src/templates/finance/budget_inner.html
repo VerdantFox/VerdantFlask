@@ -13,7 +13,11 @@
         </i>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
           <button class="dropdown-item">Select Budget</button>
-          <button class="dropdown-item">New Budget</button>
+          <button
+            class="dropdown-item"
+            ic-confirm="Unsaved budget data will be deleted. Continue?"
+            ic-get-from="{{ url_for('finance.new_budget') }}"
+            ic-target='#budget-inner'>New Budget</button>
           <button class="dropdown-item">Share</button>
         </div>
       </div>
@@ -71,13 +75,18 @@
       </div>
     </div>
   </div>
-  {#
-  <div id="nowhere"></div>
-  <button class="btn btn-green"
-    onclick="setComment('{{ textarea_id }}');"
-    ic-post-to="{{ url_for('finance.stash_current_budget') }}"
-    ic-target='#nowhere'>
-      Submit
-  </button>
-  #}
 </form>
+
+{% if refresh_js %}
+<script>
+  budgetSummary = new BudgetSummary($(domStrings.budgetSummary))
+  budgetSummary.createBudgetCategories()
+  $(domStrings.budgetName).change(() => {
+    budgetUpdatedTime = new Date()
+  })
+  $(domStrings.viewTimePeriod).change(() => {
+    budgetUpdatedTime = new Date()
+  })
+  setInterval(stashBudget, 15000)
+</script>
+{% endif %}
