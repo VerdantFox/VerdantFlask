@@ -1,11 +1,8 @@
-import json
-
-from flask import Blueprint, render_template, session
-from flask_login import current_user, login_required
+from flask import Blueprint, abort, render_template, session
+from flask_login import login_required
 
 from . import budget
 from .forms import BudgetForm
-from .models import Budget
 
 finance = Blueprint("finance", __name__)
 
@@ -24,8 +21,7 @@ def budget_page() -> str:
     """Sub application for budget planning"""
     budget_json = session.get("current_budget")
     if budget_json:
-        budget_dict = json.loads(budget_json)
-        current_budget = Budget(**budget_dict)
+        current_budget = budget.json_to_obj(budget_json)
     else:
         current_budget = budget.get_default_budget()
     form = BudgetForm()
@@ -50,25 +46,32 @@ def new_budget() -> str:
 
 @finance.route("/budget/stash", methods=["POST"])
 def stash_current_budget():
-    """Stash the currently opened budget on the current_user object"""
-    form = BudgetForm()
-    if not form.validate_on_submit():
-        print(dict(form.errors.items()))
-        return dict(form.errors.items())
-    stashed_budget = budget.set_budget_object(
-        current_user,
-        form.budget_json.data,
-        form.budget_view_period.data,
-        form.budget_name.data,
-    )
+    """Stash the currently opened budget in the session"""
+    try:
+        stashed_budget = budget.set_budget_from_post()
+    except RuntimeError:
+        abort(500, "Failed to stash Budget.")
     session["current_budget"] = stashed_budget.to_json()
-    return {"cache": "success"}
+    return {"budget_stash": "success"}
 
 
 @finance.route("/budget/save", methods=["POST"])
 @login_required
 def save_current_budget():
     """Save the currently opened budget to mongoengine"""
+    form = BudgetForm()
+    try:
+        budget_obj = budget.set_budget_from_post()
+        budget_obj.save()
+    except RuntimeError:
+        abort(500, "Failed to save Budget.")
+    return render_template(
+        "finance/budget_inner.html",
+        budget=budget_obj,
+        form=form,
+        id_safe=id_safe,
+        refresh_js=True,
+    )
 
 
 @finance.route("/budget/retrieve/{budget_id}", methods=["POST"])

@@ -1,6 +1,10 @@
 """budget: module for handling budget.py logic"""
 import json
 
+from bson.objectid import ObjectId
+from flask_login import current_user
+
+from .forms import BudgetForm
 from .models import Budget
 
 TIME_PERIOD_CONVERTER = {
@@ -128,39 +132,51 @@ DEFAULT_BUDGET = {
 }
 
 
+def json_to_obj(budget_json):
+    """Deserialize a budget json to a budget object"""
+    budget_dict = json.loads(budget_json)
+    author = budget_dict.pop("author", None)
+    if author:
+        budget_dict["author"] = ObjectId(author["$oid"])
+    budget_dict["id"] = ObjectId(budget_dict.pop("_id")["$oid"])
+    return Budget(**budget_dict)
+
+
 def get_default_budget():
     """Get the default budget as a mongodb Budget model"""
     return Budget(budget=DEFAULT_BUDGET)
 
 
 def set_budget_object(
-    current_user,
     budget_json,
     period=12,
     budget_name=None,
     budget_id=None,
-    budget_period=None,
 ):
     """Return an instantiated Budget object"""
     if isinstance(budget_json, str):
-        budget_json = json.loads(budget_json)
+        budget_json = json.loads(budget_json.strip())
     budget = Budget(budget=budget_json, period=period)
     try:
         budget.author = current_user.id
     except AttributeError:
         pass
     if budget_id:
-        budget.id = budget_id
+        budget.id = ObjectId(budget_id)
     if budget_name:
         budget.name = budget_name
     return budget
 
 
-def save_budget():
-    """Save a budget"""
-    pass
-
-
-def delete_budget():
-    """Delete a budget"""
-    pass
+def set_budget_from_post():
+    """Set a budget object from form post"""
+    form = BudgetForm()
+    if not form.validate_on_submit():
+        print(dict(form.errors.items()))
+        raise RuntimeError(str(dict(form.errors.items())))
+    return set_budget_object(
+        form.budget_json.data,
+        form.budget_view_period.data,
+        form.budget_name.data,
+        form.budget_id.data,
+    )

@@ -12,7 +12,7 @@ from src.globals import db
 class Budget(db.Document):
     """Budget Model"""
 
-    id = db.ObjectIdField(default=lambda: ObjectId())
+    id = db.ObjectIdField(default=lambda: ObjectId(), primary_key=True)
     author = db.ObjectIdField(required=False)
     name = db.StringField(required=False, max_length=30)
     period = db.IntField(default=12)
@@ -20,8 +20,8 @@ class Budget(db.Document):
 
     meta = {
         "collection": "budget",
-        "indexes": ["id", "author", "name"],
+        "indexes": ["author", "name"],
     }
 
     def __str__(self):
-        return f"Budget(author: {self.author}, name: {self.name})"
+        return f"Budget(id: {self.id}, author: {self.author}, name: {self.name})"

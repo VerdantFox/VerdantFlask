@@ -1,8 +1,10 @@
 <form id="budget-form" name="budget-form" method="POST">
-  {{ form.hidden_tag() }}
+  {{ form.budget_id(value=budget.id) }}
+  {{ form.budget_json }}
+  {{ form.csrf_token }}
   <div class="card card-body d-flex">
     <div class="form-inline">
-      <label class="fs-rem-1-8" for="budget_name">Budget name:&nbsp;</label>
+      <label class="fs-rem-1-8" for="budget_name">Budget ({{ budget_number }}) name:&nbsp;</label>
       <input class="form-control fs-rem-1-6" id="budget_name" name="budget_name" placeholder="My First Budget" maxlength="30" value="{{ budget.name if budget.name else '' }}">
       <div class="dropdown dropleft ml-auto">
         <i class="fas fa-2x fa-ellipsis-v"
@@ -13,6 +15,10 @@
         </i>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
           <button class="dropdown-item">Select Budget</button>
+          <button
+            class="dropdown-item"
+            ic-post-to="{{ url_for('finance.save_current_budget') }}"
+            ic-target='#budget-inner'>Save Budget</button>
           <button
             class="dropdown-item"
             ic-confirm="Unsaved budget data will be deleted. Continue?"
@@ -87,6 +93,7 @@
   $(domStrings.viewTimePeriod).change(() => {
     budgetUpdatedTime = new Date()
   })
+  setBudgetJson()
   setInterval(stashBudget, 15000)
 </script>
 {% endif %}
