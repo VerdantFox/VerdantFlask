@@ -38,6 +38,7 @@ DEFAULT_PICS = sorted(os.listdir(DEFAULT_AVATARS_PATH))
 def register() -> FlaskResponse:
     """Registers the user in 'flask' database, 'users' collection"""
     logout_user()
+    session_clear_special()
     session["next"] = request.args.get("next")
     form = RegistrationForm()
     if form.validate_on_submit():
@@ -82,8 +83,9 @@ def login() -> FlaskResponse:
 @login_required
 def logout() -> FlaskResponse:
     logout_user()
+    session_clear_special()
     flash("You have logged out.", category="success")
-    return redirect(url_for("users.login"))
+    return redirect(url_for("users.login", next=request.args.get("next")))
 
 
 @users.route("/profile/<username>", methods=["GET", "POST"])
@@ -177,6 +179,7 @@ def delete_account() -> FlaskResponse:
     """Delete current user's account"""
     current_user.delete()
     logout_user()
+    session_clear_special()
     flash("Account deleted!", category="success")
     return redirect(url_for("core.index"))
 
@@ -329,6 +332,15 @@ def login_and_redirect(user: User) -> FlaskResponse:
     else:
         next_page = url_for("core.index")
     return redirect(next_page)
+
+
+def session_clear_special():
+    """Clear special items from the session
+
+    Note: This function will need to be updated for apps that store
+    objects on the session
+    """
+    session.pop("current_budget", None)
 
 
 def flash_register_message(username: str) -> None:

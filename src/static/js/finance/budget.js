@@ -241,4 +241,4 @@ $(domStrings.viewTimePeriod).change(() => {
   budgetUpdatedTime = new Date()
 })
 setBudgetJson()
-setInterval(stashBudget, 15000)
+setInterval(stashBudget, 10000)

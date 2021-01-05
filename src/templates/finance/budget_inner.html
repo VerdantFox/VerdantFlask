@@ -4,27 +4,72 @@
   {{ form.csrf_token }}
   <div class="card card-body d-flex">
     <div class="form-inline">
-      <label class="fs-rem-1-8" for="budget_name">Budget ({{ budget_number }}) name:&nbsp;</label>
+      <label class="fs-rem-1-8" for="budget_name">Budget name:&nbsp;</label>
       <input class="form-control fs-rem-1-6" id="budget_name" name="budget_name" placeholder="My First Budget" maxlength="30" value="{{ budget.name if budget.name else '' }}">
-      <div class="dropdown dropleft ml-auto">
+      <div class="btn-group dropleft ml-auto">
         <i class="fas fa-2x fa-ellipsis-v"
             type="button"
             data-toggle="dropdown"
             aria-haspopup="true"
-            aria-expanded="false">
-        </i>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <button class="dropdown-item">Select Budget</button>
-          <button
-            class="dropdown-item"
-            ic-post-to="{{ url_for('finance.save_current_budget') }}"
-            ic-target='#budget-inner'>Save Budget</button>
-          <button
-            class="dropdown-item"
-            ic-confirm="Unsaved budget data will be deleted. Continue?"
-            ic-get-from="{{ url_for('finance.new_budget') }}"
-            ic-target='#budget-inner'>New Budget</button>
-          <button class="dropdown-item">Share</button>
+            aria-expanded="false"></i>
+        <div class="dropdown-menu">
+          {% if not current_user.is_authenticated %}
+          <h6 class="dropdown-header">
+            <a href="{{ url_for('users.login', next=url_for('finance.budget_page')) }}">Log in</a> to access disabled features
+          </h6>
+          {% endif %}
+          <button class="dropdown-item{% if not current_user.is_authenticated %} disabled{% endif %}"
+                  type="button"
+                  ic-post-to="{{ url_for('finance.save_current_budget') }}"
+                  ic-target='#budget-inner'>Save Budget</button>
+          <button class="dropdown-item{% if not current_user.is_authenticated %} disabled{% endif %}"
+                  type="button">Share Budget</button>
+          <button class="dropdown-item"
+                  type="button"
+                  ic-confirm="Unsaved budget data will be deleted. Continue?"
+                  ic-get-from="{{ url_for('finance.new_budget') }}"
+                  ic-target='#budget-inner'>New Budget</button>
+          <div class="dropdown-submenu">
+            <button class="dropdown-item subdrop{% if not current_user.is_authenticated %} disabled{% endif %}"
+                    type="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false">Select a Budget</button>
+            <div class="dropdown-menu">
+              {% for saved_budget in saved_budgets %}
+                <button class="dropdown-item"
+                        type="button"
+                        ic-post-to="{{ url_for('finance.retrieve_budget', budget_id=saved_budget.id) }}"
+                        ic-target='#budget-inner'>
+                  <span>{{ saved_budget.name }}</span>
+                  {% if saved_budget.id == budget.id %}
+                  <span>&nbsp;(current)</span>
+                  {% endif %}
+                </button>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="dropdown-submenu">
+            <button class="dropdown-item subdrop{% if not current_user.is_authenticated %} disabled{% endif %}"
+                    type="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false">Delete a Budget</button>
+            <div class="dropdown-menu">
+              {% for saved_budget in saved_budgets %}
+                <button class="dropdown-item"
+                        type="button"
+                        ic-confirm="Are you sure you want to delete '{{ saved_budget.name }}'?"
+                        ic-post-to="{{ url_for('finance.delete_budget', budget_id=saved_budget.id) }}"
+                        ic-target='#budget-inner'>
+                  <span>{{ saved_budget.name }}</span>
+                  {% if saved_budget.id == budget.id %}
+                  <span>&nbsp;(current)</span>
+                  {% endif %}
+                </button>
+              {% endfor %}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -95,5 +140,6 @@
   })
   setBudgetJson()
   setInterval(stashBudget, 15000)
+  readyDropdownSubmenus()
 </script>
 {% endif %}

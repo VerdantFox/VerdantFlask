@@ -14,3 +14,13 @@ $("#blog-search").keydown(function (event) {
     document.getElementById("search-submit").click()
   }
 })
+
+// dropdown submenu capabilities
+function readyDropdownSubmenus() {
+  $(".dropdown-submenu button.subdrop").on("click", function (e) {
+    $(this).next("div").toggle()
+    e.stopPropagation()
+    e.preventDefault()
+  })
+}
+$(document).ready(readyDropdownSubmenus)

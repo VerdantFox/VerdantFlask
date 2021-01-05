@@ -44,7 +44,7 @@
                 <a class="dropdown-item" href="{{ url_for('users.account_settings') }}">
                   <i class="fas fa-cog"></i> Settings
                 </a>
-                <a class="dropdown-item" href="{{ url_for('users.logout') }}">
+                <a class="dropdown-item" href="{{ url_for('users.logout', next=request.path) }}">
                   <i class="fas fa-sign-out-alt"></i> Logout
                 </a>
               </div>

@@ -1,7 +1,7 @@
-from flask import Blueprint, abort, render_template, session
+from flask import Blueprint, render_template, session
 from flask_login import login_required
 
-from . import budget
+from . import budget_helpers
 from .forms import BudgetForm
 
 finance = Blueprint("finance", __name__)
@@ -19,25 +19,25 @@ def landing() -> str:
 @finance.route("/budget", methods=["GET"])
 def budget_page() -> str:
     """Sub application for budget planning"""
-    budget_json = session.get("current_budget")
-    if budget_json:
-        current_budget = budget.json_to_obj(budget_json)
-    else:
-        current_budget = budget.get_default_budget()
-    form = BudgetForm()
     return render_template(
-        "finance/budget.html", budget=current_budget, id_safe=id_safe, form=form
+        "finance/budget.html",
+        budget=budget_helpers.get_current_or_default_budget(),
+        saved_budgets=budget_helpers.get_user_budgets_limited(),
+        id_safe=id_safe,
+        form=BudgetForm(),
     )
 
 
 @finance.route("/budget/new_budget", methods=["GET"])
 def new_budget() -> str:
     """ Create a new budget, removing old one from stash """
+    budget_helpers.save_budget()
     session.pop("current_budget", None)
     form = BudgetForm()
     return render_template(
         "finance/budget_inner.html",
-        budget=budget.get_default_budget(),
+        budget=budget_helpers.get_default_budget(),
+        saved_budgets=budget_helpers.get_user_budgets_limited(),
         form=form,
         id_safe=id_safe,
         refresh_js=True,
@@ -47,10 +47,7 @@ def new_budget() -> str:
 @finance.route("/budget/stash", methods=["POST"])
 def stash_current_budget():
     """Stash the currently opened budget in the session"""
-    try:
-        stashed_budget = budget.set_budget_from_post()
-    except RuntimeError:
-        abort(500, "Failed to stash Budget.")
+    stashed_budget = budget_helpers.set_budget_from_post()
     session["current_budget"] = stashed_budget.to_json()
     return {"budget_stash": "success"}
 
@@ -60,27 +57,54 @@ def stash_current_budget():
 def save_current_budget():
     """Save the currently opened budget to mongoengine"""
     form = BudgetForm()
-    try:
-        budget_obj = budget.set_budget_from_post()
-        budget_obj.save()
-    except RuntimeError:
-        abort(500, "Failed to save Budget.")
+    budget_obj = budget_helpers.save_budget()
     return render_template(
         "finance/budget_inner.html",
         budget=budget_obj,
+        saved_budgets=budget_helpers.get_user_budgets_limited(),
         form=form,
         id_safe=id_safe,
         refresh_js=True,
     )
 
 
-@finance.route("/budget/retrieve/{budget_id}", methods=["POST"])
+@finance.route("/budget/retrieve/<budget_id>", methods=["POST"])
 @login_required
 def retrieve_budget(budget_id) -> str:
     """Retrieve a budget, only available to budget owner"""
+    form = BudgetForm()
+    budget_helpers.save_budget()
+    return render_template(
+        "finance/budget_inner.html",
+        budget=budget_helpers.retrieve_budget(budget_id),
+        saved_budgets=budget_helpers.get_user_budgets_limited(),
+        form=form,
+        id_safe=id_safe,
+        refresh_js=True,
+    )
 
 
-@finance.route("/budget/share/{budget_id}", methods=["GET"])
+@finance.route("/budget/delete/<budget_id>", methods=["POST"])
+@login_required
+def delete_budget(budget_id) -> str:
+    """Retrieve a budget, only available to budget owner"""
+    form = BudgetForm()
+    if budget_id == form.budget_id:
+        session.pop("current_budget", None)
+    else:
+        budget_helpers.save_budget()
+    budget_helpers.delete_budget(budget_id)
+    return render_template(
+        "finance/budget_inner.html",
+        budget=budget_helpers.get_current_or_default_budget(),
+        saved_budgets=budget_helpers.get_user_budgets_limited(),
+        form=form,
+        id_safe=id_safe,
+        refresh_js=True,
+    )
+
+
+@finance.route("/budget/share/<budget_id>", methods=["GET"])
 def share_budget(budget_id) -> str:
     """Retrieve a budget for sharing purposes, in uneditable format"""
     return render_template("finance/budget_share.html")

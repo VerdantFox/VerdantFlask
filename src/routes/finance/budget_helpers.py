@@ -2,6 +2,7 @@
 import json
 
 from bson.objectid import ObjectId
+from flask import session
 from flask_login import current_user
 
 from .forms import BudgetForm
@@ -147,6 +148,14 @@ def get_default_budget():
     return Budget(budget=DEFAULT_BUDGET)
 
 
+def get_current_or_default_budget():
+    """Retrieve current budget from session or default budget if none in session"""
+    budget_json = session.get("current_budget")
+    if budget_json:
+        return json_to_obj(budget_json)
+    return get_default_budget()
+
+
 def set_budget_object(
     budget_json,
     period=12,
@@ -172,11 +181,41 @@ def set_budget_from_post():
     """Set a budget object from form post"""
     form = BudgetForm()
     if not form.validate_on_submit():
-        print(dict(form.errors.items()))
-        raise RuntimeError(str(dict(form.errors.items())))
+        raise RuntimeError(dict(form.errors.items()))
     return set_budget_object(
         form.budget_json.data,
         form.budget_view_period.data,
         form.budget_name.data,
         form.budget_id.data,
     )
+
+
+def get_user_budgets_limited():
+    """Get the saved budget names of the current user"""
+    if current_user.is_authenticated:
+        return Budget.objects(author=current_user.id).only("name")
+    return []
+
+
+def save_budget():
+    """Save current budget"""
+    if not current_user.is_authenticated:
+        return get_current_or_default_budget()
+    try:
+        budget_obj = set_budget_from_post()
+    except RuntimeError:
+        budget_obj = get_current_or_default_budget()
+    if not budget_obj.name:
+        budget_obj.name = "unnamed budget"
+    budget_obj.save()
+    return budget_obj
+
+
+def retrieve_budget(budget_id):
+    """Retrieve a specific saved budget"""
+    return Budget.objects(id=budget_id).first()
+
+
+def delete_budget(budget_id):
+    """Delete a specific saved budget"""
+    return Budget.objects(id=budget_id).first().delete()
