@@ -1,6 +1,15 @@
 // -------------------------------------------------------------------------
 // Global variables
 // -------------------------------------------------------------------------
+const budgetItemCreatorHTML = `<div class="row budget-item-creator">
+  <div class="col-md">
+    <input maxlength="40" class="form-control input-val new-item-name" placeholder="Item Name">
+  </div>
+  <div class="col-md">
+    <button type="button" class="float-right btn btn-green ml-auto new-item-add-button">Add Item</button>
+  </div>
+</div>`
+
 const domStrings = {
   budgetName: "#budget_name",
   viewTimePeriod: "#budget_view_period",
@@ -18,6 +27,13 @@ const domStrings = {
   budgetItemLabel: ".budget-item-label",
   budgetItemInput: ".input-val",
   budgetItemTimeperiod: ".input-timeperiod",
+  budgetForm: "#budget-form",
+  categoryCreator: "#category-creator",
+  newCategoryName: "#new-category-name",
+  newCategoryAddButton: "#new-category-add-button",
+  newItemCreator: ".budget-item-creator",
+  newItemName: ".new-item-name",
+  newItemAddButton: ".new-item-add-button",
 }
 let budgetStashTime = new Date()
 let budgetUpdatedTime = new Date()
@@ -32,6 +48,7 @@ class BudgetSummary {
     this.viewTimePeriod = $(domStrings.viewTimePeriod)
     this.total = $(element).find(domStrings.summaryTotal)
     this.categoriesArr = []
+    this.categoryCounter = 0
   }
 
   setSummaryTotal() {
@@ -61,23 +78,56 @@ class BudgetSummary {
     }
   }
 
-  createBudgetCategories() {
+  addBudgetCategories() {
     $(domStrings.budgetCategory).each((i, el) => {
-      let budgetCategory = new BudgetCategory(el, this)
-      budgetCategory.createBudgetItems()
+      this.categoryCounter += 1
+      const budgetCategory = new BudgetCategory(el, this)
+      budgetCategory.addBudgetItems()
+      budgetCategory.setCategoryTotal()
       this.categoriesArr.push(budgetCategory)
+      budgetCategory.setListeners()
     })
+  }
+
+  newCategoryHtmlCreator(category_name) {
+    const categoryHTML = `<div class="budget-category">
+      <div data-toggle="collapse" data-target="#collapse-${this.categoryCounter}" class="cursor-pointer card-header fs-rem-1-8">
+        <div class="row">
+          <div class="col-md"><span class="category-label">${category_name}</span></div>
+          <div class="col-md"><span class="float-right category-total">$0</span></div>
+        </div>
+      </div>
+      <div id="collapse-${this.categoryCounter}" class="collapse fs-rem-1-4">
+        ${budgetItemCreatorHTML}
+      </div>
+    </div>`
+    return $.parseHTML(categoryHTML)
+  }
+
+  createNewBudgetCategory() {
+    this.categoryCounter += 1
+    const categoryName = $(domStrings.newCategoryName).val()
+    const lastCategory = this.categoriesArr[this.categoriesArr.length - 1]
+      .element
+    const newCategory = this.newCategoryHtmlCreator(categoryName)
+    $(lastCategory).after(newCategory)
+    const budgetCategory = new BudgetCategory(newCategory, this)
+    this.categoriesArr.push(budgetCategory)
+    budgetCategory.setListeners()
   }
 }
 
 class BudgetCategory {
   constructor(element, summary) {
-    this.summary = summary
     this.element = element
+    this.summary = summary
     this.viewTimePeriod = $(domStrings.viewTimePeriod)
     this.label = $(element).find(domStrings.categoryLabel)
     this.total = $(element).find(domStrings.categoryTotal)
     this.isPos = $(element).find(domStrings.itemPos).first()
+    this.newItemCreator = $(element).find(domStrings.newItemCreator).first()
+    this.newItemName = $(element).find(domStrings.newItemName).first()
+    this.newItemAddButton = $(element).find(domStrings.newItemAddButton).first()
     this.itemsArr = []
   }
 
@@ -105,20 +155,73 @@ class BudgetCategory {
     }
   }
 
-  createBudgetItems() {
+  addBudgetItems() {
     $(this.element)
       .find(domStrings.budgetItem)
       .each((i, el) => {
-        let budgetItem = new BudgetItem(el, this)
+        const budgetItem = new BudgetItem(el, this)
         budgetItem.setListeners()
         this.itemsArr.push(budgetItem)
         budgetItem.setItemTotal()
       })
   }
+
+  newItemHtmlCreator(itemName) {
+    const budgetItemHTML = `<div class="row budget-item">
+      <div class="col-sm">
+        <label class="budget-item-label">${itemName}</label>
+      </div>
+      <div class="col">
+        <input class="form-control input-val" inputmode="decimal" type="number" }}">
+      </div>
+      <div class="col">
+        <select class="form-control input-timeperiod">
+          <option value="52">Weekly</option>
+          <option value="26">Fortnightly</option>
+          <option value="24">Bimonthly</option>
+          <option selected value="12">Monthly</option>
+          <option value="4">Quarterly</option>
+          <option value="2">Biannually</option>
+          <option value="1">Annually</option>
+        </select>
+      </div>
+      <div class="col text-right">
+        <span class="item-total">$0</span>
+        <span class="item-pos" hidden>${this.isPos.text()}</span>
+      </div>
+    </div>`
+    return $.parseHTML(budgetItemHTML)
+  }
+
+  createNewBudgetItem() {
+    const itemName = this.newItemName.val()
+    const lastItem = this.itemsArr[this.itemsArr.length - 1].element
+    const newItem = this.newItemHtmlCreator(itemName)
+    $(lastItem).after(newItem)
+    const budgetItem = new BudgetItem(newItem, this)
+    budgetItem.setListeners()
+    this.itemsArr.push(budgetItem)
+    budgetItem.setItemTotal()
+  }
+
+  setListeners() {
+    this.newItemAddButton.click(() => {
+      this.createNewBudgetItem()
+      this.newItemName.val("")
+    })
+    this.newItemName.keypress((key) => {
+      if (key.which == 13) {
+        key.preventDefault()
+        this.createNewBudgetItem()
+        this.newItemName.val("")
+      }
+    })
+  }
 }
 
 class BudgetItem {
   constructor(element, category) {
+    this.element = element
     this.category = category
     this.viewTimePeriod = $(domStrings.viewTimePeriod)
     this.label = $(element).find(domStrings.budgetItemLabel)
@@ -216,11 +319,13 @@ function stashBudget() {
   }
   setBudgetJson()
   budgetStashTime = new Date()
-  $.post("/finance/budget/stash", $("#budget-form").serialize(), function (
-    data
-  ) {
-    console.log(`Stashed budget at ${budgetStashTime}.`)
-  })
+  $.post(
+    "/finance/budget/stash",
+    $(domStrings.budgetForm).serialize(),
+    function (data) {
+      console.log(`Stashed budget at ${budgetStashTime}.`)
+    }
+  )
     .done(function () {
       console.log("Success!")
     })
@@ -229,16 +334,35 @@ function stashBudget() {
     })
 }
 
+function addEvents(budgetSummary) {
+  $(domStrings.newCategoryAddButton).click(() => {
+    budgetSummary.createNewBudgetCategory()
+    $(domStrings.newCategoryName).val("")
+  })
+  $(domStrings.newCategoryName).keypress((key) => {
+    if (key.which == 13) {
+      key.preventDefault()
+      budgetSummary.createNewBudgetCategory()
+      $(domStrings.newCategoryName).val("")
+    }
+  })
+  $(domStrings.budgetName).change(() => {
+    budgetUpdatedTime = new Date()
+  })
+  $(domStrings.viewTimePeriod).change(() => {
+    budgetUpdatedTime = new Date()
+  })
+}
+
+function setUpBudget() {
+  budgetSummary = new BudgetSummary($(domStrings.budgetSummary))
+  budgetSummary.addBudgetCategories()
+  addEvents(budgetSummary)
+  setBudgetJson()
+  setInterval(stashBudget, 10000)
+}
+
 // -------------------------------------------------------------------------
 // Entry point
 // -------------------------------------------------------------------------
-budgetSummary = new BudgetSummary($(domStrings.budgetSummary))
-budgetSummary.createBudgetCategories()
-$(domStrings.budgetName).change(() => {
-  budgetUpdatedTime = new Date()
-})
-$(domStrings.viewTimePeriod).change(() => {
-  budgetUpdatedTime = new Date()
-})
-setBudgetJson()
-setInterval(stashBudget, 10000)
+setUpBudget()

@@ -17,7 +17,7 @@ VIEW_PERIODS = [
 class BudgetForm(FlaskForm):
     budget_id = HiddenField("Budget ID")
     budget_name = StringField(
-        "Budget Name", description="My First Budget", validators=[Length(max=30)]
+        "Budget Name", description="My First Budget", validators=[Length(max=20)]
     )
     budget_view_period = SelectField("View Time Period", choices=VIEW_PERIODS)
     budget_json = HiddenField("Budget")

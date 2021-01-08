@@ -5,7 +5,7 @@
   <div class="card card-body d-flex">
     <div class="form-inline">
       <label class="fs-rem-1-8" for="budget_name">Budget name:&nbsp;</label>
-      <input class="form-control fs-rem-1-6" id="budget_name" name="budget_name" placeholder="My First Budget" maxlength="30" value="{{ budget.name if budget.name else '' }}">
+      <input class="form-control fs-rem-1-6" id="budget_name" name="budget_name" placeholder="My First Budget" maxlength="20" value="{{ budget.name if budget.name else '' }}">
       <div class="btn-group dropleft ml-auto">
         <i class="fas fa-2x fa-ellipsis-v"
             type="button"
@@ -85,34 +85,54 @@
   <div class="card">
     {% for category in budget.budget %}
     <div class="budget-category">
-      <div data-toggle="collapse" data-target="#{{ id_safe(category) }}-Collapse" aria-expanded="false" aria-controls="{{ id_safe(category) }}-Collapse" class="cursor-pointer card-header fs-rem-1-8">
-        <span class="category-label">{{ category }}</span>
-        <span class="float-right category-total"></span>
+      <div data-toggle="collapse" data-target="#collapse-{{ loop.index }}" class="cursor-pointer card-header fs-rem-1-8">
+        <div class="row">
+          <div class="col-md"><span class="category-label">{{ category }}</span></div>
+          <div class="col-md"><span class="float-right category-total"></span></div>
+        </div>
       </div>
-      <div id="{{ id_safe(category) }}-Collapse" class="collapse fs-rem-1-4">
+      <div id="collapse-{{ loop.index }}" class="collapse fs-rem-1-4">
         {% for item in budget.budget[category] %}
-        <div id="{{ id_safe(category) }}-{{ loop.index }}" class="row budget-item">
+        <div class="row budget-item">
           <div class="col-sm">
-            <label class="budget-item-label" for="{{ id_safe(category) }}-{{ loop.index }}-value">{{ item }}</label>
+            <label class="budget-item-label">{{ item }}</label>
           </div>
           <div class="col">
-            <input class="form-control input-val" inputmode="decimal" type="number" id="{{ id_safe(category) }}-{{ loop.index }}-value" value="{{ budget.budget[category][item]['value'] if budget.budget[category][item]['value'] else '' }}">
+            <input class="form-control input-val" inputmode="decimal" type="number" value="{{ budget.budget[category][item]['value'] if budget.budget[category][item]['value'] else '' }}">
           </div>
           <div class="col">
-            <select class="form-control input-timeperiod" name="{{ id_safe(category) }}-{{ loop.index }}-select" id="{{ id_safe(category) }}-{{ loop.index }}-select">
+            <select class="form-control input-timeperiod">
             {% set period = budget.budget[category][item]["period"] %}
             {% include "finance/form_timeperiod_selector.html" %}
             </select>
           </div>
           <div class="col text-right">
-            <span class="item-total" id="{{ id_safe(category) }}-{{ loop.index }}-total">$0</span>
-            <span class="item-pos" hidden aria-hidden="true">{{ budget.budget[category][item].get("pos", "False") }}</span>
+            <span class="item-total">$0</span>
+            <span class="item-pos" hidden>{{ budget.budget[category][item].get("pos", "False") }}</span>
           </div>
         </div>
         {% endfor %}
+        <div class="row budget-item-creator">
+          <div class="col-md">
+            <input maxlength="40" class="form-control input-val new-item-name" placeholder="Item Name">
+          </div>
+          <div class="col-md">
+            <button type="button" class="float-right btn btn-green ml-auto new-item-add-button">Add Item</button>
+          </div>
+        </div>
       </div>
     </div>
     {% endfor %}
+    <div id="category-creator" class="card-header">
+      <div class="row">
+        <div class="col-md">
+          <input maxlength="40" id="new-category-name" class="form-control" placeholder="Category Name">
+        </div>
+        <div class="col-md">
+          <button id="new-category-add-button" type="button" class="float-right btn btn-green ml-auto">Add Category</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="card">
@@ -130,16 +150,7 @@
 
 {% if refresh_js %}
 <script>
-  budgetSummary = new BudgetSummary($(domStrings.budgetSummary))
-  budgetSummary.createBudgetCategories()
-  $(domStrings.budgetName).change(() => {
-    budgetUpdatedTime = new Date()
-  })
-  $(domStrings.viewTimePeriod).change(() => {
-    budgetUpdatedTime = new Date()
-  })
-  setBudgetJson()
-  setInterval(stashBudget, 15000)
+  setUpBudget()
   readyDropdownSubmenus()
 </script>
 {% endif %}

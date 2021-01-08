@@ -18,7 +18,7 @@ TIME_PERIOD_CONVERTER = {
     1: "Annually",
 }
 DEFAULT_FIELD_POS = {"value": None, "period": 12, "pos": True}
-DEFAULT_FIELD_NEG = {"value": None, "period": 12}
+DEFAULT_FIELD_NEG = {"value": None, "period": 12, "pos": False}
 DEFAULT_BUDGET = {
     "Income": {
         "Your take-home pay": DEFAULT_FIELD_POS,
@@ -54,6 +54,7 @@ DEFAULT_BUDGET = {
         "Paying off debt": DEFAULT_FIELD_NEG,
         "Savings": DEFAULT_FIELD_NEG,
         "401K / retirement account": DEFAULT_FIELD_NEG,
+        "Retirement individual contribution": DEFAULT_FIELD_NEG,
         "Property investments": DEFAULT_FIELD_NEG,
         "Other investments": DEFAULT_FIELD_NEG,
         "Donations & Charity": DEFAULT_FIELD_NEG,
@@ -197,6 +198,16 @@ def get_user_budgets_limited():
     return []
 
 
+def budget_is_default(budget_obj):
+    """A test to see if the budget is equivalent to the default budget"""
+    default = json.loads(get_default_budget().to_json())
+    incoming = json.loads(budget_obj.to_json())
+    for budget_dict in (default, incoming):
+        budget_dict.pop("_id", None)
+        budget_dict.pop("author", None)
+    return bool(default == incoming)
+
+
 def save_budget():
     """Save current budget"""
     if not current_user.is_authenticated:
@@ -205,6 +216,8 @@ def save_budget():
         budget_obj = set_budget_from_post()
     except RuntimeError:
         budget_obj = get_current_or_default_budget()
+    if budget_is_default(budget_obj):
+        return budget_obj
     if not budget_obj.name:
         budget_obj.name = "unnamed budget"
     budget_obj.save()
