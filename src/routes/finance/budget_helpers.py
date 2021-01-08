@@ -27,7 +27,6 @@ DEFAULT_BUDGET = {
         "Income from investments": DEFAULT_FIELD_POS,
         "Child support recieved": DEFAULT_FIELD_POS,
         "Stipend": DEFAULT_FIELD_POS,
-        "Other": DEFAULT_FIELD_POS,
     },
     "Home & Utilities": {
         "Mortgage or Rent": DEFAULT_FIELD_NEG,
@@ -40,7 +39,6 @@ DEFAULT_BUDGET = {
         "Internet": DEFAULT_FIELD_NEG,
         "TV & Streaming": DEFAULT_FIELD_NEG,
         "Phone bill(s)": DEFAULT_FIELD_NEG,
-        "Other": DEFAULT_FIELD_NEG,
     },
     "Insurance & Financial": {
         "Car insurance": DEFAULT_FIELD_NEG,
@@ -58,7 +56,6 @@ DEFAULT_BUDGET = {
         "Property investments": DEFAULT_FIELD_NEG,
         "Other investments": DEFAULT_FIELD_NEG,
         "Donations & Charity": DEFAULT_FIELD_NEG,
-        "Other": DEFAULT_FIELD_NEG,
     },
     "Food & Groceries": {
         "Supermarket": DEFAULT_FIELD_NEG,
@@ -70,7 +67,6 @@ DEFAULT_BUDGET = {
         "Coffee & Tea": DEFAULT_FIELD_NEG,
         "Drinks & alcohol": DEFAULT_FIELD_NEG,
         "Bars & Clubs": DEFAULT_FIELD_NEG,
-        "Other": DEFAULT_FIELD_NEG,
     },
     "Medical & Personal Care": {
         "Pet & vet care": DEFAULT_FIELD_NEG,
@@ -85,7 +81,6 @@ DEFAULT_BUDGET = {
         "Education expenses": DEFAULT_FIELD_NEG,
         "Clothing & shoes": DEFAULT_FIELD_NEG,
         "Jewelry & accessories": DEFAULT_FIELD_NEG,
-        "Other": DEFAULT_FIELD_NEG,
     },
     "Entertainment & Hobbies": {
         "Books": DEFAULT_FIELD_NEG,
@@ -97,7 +92,6 @@ DEFAULT_BUDGET = {
         "Hobbies": DEFAULT_FIELD_NEG,
         "Vacations": DEFAULT_FIELD_NEG,
         "Celebrations & gifts": DEFAULT_FIELD_NEG,
-        "Other": DEFAULT_FIELD_NEG,
     },
     "Transportation & Auto": {
         "Bus/train/ferry": DEFAULT_FIELD_NEG,
@@ -108,7 +102,6 @@ DEFAULT_BUDGET = {
         "Fines": DEFAULT_FIELD_NEG,
         "Airfares": DEFAULT_FIELD_NEG,
         "Hotel & accommodations": DEFAULT_FIELD_NEG,
-        "Other": DEFAULT_FIELD_NEG,
     },
     "Children": {
         "Prenatal": DEFAULT_FIELD_NEG,
@@ -129,7 +122,6 @@ DEFAULT_BUDGET = {
         "Allowance": DEFAULT_FIELD_NEG,
         "Child support payment": DEFAULT_FIELD_NEG,
         "College fund": DEFAULT_FIELD_NEG,
-        "Other": DEFAULT_FIELD_NEG,
     },
 }
 

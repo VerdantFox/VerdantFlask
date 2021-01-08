@@ -3,7 +3,7 @@
 // -------------------------------------------------------------------------
 const budgetItemCreatorHTML = `<div class="row budget-item-creator">
   <div class="col-md">
-    <input maxlength="40" class="form-control input-val new-item-name" placeholder="Item Name">
+    <input maxlength="40" class="form-control input-val new-item-name" placeholder="New Item Name">
   </div>
   <div class="col-md">
     <button type="button" class="float-right btn btn-green ml-auto new-item-add-button">Add Item</button>
@@ -195,9 +195,8 @@ class BudgetCategory {
 
   createNewBudgetItem() {
     const itemName = this.newItemName.val()
-    const lastItem = this.itemsArr[this.itemsArr.length - 1].element
     const newItem = this.newItemHtmlCreator(itemName)
-    $(lastItem).after(newItem)
+    $(this.newItemCreator).before(newItem)
     const budgetItem = new BudgetItem(newItem, this)
     budgetItem.setListeners()
     this.itemsArr.push(budgetItem)
