@@ -106,7 +106,7 @@
       <div id="collapse-{{ loop.index }}" class="collapse fs-rem-1-4">
         {% for item in budget.budget[category] %}
         <div id="budget-item-{{ loop.index }}" class="row budget-item">
-          <div class="col col-sm">
+          <div class="col-lg">
             <span class="dropdown">
               <span class="item-del-btn" data-toggle="dropdown">
                 <i class="far fa-times-circle"></i>
@@ -147,11 +147,17 @@
     {% endfor %}
     <div id="category-creator" class="card-header">
       <div class="row">
-        <div class="col-md">
+        <div class="col-md col-md-6">
           <input maxlength="40" id="new-category-name" class="form-control" placeholder="Category Name">
         </div>
-        <div class="col-md">
-          <button id="new-category-add-button" type="button" class="float-right btn btn-green ml-auto">Add Category</button>
+        <div class="col">
+          <select name="new-cat-pos" id="new-cat-pos" class="form-control float-right ml-auto">
+            <option value="True">Income</option>
+            <option selected value="False">Expense</option>
+          </select>
+        </div>
+        <div class="col">
+          <button id="new-category-add-button" type="button" class="btn btn-green btn-block">Add Category</button>
         </div>
       </div>
     </div>

@@ -89,7 +89,7 @@ def retrieve_budget(budget_id) -> str:
 def delete_budget(budget_id) -> str:
     """Retrieve a budget, only available to budget owner"""
     form = BudgetForm()
-    if budget_id == form.budget_id:
+    if budget_id == form.budget_id.data:
         session.pop("current_budget", None)
     else:
         budget_helpers.save_budget()

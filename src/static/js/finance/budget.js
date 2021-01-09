@@ -30,6 +30,7 @@ const domStrings = {
   budgetForm: "#budget-form",
   categoryCreator: "#category-creator",
   newCategoryName: "#new-category-name",
+  newCategoryPos: "#new-cat-pos",
   newCategoryAddButton: "#new-category-add-button",
   newItemCreator: ".budget-item-creator",
   newItemName: ".new-item-name",
@@ -62,7 +63,7 @@ class BudgetSummary {
     let totalVal = 0
     this.categoriesArr.forEach((category) => {
       let categoryTotal = getNumFromCurrency(category.total.text())
-      if (category.isPos.text() === "True") {
+      if (category.isPos === "True") {
         totalVal += categoryTotal
       } else {
         totalVal -= categoryTotal
@@ -125,12 +126,13 @@ class BudgetSummary {
 
   createNewBudgetCategory() {
     this.categoryCounter += 1
+    const isPos = $(domStrings.newCategoryPos).val()
     const categoryName = $(domStrings.newCategoryName).val()
     const lastCategory = this.categoriesArr[this.categoriesArr.length - 1]
       .element
     const newCategory = this.newCategoryHtmlCreator(categoryName)
     $(lastCategory).after(newCategory)
-    const budgetCategory = new BudgetCategory(newCategory, this)
+    const budgetCategory = new BudgetCategory(newCategory, this, isPos)
     this.categoriesArr.push(budgetCategory)
     budgetCategory.setListeners()
   }
@@ -142,14 +144,18 @@ class BudgetSummary {
 }
 
 class BudgetCategory {
-  constructor(element, summary) {
+  constructor(element, summary, isPos = null) {
     this.element = element
     this.summary = summary
     this.id = $(element).attr("id")
     this.viewTimePeriod = $(domStrings.viewTimePeriod)
     this.label = $(element).find(domStrings.categoryLabel)
     this.total = $(element).find(domStrings.categoryTotal)
-    this.isPos = $(element).find(domStrings.itemPos).first()
+    if (isPos) {
+      this.isPos = isPos
+    } else {
+      this.isPos = $(element).find(domStrings.itemPos).first().text()
+    }
     this.newItemCreator = $(element).find(domStrings.newItemCreator).first()
     this.newItemName = $(element).find(domStrings.newItemName).first()
     this.newItemAddButton = $(element).find(domStrings.newItemAddButton).first()
@@ -177,7 +183,7 @@ class BudgetCategory {
     if (this.total.text() === "$0") {
       return
     }
-    if (this.isPos.text() === "True") {
+    if (this.isPos === "True") {
       this.total.addClass(domStrings.green)
     } else {
       this.total.addClass(domStrings.red)
@@ -197,9 +203,7 @@ class BudgetCategory {
   }
 
   newItemHtmlCreator(itemName) {
-    const budgetItemHTML = `<div id="budget-item-${
-      this.budgetItemCounter
-    }" class="row budget-item">
+    const budgetItemHTML = `<div id="budget-item-${this.budgetItemCounter}" class="row budget-item">
       <div class="col-sm">
         <span class="dropdown">
           <span class="item-del-btn" data-toggle="dropdown">
@@ -229,7 +233,7 @@ class BudgetCategory {
       </div>
       <div class="col text-right">
         <span class="item-total">$0</span>
-        <span class="item-pos" hidden>${this.isPos.text()}</span>
+        <span class="item-pos" hidden>${this.isPos}</span>
       </div>
     </div>`
     return $.parseHTML(budgetItemHTML)
@@ -285,7 +289,7 @@ class BudgetItem {
     this.input = $(element).find(domStrings.budgetItemInput)
     this.inputTimePeriod = $(element).find(domStrings.budgetItemTimeperiod)
     this.total = $(element).find(domStrings.itemTotal)
-    this.isPos = $(element).find(domStrings.itemPos)
+    this.isPos = $(element).find(domStrings.itemPos).text()
     this.itemDelConfirm = $(element).find(domStrings.itemDelConfirm).first()
   }
 
@@ -306,7 +310,8 @@ class BudgetItem {
     if (this.total.text() === "$0") {
       return
     }
-    if (this.isPos.text() === "True") {
+    console.log(this.isPos)
+    if (this.isPos === "True") {
       this.total.addClass(domStrings.green)
     } else {
       this.total.addClass(domStrings.red)
@@ -361,7 +366,7 @@ function setBudgetJson() {
         val = null
       }
       let isPos = false
-      if (item.isPos.text() === "True") {
+      if (item.isPos === "True") {
         isPos = true
       }
       budgetObj[category.label.text()][item.label.text()] = {
