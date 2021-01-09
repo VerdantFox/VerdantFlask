@@ -7,6 +7,24 @@
   margin: 0 0 0 0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.125);
 }
+.cat-del-btn,
+.item-del-btn {
+  font-size: 1.2rem;
+}
+
+/* Switch out del button on hover */
+.item-del-btn:hover .far,
+.cat-del-btn:hover .far,
+.item-del-btn .fas,
+.cat-del-btn .fas {
+  cursor: pointer;
+  display: none;
+}
+.item-del-btn:hover .fas,
+.cat-del-btn:hover .fas {
+  cursor: pointer;
+  display: inline;
+}
 
 .in-the-red {
   color: red;

@@ -34,6 +34,13 @@ const domStrings = {
   newItemCreator: ".budget-item-creator",
   newItemName: ".new-item-name",
   newItemAddButton: ".new-item-add-button",
+  catDelBtn: ".cat-del-btn",
+  catDelConfirm: ".cat-del-confirm",
+  catDelCancel: ".cat-del-cancel",
+  itemDelBtn: ".item-del-btn",
+  itemDelConfirm: ".item-del-confirm",
+  itemDelCancel: ".item-del-cancel",
+  catDropdown: ".cat-dropdown",
 }
 let budgetStashTime = new Date()
 let budgetUpdatedTime = new Date()
@@ -47,8 +54,8 @@ class BudgetSummary {
     this.element = element
     this.viewTimePeriod = $(domStrings.viewTimePeriod)
     this.total = $(element).find(domStrings.summaryTotal)
-    this.categoriesArr = []
     this.categoryCounter = 0
+    this.categoriesArr = []
   }
 
   setSummaryTotal() {
@@ -90,10 +97,22 @@ class BudgetSummary {
   }
 
   newCategoryHtmlCreator(category_name) {
-    const categoryHTML = `<div class="budget-category">
+    const categoryHTML = `<div id="category-${this.categoryCounter}" class="budget-category">
       <div data-toggle="collapse" data-target="#collapse-${this.categoryCounter}" class="cursor-pointer card-header fs-rem-1-8">
         <div class="row">
-          <div class="col-md"><span class="category-label">${category_name}</span></div>
+          <div class="col-md">
+            <span class="dropdown">
+              <span class="cat-del-btn" data-toggle="dropdown">
+                <i class="far fa-times-circle"></i>
+                <i class="fas fa-times-circle"></i>
+              </span>
+              <div class="dropdown-menu">
+                <button type="button" class="dropdown-item cat-del-confirm">Delete</button>
+                <button type="button" class="dropdown-item">Cancel</a>
+              </div>
+            </span>
+            <span class="category-label">${category_name}</span>
+          </div>
           <div class="col-md"><span class="float-right category-total">$0</span></div>
         </div>
       </div>
@@ -115,12 +134,18 @@ class BudgetSummary {
     this.categoriesArr.push(budgetCategory)
     budgetCategory.setListeners()
   }
+
+  deleteBudgetCategory(category) {
+    this.categoriesArr = this.categoriesArr.filter((e) => e !== category)
+    $(category.element).remove()
+  }
 }
 
 class BudgetCategory {
   constructor(element, summary) {
     this.element = element
     this.summary = summary
+    this.id = $(element).attr("id")
     this.viewTimePeriod = $(domStrings.viewTimePeriod)
     this.label = $(element).find(domStrings.categoryLabel)
     this.total = $(element).find(domStrings.categoryTotal)
@@ -128,6 +153,10 @@ class BudgetCategory {
     this.newItemCreator = $(element).find(domStrings.newItemCreator).first()
     this.newItemName = $(element).find(domStrings.newItemName).first()
     this.newItemAddButton = $(element).find(domStrings.newItemAddButton).first()
+    this.catDelConfirm = $(element).find(domStrings.catDelConfirm).first()
+    this.catDelCancel = $(element).find(domStrings.catDelCancel).first()
+    this.catDropdown = $(element).find(domStrings.catDropdown).first()
+    this.budgetItemCounter = 0
     this.itemsArr = []
   }
 
@@ -159,6 +188,7 @@ class BudgetCategory {
     $(this.element)
       .find(domStrings.budgetItem)
       .each((i, el) => {
+        this.budgetItemCounter += 1
         const budgetItem = new BudgetItem(el, this)
         budgetItem.setListeners()
         this.itemsArr.push(budgetItem)
@@ -167,9 +197,21 @@ class BudgetCategory {
   }
 
   newItemHtmlCreator(itemName) {
-    const budgetItemHTML = `<div class="row budget-item">
+    const budgetItemHTML = `<div id="budget-item-${
+      this.budgetItemCounter
+    }" class="row budget-item">
       <div class="col-sm">
-        <label class="budget-item-label">${itemName}</label>
+        <span class="dropdown">
+          <span class="item-del-btn" data-toggle="dropdown">
+            <i class="far fa-times-circle"></i>
+            <i class="fas fa-times-circle"></i>
+          </span>
+          <div class="dropdown-menu">
+            <button type="button" class="dropdown-item item-del-confirm">Delete</button>
+            <button type="button" class="dropdown-item">Cancel</button>
+          </div>
+        </span>
+        <span class="budget-item-label">${itemName}</span>
       </div>
       <div class="col">
         <input class="form-control input-val" inputmode="decimal" type="number" }}">
@@ -194,6 +236,7 @@ class BudgetCategory {
   }
 
   createNewBudgetItem() {
+    this.budgetItemCounter += 1
     const itemName = this.newItemName.val()
     const newItem = this.newItemHtmlCreator(itemName)
     $(this.newItemCreator).before(newItem)
@@ -201,6 +244,11 @@ class BudgetCategory {
     budgetItem.setListeners()
     this.itemsArr.push(budgetItem)
     budgetItem.setItemTotal()
+  }
+
+  deleteBudgetItem(item) {
+    this.itemsArr = this.itemsArr.filter((e) => e !== item)
+    $(item.element).remove()
   }
 
   setListeners() {
@@ -215,6 +263,15 @@ class BudgetCategory {
         this.newItemName.val("")
       }
     })
+    this.catDelConfirm.click((event) => {
+      event.stopPropagation()
+      this.catDropdown.removeClass("show")
+      this.summary.deleteBudgetCategory(this)
+    })
+    this.catDelCancel.click((event) => {
+      event.stopPropagation()
+      this.catDropdown.removeClass("show")
+    })
   }
 }
 
@@ -222,12 +279,14 @@ class BudgetItem {
   constructor(element, category) {
     this.element = element
     this.category = category
+    this.id = $(element).attr("id")
     this.viewTimePeriod = $(domStrings.viewTimePeriod)
     this.label = $(element).find(domStrings.budgetItemLabel)
     this.input = $(element).find(domStrings.budgetItemInput)
     this.inputTimePeriod = $(element).find(domStrings.budgetItemTimeperiod)
     this.total = $(element).find(domStrings.itemTotal)
     this.isPos = $(element).find(domStrings.itemPos)
+    this.itemDelConfirm = $(element).find(domStrings.itemDelConfirm).first()
   }
 
   setItemTotal() {
@@ -266,6 +325,9 @@ class BudgetItem {
     })
     this.input.keyup(() => {
       this.setItemTotal()
+    })
+    this.itemDelConfirm.click(() => {
+      this.category.deleteBudgetItem(this)
     })
   }
 }

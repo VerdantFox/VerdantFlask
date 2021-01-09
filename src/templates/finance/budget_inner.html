@@ -7,7 +7,7 @@
       <label class="fs-rem-1-8" for="budget_name">Budget name:&nbsp;</label>
       <input class="form-control fs-rem-1-6" id="budget_name" name="budget_name" placeholder="My First Budget" maxlength="20" value="{{ budget.name if budget.name else '' }}">
       <div class="btn-group dropleft ml-auto">
-        <i class="fas fa-2x fa-ellipsis-v"
+        <i class="fas fa-2x fa-cog pointer"
             type="button"
             data-toggle="dropdown"
             aria-haspopup="true"
@@ -84,18 +84,40 @@
 
   <div class="card">
     {% for category in budget.budget %}
-    <div class="budget-category">
+    <div id="category-{{ loop.index }}" class="budget-category">
       <div data-toggle="collapse" data-target="#collapse-{{ loop.index }}" class="cursor-pointer card-header fs-rem-1-8">
         <div class="row">
-          <div class="col-md"><span class="category-label">{{ category }}</span></div>
+          <div class="col-md">
+            <span class="dropdown">
+              <span class="cat-del-btn" data-toggle="dropdown">
+                <i class="far fa-times-circle"></i>
+                <i class="fas fa-times-circle"></i>
+              </span>
+              <div class="dropdown-menu cat-dropdown">
+                <button type="button" class="dropdown-item cat-del-confirm">Delete</button>
+                <button type="button" class="dropdown-item cat-del-cancel">Cancel</a>
+              </div>
+            </span>
+            <span class="category-label">{{ category }}</span>
+          </div>
           <div class="col-md"><span class="float-right category-total"></span></div>
         </div>
       </div>
       <div id="collapse-{{ loop.index }}" class="collapse fs-rem-1-4">
         {% for item in budget.budget[category] %}
-        <div class="row budget-item">
-          <div class="col-sm">
-            <label class="budget-item-label">{{ item }}</label>
+        <div id="budget-item-{{ loop.index }}" class="row budget-item">
+          <div class="col col-sm">
+            <span class="dropdown">
+              <span class="item-del-btn" data-toggle="dropdown">
+                <i class="far fa-times-circle"></i>
+                <i class="fas fa-times-circle"></i>
+              </span>
+              <div class="dropdown-menu">
+                <button type="button" class="dropdown-item item-del-confirm">Delete</button>
+                <button type="button" class="dropdown-item item-del-cancel">Cancel</button>
+              </div>
+            </span>
+            <span class="budget-item-label">{{ item }}</span>
           </div>
           <div class="col">
             <input class="form-control input-val" inputmode="decimal" type="number" value="{{ budget.budget[category][item]['value'] if budget.budget[category][item]['value'] else '' }}">

@@ -33,4 +33,4 @@ def test_index_while_logged_in(client, current_user_standard):
     assert f'href="/users/profile/{current_user_standard.username}">' in data
     assert 'href="/users/edit_profile">' in data
     assert 'href="/users/account_settings">' in data
-    assert 'href="/users/logout">' in data
+    assert 'href="/users/logout' in data
