@@ -231,7 +231,7 @@ class BudgetCategory {
           <option value="1">Annually</option>
         </select>
       </div>
-      <div class="col text-right">
+      <div class="col-lg text-right">
         <span class="item-total">$0</span>
         <span class="item-pos" hidden>${this.isPos}</span>
       </div>

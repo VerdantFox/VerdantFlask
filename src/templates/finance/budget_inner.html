@@ -6,7 +6,7 @@
     <div class="form-inline">
       <label class="fs-rem-1-8" for="budget_name">Budget name:&nbsp;</label>
       <input class="form-control fs-rem-1-6" id="budget_name" name="budget_name" placeholder="My First Budget" maxlength="20" value="{{ budget.name if budget.name else '' }}">
-      <div class="btn-group dropleft ml-auto">
+      <div class="btn-group dropdown pad-left">
         <i class="fas fa-2x fa-cog pointer"
             type="button"
             data-toggle="dropdown"
@@ -37,15 +37,15 @@
                     aria-expanded="false">Select a Budget</button>
             <div class="dropdown-menu">
               {% for saved_budget in saved_budgets %}
-                <button class="dropdown-item"
-                        type="button"
-                        ic-post-to="{{ url_for('finance.retrieve_budget', budget_id=saved_budget.id) }}"
-                        ic-target='#budget-inner'>
-                  <span>{{ saved_budget.name }}</span>
-                  {% if saved_budget.id == budget.id %}
-                  <span>&nbsp;(current)</span>
-                  {% endif %}
-                </button>
+              <button class="dropdown-item"
+                      type="button"
+                      ic-post-to="{{ url_for('finance.retrieve_budget', budget_id=saved_budget.id) }}"
+                      ic-target='#budget-inner'>
+                <span>{{ saved_budget.name }}</span>
+                {% if saved_budget.id == budget.id %}
+                <span>&nbsp;(current)</span>
+                {% endif %}
+              </button>
               {% endfor %}
             </div>
           </div>
@@ -57,16 +57,16 @@
                     aria-expanded="false">Delete a Budget</button>
             <div class="dropdown-menu">
               {% for saved_budget in saved_budgets %}
-                <button class="dropdown-item"
-                        type="button"
-                        ic-confirm="Are you sure you want to delete '{{ saved_budget.name }}'?"
-                        ic-post-to="{{ url_for('finance.delete_budget', budget_id=saved_budget.id) }}"
-                        ic-target='#budget-inner'>
-                  <span>{{ saved_budget.name }}</span>
-                  {% if saved_budget.id == budget.id %}
-                  <span>&nbsp;(current)</span>
-                  {% endif %}
-                </button>
+              <button class="dropdown-item"
+                      type="button"
+                      ic-confirm="Are you sure you want to delete '{{ saved_budget.name }}'?"
+                      ic-post-to="{{ url_for('finance.delete_budget', budget_id=saved_budget.id) }}"
+                      ic-target='#budget-inner'>
+                <span>{{ saved_budget.name }}</span>
+                {% if saved_budget.id == budget.id %}
+                <span>&nbsp;(current)</span>
+                {% endif %}
+              </button>
               {% endfor %}
             </div>
           </div>
@@ -128,7 +128,7 @@
             {% include "finance/form_timeperiod_selector.html" %}
             </select>
           </div>
-          <div class="col text-right">
+          <div class="col-lg text-right">
             <span class="item-total">$0</span>
             <span class="item-pos" hidden>{{ budget.budget[category][item].get("pos", "False") }}</span>
           </div>

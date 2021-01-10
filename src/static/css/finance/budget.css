@@ -11,6 +11,9 @@
 .item-del-btn {
   font-size: 1.2rem;
 }
+.pad-left {
+  padding-left: 1rem;
+}
 
 /* Switch out del button on hover */
 .item-del-btn:hover .far,
