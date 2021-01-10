@@ -57,6 +57,7 @@ class BudgetSummary {
     this.total = $(element).find(domStrings.summaryTotal)
     this.categoryCounter = 0
     this.categoriesArr = []
+    this.addBudgetCategories()
   }
 
   setSummaryTotal() {
@@ -90,10 +91,7 @@ class BudgetSummary {
     $(domStrings.budgetCategory).each((i, el) => {
       this.categoryCounter += 1
       const budgetCategory = new BudgetCategory(el, this)
-      budgetCategory.addBudgetItems()
-      budgetCategory.setCategoryTotal()
       this.categoriesArr.push(budgetCategory)
-      budgetCategory.setListeners()
     })
   }
 
@@ -164,6 +162,10 @@ class BudgetCategory {
     this.catDropdown = $(element).find(domStrings.catDropdown).first()
     this.budgetItemCounter = 0
     this.itemsArr = []
+    // Call setup
+    this.addBudgetItems()
+    this.setCategoryTotal()
+    this.setListeners()
   }
 
   setCategoryTotal() {
@@ -196,9 +198,7 @@ class BudgetCategory {
       .each((i, el) => {
         this.budgetItemCounter += 1
         const budgetItem = new BudgetItem(el, this)
-        budgetItem.setListeners()
         this.itemsArr.push(budgetItem)
-        budgetItem.setItemTotal()
       })
   }
 
@@ -259,18 +259,21 @@ class BudgetCategory {
     this.newItemAddButton.click(() => {
       this.createNewBudgetItem()
       this.newItemName.val("")
+      setBudgetJson()
     })
     this.newItemName.keypress((key) => {
       if (key.which == 13) {
         key.preventDefault()
         this.createNewBudgetItem()
         this.newItemName.val("")
+        setBudgetJson()
       }
     })
     this.catDelConfirm.click((event) => {
       event.stopPropagation()
       this.catDropdown.removeClass("show")
       this.summary.deleteBudgetCategory(this)
+      setBudgetJson()
     })
     this.catDelCancel.click((event) => {
       event.stopPropagation()
@@ -291,6 +294,9 @@ class BudgetItem {
     this.total = $(element).find(domStrings.itemTotal)
     this.isPos = $(element).find(domStrings.itemPos).text()
     this.itemDelConfirm = $(element).find(domStrings.itemDelConfirm).first()
+    // Run setup functions
+    this.setListeners()
+    this.setItemTotal()
   }
 
   setItemTotal() {
@@ -310,7 +316,6 @@ class BudgetItem {
     if (this.total.text() === "$0") {
       return
     }
-    console.log(this.isPos)
     if (this.isPos === "True") {
       this.total.addClass(domStrings.green)
     } else {
@@ -321,18 +326,22 @@ class BudgetItem {
   setListeners() {
     this.viewTimePeriod.change(() => {
       this.setItemTotal()
+      setBudgetJson()
     })
     this.inputTimePeriod.change(() => {
       this.setItemTotal()
+      setBudgetJson()
     })
     this.input.change(() => {
       this.setItemTotal()
+      setBudgetJson()
     })
     this.input.keyup(() => {
       this.setItemTotal()
     })
     this.itemDelConfirm.click(() => {
       this.category.deleteBudgetItem(this)
+      setBudgetJson()
     })
   }
 }
@@ -404,25 +413,28 @@ function addEvents(budgetSummary) {
   $(domStrings.newCategoryAddButton).click(() => {
     budgetSummary.createNewBudgetCategory()
     $(domStrings.newCategoryName).val("")
+    setBudgetJson()
   })
   $(domStrings.newCategoryName).keypress((key) => {
     if (key.which == 13) {
       key.preventDefault()
       budgetSummary.createNewBudgetCategory()
       $(domStrings.newCategoryName).val("")
+      setBudgetJson()
     }
   })
   $(domStrings.budgetName).change(() => {
     budgetUpdatedTime = new Date()
+    setBudgetJson()
   })
   $(domStrings.viewTimePeriod).change(() => {
     budgetUpdatedTime = new Date()
+    setBudgetJson()
   })
 }
 
 function setUpBudget() {
   budgetSummary = new BudgetSummary($(domStrings.budgetSummary))
-  budgetSummary.addBudgetCategories()
   addEvents(budgetSummary)
   setBudgetJson()
   setInterval(stashBudget, 10000)
