@@ -32,7 +32,7 @@ flask-mongoengine==1.0.0
 # Other
 python-dotenv==0.13.0
 beautifulsoup4==4.9.0
-bleach==3.1.5
+bleach==3.3.0
 pytz==2020.1
 Markdown==3.2.2
 Pygments==2.6.1
