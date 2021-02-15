@@ -389,6 +389,9 @@ function setBudgetJson() {
 }
 
 function stashBudget() {
+  if (typeof document.forms[0] !== "undefined") {
+    return
+  }
   if (budgetUpdatedTime < budgetStashTime) {
     return
   }
@@ -437,7 +440,9 @@ function setUpBudget() {
   budgetSummary = new BudgetSummary($(domStrings.budgetSummary))
   addEvents(budgetSummary)
   setBudgetJson()
-  setInterval(stashBudget, 10000)
+  if (typeof document.forms[0] !== "undefined") {
+    setInterval(stashBudget, 10000)
+  }
 }
 
 // -------------------------------------------------------------------------

@@ -1,0 +1,47 @@
+{% extends "core/base.html" %}
+{% set active_page = None %}
+
+{% block title %}
+  Verdant Fox | Finance
+{% endblock title %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{{ url_for('core.index') }}">Home</a></li>
+  <li class="breadcrumb-item"><a href="{{ url_for('finance.landing') }}">Finance</a></li>
+  <li class="breadcrumb-item"><a href="{{ url_for('finance.budget_page') }}">Budget</a></li>
+  <li class="breadcrumb-item active" aria-current="page">Share Budget</li>
+{% endblock breadcrumb %}
+
+{% block navbar %}
+  {% include "finance/navbar.html" %}
+{% endblock navbar %}
+
+{% block css %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/finance/budget.css') }}">
+{% endblock css %}
+
+{% block content %}
+<br>
+<div class="container">
+  <h1>Shared Budget</h1>
+  <p>
+    Here is a page where one can share a created budget.
+    To share this budget, just copy the URL from the address bar and share it
+    with your friends.
+  </p>
+  <p>
+    Shared budgets cannot be altered from this page. If this is your shared
+    budget (or if you'd like to create your own budget), you can go to the
+    <a href="{{ url_for('finance.budget_page') }}">budget page</a> and select
+    a saved budget or create a new budget with the cog icon to make edits.
+    On refreshing this page, any updates you made to this budget from the
+    edit page will show up here.
+  </p>
+  <div id="budget-inner">
+    {% include "finance/budget_inner_share.html" %}
+  </div>
+</div>
+{% endblock content %}
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/finance/budget.js') }}"></script>
+{% endblock scripts %}

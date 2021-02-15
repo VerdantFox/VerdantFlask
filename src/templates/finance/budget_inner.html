@@ -7,11 +7,14 @@
       <label class="fs-rem-1-8" for="budget_name">Budget name:&nbsp;</label>
       <input class="form-control fs-rem-1-6" id="budget_name" name="budget_name" placeholder="My First Budget" maxlength="20" value="{{ budget.name if budget.name else '' }}">
       <div class="btn-group dropdown pad-left">
-        <i class="fas fa-2x fa-cog pointer"
-            type="button"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"></i>
+        <button type="button"
+                class="btn btn-green"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false">
+          <i class="fas fa-cog pointer"></i>
+          options
+        </button>
         <div class="dropdown-menu">
           {% if not current_user.is_authenticated %}
           <h6 class="dropdown-header">
@@ -22,8 +25,10 @@
                   type="button"
                   ic-post-to="{{ url_for('finance.save_current_budget') }}"
                   ic-target='#budget-inner'>Save Budget</button>
-          <button class="dropdown-item{% if not current_user.is_authenticated %} disabled{% endif %}"
-                  type="button">Share Budget</button>
+          <input  type="submit"
+                  class="dropdown-item{% if not current_user.is_authenticated %} disabled{% endif %}"
+                  value="Share Budget"
+                  formaction="{{ url_for('finance.share_budget', budget_id=budget.id) }}">
           <button class="dropdown-item"
                   type="button"
                   ic-confirm="Unsaved budget data will be deleted. Continue?"
@@ -169,9 +174,7 @@
         <span class="summary-label">Summary</span>
         <span class="float-right summary-total"></span>
       </div>
-      <div id="budgetSummary-Collapse" class="collapse fs-rem-1-4">
-        <h2>GRAPHS GO HERE</h2>
-      </div>
+      {% include "finance/budget_graphs.html" %}
     </div>
   </div>
 </form>

@@ -1,5 +1,8 @@
-from flask import Blueprint, render_template, session
+from typing import Union
+
+from flask import Blueprint, redirect, render_template, request, session, url_for
 from flask_login import login_required
+from werkzeug.wrappers import Response
 
 from . import budget_helpers
 from .forms import BudgetForm
@@ -104,10 +107,17 @@ def delete_budget(budget_id) -> str:
     )
 
 
-@finance.route("/budget/share/<budget_id>", methods=["GET"])
-def share_budget(budget_id) -> str:
+@finance.route("/budget/share/<budget_id>", methods=["GET", "POST"])
+def share_budget(budget_id) -> Union[str, Response]:
     """Retrieve a budget for sharing purposes, in uneditable format"""
-    return render_template("finance/budget_share.html")
+    if request.method == "POST":
+        budget_helpers.save_budget()
+        return redirect(url_for("finance.share_budget", budget_id=budget_id))
+    return render_template(
+        "finance/budget_share.html",
+        budget=budget_helpers.retrieve_budget(budget_id),
+        is_share=True,
+    )
 
 
 # --------------------------------------------------------------------------
