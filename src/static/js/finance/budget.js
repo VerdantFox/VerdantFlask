@@ -42,9 +42,11 @@ const domStrings = {
   itemDelConfirm: ".item-del-confirm",
   itemDelCancel: ".item-del-cancel",
   catDropdown: ".cat-dropdown",
+  sharedBudget: "#sharedBudget",
 }
-let budgetStashTime = new Date()
 let budgetUpdatedTime = new Date()
+let budgetStashTime = new Date()
+budgetStashTime.setSeconds(budgetStashTime.getSeconds() + 1)
 let budgetSummary
 
 // -------------------------------------------------------------------------
@@ -388,24 +390,27 @@ function setBudgetJson() {
   $(domStrings.budgetJson).val(JSON.stringify(budgetObj))
 }
 
-function stashBudget() {
-  if (typeof document.forms[0] !== "undefined") {
-    return
-  }
+function updateBudget() {
+  console.log("In updateBudget")
+  console.log(budgetUpdatedTime)
+  console.log(budgetStashTime)
   if (budgetUpdatedTime < budgetStashTime) {
     return
   }
   setBudgetJson()
   budgetStashTime = new Date()
-  $.post(
-    "/finance/budget/stash",
+  let posting = $.post(
+    "/finance/budget/update",
     $(domStrings.budgetForm).serialize(),
     function (data) {
-      console.log(`Stashed budget at ${budgetStashTime}.`)
+      console.log(`Stashing budget at ${budgetStashTime}.`)
     }
   )
-    .done(function () {
-      console.log("Success!")
+    .done(function (data) {
+      console.log("Stash success!")
+      let content = $(data)
+      $("#budgetSummary-Collapse").empty().append(content)
+      console.log("Loaded budget graphs!")
     })
     .fail(function () {
       console.log("Error Stashing budget...")
@@ -440,8 +445,9 @@ function setUpBudget() {
   budgetSummary = new BudgetSummary($(domStrings.budgetSummary))
   addEvents(budgetSummary)
   setBudgetJson()
-  if (typeof document.forms[0] !== "undefined") {
-    setInterval(stashBudget, 10000)
+  // only updateBudget (stash and recreate graphs) if not a shared budget
+  if (!$(domStrings.sharedBudget).length) {
+    setInterval(updateBudget, 10000)
   }
 }
 

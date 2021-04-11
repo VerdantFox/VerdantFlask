@@ -43,5 +43,6 @@
 </div>
 {% endblock content %}
 {% block scripts %}
+  <div id="sharedBudget" hidden="true" aria-hidden="true">Shared budget</div>
   <script src="{{ url_for('static', filename='js/finance/budget.js') }}"></script>
 {% endblock scripts %}

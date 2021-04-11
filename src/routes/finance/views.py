@@ -4,7 +4,7 @@ from flask import Blueprint, redirect, render_template, request, session, url_fo
 from flask_login import login_required
 from werkzeug.wrappers import Response
 
-from . import budget_helpers
+from . import budget_graphs, budget_helpers
 from .forms import BudgetForm
 
 finance = Blueprint("finance", __name__)
@@ -22,12 +22,14 @@ def landing() -> str:
 @finance.route("/budget", methods=["GET"])
 def budget_page() -> str:
     """Sub application for budget planning"""
+    budget = budget_helpers.get_current_or_default_budget()
     return render_template(
         "finance/budget.html",
-        budget=budget_helpers.get_current_or_default_budget(),
+        budget=budget,
         saved_budgets=budget_helpers.get_user_budgets_limited(),
         id_safe=id_safe,
         form=BudgetForm(),
+        graphs=budget_graphs.prepare_all_budget_graphs(budget),
     )
 
 
@@ -37,22 +39,24 @@ def new_budget() -> str:
     budget_helpers.save_budget()
     session.pop("current_budget", None)
     form = BudgetForm()
+    budget = budget_helpers.get_default_budget()
     return render_template(
         "finance/budget_inner.html",
-        budget=budget_helpers.get_default_budget(),
+        budget=budget,
         saved_budgets=budget_helpers.get_user_budgets_limited(),
         form=form,
         id_safe=id_safe,
         refresh_js=True,
+        graphs=None,
     )
 
 
-@finance.route("/budget/stash", methods=["POST"])
-def stash_current_budget():
-    """Stash the currently opened budget in the session"""
-    stashed_budget = budget_helpers.set_budget_from_post()
-    session["current_budget"] = stashed_budget.to_json()
-    return {"budget_stash": "success"}
+@finance.route("/budget/update", methods=["POST"])
+def update_current_budget():
+    """Stash the currently opened budget in the session and return graphs"""
+    budget = budget_helpers.set_budget_from_post()
+    session["current_budget"] = budget.to_json()
+    return budget_graphs.prepare_all_budget_graphs(budget)
 
 
 @finance.route("/budget/save", methods=["POST"])
@@ -77,13 +81,15 @@ def retrieve_budget(budget_id) -> str:
     """Retrieve a budget, only available to budget owner"""
     form = BudgetForm()
     budget_helpers.save_budget()
+    budget = budget_helpers.retrieve_budget(budget_id)
     return render_template(
         "finance/budget_inner.html",
-        budget=budget_helpers.retrieve_budget(budget_id),
+        budget=budget,
         saved_budgets=budget_helpers.get_user_budgets_limited(),
         form=form,
         id_safe=id_safe,
         refresh_js=True,
+        graphs=budget_graphs.prepare_all_budget_graphs(budget),
     )
 
 
@@ -113,10 +119,12 @@ def share_budget(budget_id) -> Union[str, Response]:
     if request.method == "POST":
         budget_helpers.save_budget()
         return redirect(url_for("finance.share_budget", budget_id=budget_id))
+    budget = budget_helpers.retrieve_budget(budget_id)
     return render_template(
         "finance/budget_share.html",
-        budget=budget_helpers.retrieve_budget(budget_id),
+        budget=budget,
         is_share=True,
+        graphs=budget_graphs.prepare_all_budget_graphs(budget),
     )
 
 
