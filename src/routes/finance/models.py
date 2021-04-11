@@ -23,5 +23,5 @@ class Budget(db.Document):
         "indexes": ["author", "name"],
     }
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Budget(id: {self.id}, author: {self.author}, name: {self.name})"

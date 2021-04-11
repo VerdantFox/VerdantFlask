@@ -1,5 +1,6 @@
 """budget: module for handling budget.py logic"""
 import json
+from typing import List, Optional
 
 from bson.objectid import ObjectId
 from flask import session
@@ -23,6 +24,7 @@ DEFAULT_BUDGET = {
     "Income": {
         "Your take-home pay": DEFAULT_FIELD_POS,
         "Partner's take-home pay": DEFAULT_FIELD_POS,
+        "Tips": DEFAULT_FIELD_POS,
         "Bonuses & overtime": DEFAULT_FIELD_POS,
         "Income from investments": DEFAULT_FIELD_POS,
         "Child support recieved": DEFAULT_FIELD_POS,
@@ -126,7 +128,7 @@ DEFAULT_BUDGET = {
 }
 
 
-def json_to_obj(budget_json):
+def json_to_obj(budget_json: str) -> Budget:
     """Deserialize a budget json to a budget object"""
     budget_dict = json.loads(budget_json)
     author = budget_dict.pop("author", None)
@@ -136,12 +138,12 @@ def json_to_obj(budget_json):
     return Budget(**budget_dict)
 
 
-def get_default_budget():
+def get_default_budget() -> Budget:
     """Get the default budget as a mongodb Budget model"""
     return Budget(budget=DEFAULT_BUDGET)
 
 
-def get_current_or_default_budget():
+def get_current_or_default_budget() -> Budget:
     """Retrieve current budget from session or default budget if none in session"""
     budget_json = session.get("current_budget")
     if budget_json:
@@ -150,10 +152,10 @@ def get_current_or_default_budget():
 
 
 def set_budget_object(
-    budget_json,
-    period=12,
-    budget_name=None,
-    budget_id=None,
+    budget_json: Optional[str],
+    period: int = 12,
+    budget_name: Optional[str] = None,
+    budget_id: Optional[str] = None,
 ):
     """Return an instantiated Budget object"""
     if isinstance(budget_json, str):
@@ -170,7 +172,7 @@ def set_budget_object(
     return budget
 
 
-def set_budget_from_post():
+def set_budget_from_post() -> Budget:
     """Set a budget object from form post"""
     form = BudgetForm()
     if not form.validate_on_submit():
@@ -183,7 +185,7 @@ def set_budget_from_post():
     )
 
 
-def get_user_budgets_limited():
+def get_user_budgets_limited() -> List[Budget]:
     """Get the saved budget names of the current user"""
     if current_user.is_authenticated:
         return Budget.objects(author=current_user.id).only("name")

@@ -3,7 +3,7 @@
 
 
 echo "Sorting python imports with isort."
-isort --recursive .
+isort .
 
 echo "Auto-formatting python code with black."
 black .

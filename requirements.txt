@@ -3,41 +3,41 @@
 
 # Code quality
 black==20.8b1
-flake8==3.8.3
-isort==4.3.21
-bandit==1.6.2
+flake8==3.9.0
+isort==5.8.0
+bandit==1.7.0
 jinjaninja==0.1.2
-mypy==0.780
-pre-commit==2.5.1
+mypy==0.812
+pre-commit==2.12.0
 
 # Flask
 Authomatic==1.0.0
 Flask==1.1.2
-Flask-WTF==0.14.3
-Flask-Login==0.5.0
 Flask-DebugToolbar==0.11.0
-pillow==7.1.0
-dnspython==1.16.0
-email-validator==1.1.0
+Flask-Login==0.5.0
+Flask-WTF==0.14.3
+Pillow==8.2.0
+dnspython==2.1.0
+email-validator==1.1.2
 
 # pytest
-pytest==5.4.3
-pytest-cov==2.9.0
-pytest-mock==3.1.1
+pytest==6.2.3
+pytest-cov==2.11.1
+pytest-mock==3.5.1
 
 # Database
-docker==4.3.0
+docker==5.0.0
 flask-mongoengine==1.0.0
 
 # Other
-python-dotenv==0.13.0
-beautifulsoup4==4.9.0
-bleach==3.1.5
-pytz==2020.1
-Markdown==3.2.2
-Pygments==2.6.1
-micawber==0.5.1
+python-dotenv==0.17.0
+beautifulsoup4==4.9.3
+bleach==3.3.0
+pytz==2021.1
+Markdown==3.3.4
+Pygments==2.8.1
+micawber==0.5.3
 
 # Data
-pandas==1.0.3
+pandas==1.2.3
 bokeh==2.3.1

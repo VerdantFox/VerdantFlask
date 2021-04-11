@@ -27,7 +27,6 @@ def budget_page() -> str:
         "finance/budget.html",
         budget=budget,
         saved_budgets=budget_helpers.get_user_budgets_limited(),
-        id_safe=id_safe,
         form=BudgetForm(),
         graphs=budget_graphs.prepare_all_budget_graphs(budget),
     )
@@ -45,14 +44,13 @@ def new_budget() -> str:
         budget=budget,
         saved_budgets=budget_helpers.get_user_budgets_limited(),
         form=form,
-        id_safe=id_safe,
         refresh_js=True,
         graphs=None,
     )
 
 
 @finance.route("/budget/update", methods=["POST"])
-def update_current_budget():
+def update_current_budget() -> str:
     """Stash the currently opened budget in the session and return graphs"""
     budget = budget_helpers.set_budget_from_post()
     session["current_budget"] = budget.to_json()
@@ -61,7 +59,7 @@ def update_current_budget():
 
 @finance.route("/budget/save", methods=["POST"])
 @login_required
-def save_current_budget():
+def save_current_budget() -> str:
     """Save the currently opened budget to mongoengine"""
     form = BudgetForm()
     budget_obj = budget_helpers.save_budget()
@@ -70,14 +68,13 @@ def save_current_budget():
         budget=budget_obj,
         saved_budgets=budget_helpers.get_user_budgets_limited(),
         form=form,
-        id_safe=id_safe,
         refresh_js=True,
     )
 
 
 @finance.route("/budget/retrieve/<budget_id>", methods=["POST"])
 @login_required
-def retrieve_budget(budget_id) -> str:
+def retrieve_budget(budget_id: str) -> str:
     """Retrieve a budget, only available to budget owner"""
     form = BudgetForm()
     budget_helpers.save_budget()
@@ -87,7 +84,6 @@ def retrieve_budget(budget_id) -> str:
         budget=budget,
         saved_budgets=budget_helpers.get_user_budgets_limited(),
         form=form,
-        id_safe=id_safe,
         refresh_js=True,
         graphs=budget_graphs.prepare_all_budget_graphs(budget),
     )
@@ -95,7 +91,7 @@ def retrieve_budget(budget_id) -> str:
 
 @finance.route("/budget/delete/<budget_id>", methods=["POST"])
 @login_required
-def delete_budget(budget_id) -> str:
+def delete_budget(budget_id: str) -> str:
     """Retrieve a budget, only available to budget owner"""
     form = BudgetForm()
     if budget_id == form.budget_id.data:
@@ -108,13 +104,12 @@ def delete_budget(budget_id) -> str:
         budget=budget_helpers.get_current_or_default_budget(),
         saved_budgets=budget_helpers.get_user_budgets_limited(),
         form=form,
-        id_safe=id_safe,
         refresh_js=True,
     )
 
 
 @finance.route("/budget/share/<budget_id>", methods=["GET", "POST"])
-def share_budget(budget_id) -> Union[str, Response]:
+def share_budget(budget_id: str) -> Union[str, Response]:
     """Retrieve a budget for sharing purposes, in uneditable format"""
     if request.method == "POST":
         budget_helpers.save_budget()
@@ -144,16 +139,3 @@ def stocks() -> str:
 def net_worth() -> str:
     """Sub application for net worth calculating"""
     return render_template("finance/net_worth.html")
-
-
-# ----------------------------------------------------------------------------
-# Helper functions
-# ----------------------------------------------------------------------------
-def id_safe(phrase):
-    """Make a DOM id HTML safe"""
-    return phrase.replace(" ", "_").replace("&", "AND").strip()
-
-
-def id_safe_reverse(phrase):
-    """Make a safe DOM id HTML like the original"""
-    return phrase.replace("_", " ").replace("AND", "&").strip()
