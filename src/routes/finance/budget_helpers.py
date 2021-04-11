@@ -192,7 +192,7 @@ def get_user_budgets_limited() -> List[Budget]:
     return []
 
 
-def budget_is_default(budget_obj):
+def budget_is_default(budget_obj: Budget) -> bool:
     """A test to see if the budget is equivalent to the default budget"""
     default = json.loads(get_default_budget().to_json())
     incoming = json.loads(budget_obj.to_json())
@@ -202,7 +202,7 @@ def budget_is_default(budget_obj):
     return bool(default == incoming)
 
 
-def save_budget():
+def save_budget() -> Budget:
     """Save current budget"""
     if not current_user.is_authenticated:
         return get_current_or_default_budget()
@@ -218,11 +218,11 @@ def save_budget():
     return budget_obj
 
 
-def retrieve_budget(budget_id):
+def retrieve_budget(budget_id: str) -> Budget:
     """Retrieve a specific saved budget"""
     return Budget.objects(id=budget_id).first()
 
 
-def delete_budget(budget_id):
+def delete_budget(budget_id: str) -> Budget:
     """Delete a specific saved budget"""
     return Budget.objects(id=budget_id).first().delete()

@@ -9,9 +9,10 @@ from bokeh.plotting import figure
 from bokeh.transform import cumsum
 
 from .budget_helpers import TIME_PERIOD_CONVERTER
+from .models import Budget
 
 
-def prepare_budget_categories_data(budget):
+def prepare_budget_categories_data(budget: Budget) -> dict[str, int]:
     """Prepare the categories data for graphing"""
     view_period = budget.period
     category_data = {}
@@ -33,10 +34,10 @@ def prepare_budget_categories_data(budget):
     return category_data
 
 
-def prepare_budget_items_data(budget, income=False):
+def prepare_budget_items_data(budget: Budget, income: bool = False) -> dict[str, int]:
     """Prepare items data for graphing"""
     view_period = budget.period
-    item_data = {}
+    item_data: dict[str, int] = {}
     total = 0
     for category in budget.budget:
         for item in budget.budget[category]:
@@ -70,7 +71,7 @@ def prepare_budget_items_data(budget, income=False):
     return item_data
 
 
-def prepare_income_vs_expenses_data(budget):
+def prepare_income_vs_expenses_data(budget: Budget) -> dict[str, int]:
     """Prepare data for income vs expenses"""
     view_period = budget.period
     ive_data = {"Income": 0, "Expenses": 0}
@@ -88,7 +89,9 @@ def prepare_income_vs_expenses_data(budget):
     return ive_data
 
 
-def produce_pie_chart(data_dict, descriptor, title):
+def produce_pie_chart(
+    data_dict: dict[str, int], descriptor: str, title: str
+) -> tuple[str, str]:
     """Produce a pie chart div, given data"""
     data = (
         pd.Series(data_dict)
@@ -134,7 +137,9 @@ def produce_pie_chart(data_dict, descriptor, title):
     return script, div
 
 
-def produce_bar_chart(data_dict, descriptor, title):
+def produce_bar_chart(
+    data_dict: dict[str, int], descriptor: str, title: str
+) -> tuple[str, str]:
     """Produce a bar chart"""
     x = list(data_dict.keys())
     dollars = list(data_dict.values())
@@ -171,7 +176,7 @@ def produce_bar_chart(data_dict, descriptor, title):
     return script, div
 
 
-def combine_charts(*charts):
+def combine_charts(*charts: tuple[str, str]) -> str:
     """Combine all chart data"""
     html = '<div class="row">'
     for i, (script, div) in enumerate(charts, start=1):
@@ -183,7 +188,7 @@ def combine_charts(*charts):
     return html
 
 
-def prepare_all_budget_graphs(budget):
+def prepare_all_budget_graphs(budget: Budget) -> str:
     """Prepare all budget graphs"""
     view_period = budget.period
     categories_data = prepare_budget_categories_data(budget)
