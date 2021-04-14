@@ -7,6 +7,7 @@ from bokeh.models import ColumnDataSource, NumeralTickFormatter
 from bokeh.palettes import Viridis6, viridis
 from bokeh.plotting import figure
 from bokeh.transform import cumsum
+from flask import url_for
 
 from .budget_helpers import TIME_PERIOD_CONVERTER
 from .models import Budget
@@ -97,6 +98,7 @@ def produce_pie_chart(
         pd.Series(data_dict)
         .reset_index(name="value")
         .rename(columns={"index": descriptor})
+        .sort_values(by="value", ascending=False)
     )
     data["angle"] = data["value"] / data["value"].sum() * 2 * pi
     data["color"] = viridis(len(data_dict))
@@ -127,7 +129,7 @@ def produce_pie_chart(
     plot.axis.axis_label = None
     plot.axis.visible = False
     plot.grid.grid_line_color = None
-    plot.title.text_font_size = "1.25rem"
+    plot.title.text_font_size = "1rem"
     plot.border_fill_alpha = 0
     plot.background_fill_alpha = 0
     plot.legend.border_line_alpha = 0
@@ -164,8 +166,8 @@ def produce_bar_chart(
 
     # Adjust plot settings
     plot.yaxis[0].formatter = NumeralTickFormatter(format="$0,0")
-    plot.title.text_font_size = "1.2rem"
-    plot.axis.major_label_text_font_size = "1rem"
+    plot.title.text_font_size = "1rem"
+    plot.axis.major_label_text_font_size = "0.8rem"
     plot.border_fill_alpha = 0
     plot.background_fill_alpha = 0
     plot.background_fill_alpha = 0
@@ -176,7 +178,34 @@ def produce_bar_chart(
     return script, div
 
 
-def combine_charts(*charts: tuple[str, str]) -> str:
+def inject_advice(positive: bool):
+    """Inject an advice section above charts"""
+    advice_str = "<br><div class='container advice'><p>"
+    if positive:
+        advice_str += """It looks like your income is greater than your spending.
+Congratulations, that's great! Can we do even better? """
+    else:
+        advice_str += """It looks like your spending is greater than your income.
+Maybe there is room for improvement. """
+    advice_str += """Take a look at the charts above. Are there any major expenses
+you can find that can be reduced or eliminated? Examine your income. Are you satisfied
+with where it's at, or are you looking to improve it, maybe through a new or extra
+job or increased hours?"""
+    if positive:
+        advice_str += "</p><p>What can you do with your budget surplus? "
+    else:
+        advice_str += (
+            "</p><p>What are your options once your budget is back in the black? "
+        )
+    advice_str += f"""Consider paying down loans, investing (or investing more) in retirement
+accounts, or saving for an important purchase or rainy day fund. If you are interested in
+investing and growing your net worth, check out the
+<a href="{url_for('finance.stocks')}">stocks</a> and
+<a href="{url_for('finance.net_worth')}">net worth</a> pages.</p></div>"""
+    return advice_str
+
+
+def combine_charts(*charts: tuple[str, str], positive: bool) -> str:
     """Combine all chart data"""
     html = '<div class="row">'
     for i, (script, div) in enumerate(charts, start=1):
@@ -185,6 +214,7 @@ def combine_charts(*charts: tuple[str, str]) -> str:
         html += f'<div class="col-lg-6">{script}{div}</div>'
         if i % 2 == 0 or i == len(charts):
             html += "</div>"
+    html += inject_advice(positive)
     return html
 
 
@@ -216,11 +246,13 @@ def prepare_all_budget_graphs(budget: Budget) -> str:
             "x",
             f"Income vs Expenses ({TIME_PERIOD_CONVERTER[view_period]})",
         )
+        positive = income_v_expense_data["Income"] > income_v_expense_data["Expenses"]
         return combine_charts(
             (categories_script, categories_div),
             (items_script, items_div),
             (income_script, income_div),
             (ive_script, ive_div),
+            positive=positive,
         )
     else:
         return "<h2>Graphs unavailable</h2>"

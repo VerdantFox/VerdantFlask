@@ -22,8 +22,8 @@ DEFAULT_FIELD_POS = {"value": None, "period": 12, "pos": True}
 DEFAULT_FIELD_NEG = {"value": None, "period": 12, "pos": False}
 DEFAULT_BUDGET = {
     "Income": {
-        "Your take-home pay": DEFAULT_FIELD_POS,
-        "Partner's take-home pay": DEFAULT_FIELD_POS,
+        "Your wages/salary": DEFAULT_FIELD_POS,
+        "Partner's wages/salary": DEFAULT_FIELD_POS,
         "Tips": DEFAULT_FIELD_POS,
         "Bonuses & overtime": DEFAULT_FIELD_POS,
         "Income from investments": DEFAULT_FIELD_POS,
@@ -43,6 +43,8 @@ DEFAULT_BUDGET = {
         "Phone bill(s)": DEFAULT_FIELD_NEG,
     },
     "Insurance & Financial": {
+        "Income taxes": DEFAULT_FIELD_NEG,
+        "Other taxes": DEFAULT_FIELD_NEG,
         "Car insurance": DEFAULT_FIELD_NEG,
         "Home insurance": DEFAULT_FIELD_NEG,
         "Personal & life insurance": DEFAULT_FIELD_NEG,

@@ -40,3 +40,7 @@
   border-style: solid;
   border-color: rgba(0, 0, 0, 0.15);
 }
+
+.advice {
+  font-size: 1rem;
+}
