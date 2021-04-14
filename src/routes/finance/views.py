@@ -34,7 +34,7 @@ def budget_page() -> str:
 
 @finance.route("/budget/new_budget", methods=["GET"])
 def new_budget() -> str:
-    """ Create a new budget, removing old one from stash """
+    """Create a new budget, removing old one from stash"""
     budget_helpers.save_budget()
     session.pop("current_budget", None)
     form = BudgetForm()
@@ -46,6 +46,22 @@ def new_budget() -> str:
         form=form,
         refresh_js=True,
         graphs=None,
+    )
+
+
+@finance.route("/budget/copy", methods=["POST"])
+def copy_budget() -> str:
+    """Copy the current budget"""
+    budget_helpers.save_budget()
+    form = BudgetForm()
+    budget = budget_helpers.copy_current_budget()
+    return render_template(
+        "finance/budget_inner.html",
+        budget=budget,
+        saved_budgets=budget_helpers.get_user_budgets_limited(),
+        form=form,
+        refresh_js=True,
+        graphs=budget_graphs.prepare_all_budget_graphs(budget),
     )
 
 

@@ -1,5 +1,6 @@
 """budget: module for handling budget.py logic"""
 import json
+from copy import deepcopy
 from typing import List, Optional
 
 from bson.objectid import ObjectId
@@ -185,6 +186,19 @@ def set_budget_from_post() -> Budget:
         form.budget_name.data,
         form.budget_id.data,
     )
+
+
+def copy_current_budget() -> Budget:
+    """Copy the current budget"""
+    budget = get_current_or_default_budget()
+    budget_copy = deepcopy(budget)
+    budget_copy.id = None
+    budget_name = budget.name
+    if not budget_name.endswith(" (copy)"):
+        budget_name += " (copy)"
+    budget_copy.name = budget_name
+    budget_copy.save()
+    return budget_copy
 
 
 def get_user_budgets_limited() -> List[Budget]:

@@ -34,6 +34,10 @@
                   ic-confirm="Unsaved budget data will be deleted. Continue?"
                   ic-get-from="{{ url_for('finance.new_budget') }}"
                   ic-target='#budget-inner'>New Budget</button>
+          <button class="dropdown-item{% if not current_user.is_authenticated %} disabled{% endif %}"
+                  type="button"
+                  ic-post-to="{{ url_for('finance.copy_budget') }}"
+                  ic-target='#budget-inner'>Copy Budget</button>
           <div class="dropdown-submenu">
             <button class="dropdown-item subdrop{% if not current_user.is_authenticated %} disabled{% endif %}"
                     type="button"
