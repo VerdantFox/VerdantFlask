@@ -15,8 +15,8 @@ class Budget(db.Document):
     id = db.ObjectIdField(default=lambda: ObjectId(), primary_key=True)
     author = db.ObjectIdField(required=False)
     name = db.StringField(required=False, max_length=30)
-    period = db.IntField(default=12)
-    budget = db.DictField()
+    period = db.IntField(required=False, default=12)
+    budget = db.DictField(default={})
 
     meta = {
         "collection": "budget",
