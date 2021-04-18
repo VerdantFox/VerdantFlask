@@ -144,12 +144,21 @@ def share_budget(budget_id: str) -> Union[str, Response]:
 
 
 # --------------------------------------------------------------------------
-# Stocks views
+# Loan views
 # --------------------------------------------------------------------------
-@finance.route("/stocks", methods=["GET"])
-def stocks() -> str:
-    """Sub application for stocks trading"""
-    return render_template("finance/stocks.html")
+@finance.route("/loan", methods=["GET"])
+def loan() -> str:
+    """Sub application for loan calculating"""
+    return render_template("finance/loan.html")
+
+
+# --------------------------------------------------------------------------
+# Compound Interest views
+# --------------------------------------------------------------------------
+@finance.route("/compound_interest", methods=["GET"])
+def compound_interest() -> str:
+    """Sub application for compound interest calculating"""
+    return render_template("finance/compound_interest.html")
 
 
 # --------------------------------------------------------------------------
@@ -159,3 +168,12 @@ def stocks() -> str:
 def net_worth() -> str:
     """Sub application for net worth calculating"""
     return render_template("finance/net_worth.html")
+
+
+# --------------------------------------------------------------------------
+# Stocks views
+# --------------------------------------------------------------------------
+@finance.route("/stocks", methods=["GET"])
+def stocks() -> str:
+    """Sub application for stocks trading"""
+    return render_template("finance/stocks.html")

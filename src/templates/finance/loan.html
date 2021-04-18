@@ -1,5 +1,5 @@
 {% extends "core/base.html" %}
-{% set active_page = "net_worth" %}
+{% set active_page = "loan" %}
 
 {% block title %}
   Verdant Fox | Finance
@@ -8,7 +8,7 @@
 {% block breadcrumb %}
   <li class="breadcrumb-item"><a href="{{ url_for('core.index') }}">Home</a></li>
   <li class="breadcrumb-item"><a href="{{ url_for('finance.landing') }}">Finance</a></li>
-  <li class="breadcrumb-item active" aria-current="page">Net Worth</li>
+  <li class="breadcrumb-item active" aria-current="page">Loan Calculator</li>
 {% endblock breadcrumb %}
 
 {% block navbar %}
@@ -18,6 +18,6 @@
 {% block content %}
 <br>
 <div class="container">
-  <h1>Net Worth Calculator</h1>
+  <h1>Loan Calculator</h1>
 </div>
 {% endblock content %}

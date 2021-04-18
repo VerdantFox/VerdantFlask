@@ -9,11 +9,19 @@
         href="{{ url_for('finance.budget_page') }}">Budget</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link {% if active_page == 'stocks' %}active{% endif %}"
-        href="{{ url_for('finance.stocks') }}">Stocks</a>
+    <a class="nav-link {% if active_page == 'loan' %}active{% endif %}"
+        href="{{ url_for('finance.loan') }}">Loans</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if active_page == 'compound_interest' %}active{% endif %}"
+        href="{{ url_for('finance.compound_interest') }}">Interest</a>
   </li>
   <li class="nav-item">
     <a class="nav-link {% if active_page == 'net_worth' %}active{% endif %}"
         href="{{ url_for('finance.net_worth') }}">Net Worth</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if active_page == 'stocks' %}active{% endif %}"
+        href="{{ url_for('finance.stocks') }}">Stocks</a>
   </li>
 </ul>
