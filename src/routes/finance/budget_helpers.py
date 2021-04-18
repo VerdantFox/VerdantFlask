@@ -193,7 +193,7 @@ def copy_current_budget() -> Budget:
     budget = get_current_or_default_budget()
     budget_copy = deepcopy(budget)
     budget_copy.id = None
-    budget_name = budget.name
+    budget_name = budget.name or "unnamed_budget"
     if not budget_name.endswith(" (copy)"):
         budget_name += " (copy)"
     budget_copy.name = budget_name

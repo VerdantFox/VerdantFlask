@@ -2,11 +2,19 @@
 import pytest
 from bson.objectid import ObjectId
 
-# from src.routes.finance.budget_helpers import DEFAULT_BUDGET
 from src.routes.finance.models import Budget
-from tests.conftest import STANDARD_USER
+from tests.conftest import STANDARD_USER, get_and_decode, post_and_decode
 
-AUTHOR = ""
+SIMPLE_INNER_BUDGET_STR = (
+    '{"Income":{"Wages":{"value":500,"period":12,"pos":true}},'
+    '"Expenses":{"Spending":{"value":300,"period":12,"pos":false}}}'
+)
+SIMPLE_BUDGET_FORM = {
+    "budget_id": None,
+    "budget_name": "My budget",
+    "budget_view_period": 1,
+    "budget_json": SIMPLE_INNER_BUDGET_STR,
+}
 SMALL_INNER_BUDGET_1 = {
     "category1": {"item1": {"value": 123, "period": 12, "pos": True}}
 }
@@ -36,6 +44,9 @@ BUDGET_OTHER_USER = {
 }
 
 
+# --------------------------------------------------------------------------
+# Fixtures
+# --------------------------------------------------------------------------
 @pytest.fixture
 def budget1():
     """Load budget 1"""
@@ -72,8 +83,8 @@ def budget_other():
     budget.delete()
 
 
-@pytest.fixture(scope="module")
-def load_3_budgets_mod(client_module):
+@pytest.fixture
+def load_3_budgets(delete_budgets):
     """Loads 3 blogposts into database"""
     budget1 = Budget(**BUDGET_1)
     budget1.save()
@@ -84,9 +95,28 @@ def load_3_budgets_mod(client_module):
 
     yield budget1, budget2, budget_other
 
-    budget1 = Budget.objects(id=budget1.id)
-    budget1.delete()
-    budget2 = Budget.objects(id=budget2.id)
-    budget2.delete()
-    budget_other = Budget.objects(id=budget_other.id)
-    budget_other.delete()
+
+# --------------------------------------------------------------------------
+# Helper functions
+# --------------------------------------------------------------------------
+def retrieve_budget(client, budget, status_code=200):
+    """Call retrieve_budget view on a budget"""
+    form_data = {
+        "budget_id": None,
+        "budget_name": "",
+        "budget_view_period": 12,
+        "budget_json": "{}",
+    }
+    return post_and_decode(
+        client, f"/finance/budget/retrieve/{budget.id}", form_data, status_code
+    )
+
+
+def update_budget(client, form_data, status_code=200):
+    """Call update_budget view on a budget"""
+    return post_and_decode(client, "/finance/budget/update", form_data, status_code)
+
+
+def get_budget(client, status_code=200):
+    """Call get_budget"""
+    return get_and_decode(client, "/finance/budget", status_code)

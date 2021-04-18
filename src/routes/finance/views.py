@@ -32,7 +32,15 @@ def budget_page() -> str:
     )
 
 
-@finance.route("/budget/new_budget", methods=["GET"])
+@finance.route("/budget/update", methods=["POST"])
+def update_current_budget() -> str:
+    """Stash the currently opened budget in the session and return graphs"""
+    budget = budget_helpers.set_budget_from_post()
+    session["current_budget"] = budget.to_json()
+    return budget_graphs.prepare_all_budget_graphs(budget)
+
+
+@finance.route("/budget/new", methods=["GET"])
 def new_budget() -> str:
     """Create a new budget, removing old one from stash"""
     budget_helpers.save_budget()
@@ -49,12 +57,14 @@ def new_budget() -> str:
     )
 
 
+@login_required
 @finance.route("/budget/copy", methods=["POST"])
 def copy_budget() -> str:
     """Copy the current budget"""
     budget_helpers.save_budget()
     form = BudgetForm()
     budget = budget_helpers.copy_current_budget()
+    session["current_budget"] = budget.to_json()
     return render_template(
         "finance/budget_inner.html",
         budget=budget,
@@ -65,23 +75,16 @@ def copy_budget() -> str:
     )
 
 
-@finance.route("/budget/update", methods=["POST"])
-def update_current_budget() -> str:
-    """Stash the currently opened budget in the session and return graphs"""
-    budget = budget_helpers.set_budget_from_post()
-    session["current_budget"] = budget.to_json()
-    return budget_graphs.prepare_all_budget_graphs(budget)
-
-
 @finance.route("/budget/save", methods=["POST"])
 @login_required
 def save_current_budget() -> str:
     """Save the currently opened budget to mongoengine"""
     form = BudgetForm()
-    budget_obj = budget_helpers.save_budget()
+    budget = budget_helpers.save_budget()
+    session["current_budget"] = budget.to_json()
     return render_template(
         "finance/budget_inner.html",
-        budget=budget_obj,
+        budget=budget,
         saved_budgets=budget_helpers.get_user_budgets_limited(),
         form=form,
         refresh_js=True,
@@ -95,6 +98,7 @@ def retrieve_budget(budget_id: str) -> str:
     form = BudgetForm()
     budget_helpers.save_budget()
     budget = budget_helpers.retrieve_budget(budget_id)
+    session["current_budget"] = budget.to_json()
     return render_template(
         "finance/budget_inner.html",
         budget=budget,

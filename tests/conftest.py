@@ -75,6 +75,20 @@ def get_image_path(image):
     )
 
 
+def get_and_decode(client, url, status_code=200):
+    """GET a url, assert its status code and return decoded data"""
+    response = client.get(url, follow_redirects=True)
+    assert response.status_code == status_code
+    return response.data.decode()
+
+
+def post_and_decode(client, url, data, status_code=200):
+    """POST to a url, assert its status code and return decoded data"""
+    response = client.post(url, data=data, follow_redirects=True)
+    assert response.status_code == status_code
+    return response.data.decode()
+
+
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------
