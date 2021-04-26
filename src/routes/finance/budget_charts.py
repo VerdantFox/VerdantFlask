@@ -1,15 +1,8 @@
 """budget_graphs:  produce bokeh graphs for budget"""
-from math import pi
-
-import pandas as pd
-from bokeh.embed import components
-from bokeh.models import ColumnDataSource, NumeralTickFormatter
-from bokeh.palettes import Viridis6, viridis
-from bokeh.plotting import figure
-from bokeh.transform import cumsum
 from flask import url_for
 
 from .budget_helpers import TIME_PERIOD_CONVERTER
+from .charts_common import combine_charts, produce_bar_chart, produce_pie_chart
 from .models import Budget
 
 
@@ -90,94 +83,6 @@ def prepare_income_vs_expenses_data(budget: Budget) -> dict[str, int]:
     return ive_data
 
 
-def produce_pie_chart(
-    data_dict: dict[str, int], descriptor: str, title: str
-) -> tuple[str, str]:
-    """Produce a pie chart div, given data"""
-    data = (
-        pd.Series(data_dict)
-        .reset_index(name="value")
-        .rename(columns={"index": descriptor})
-        .sort_values(by="value", ascending=False)
-    )
-    data["angle"] = data["value"] / data["value"].sum() * 2 * pi
-    data["color"] = viridis(len(data_dict))
-    data["percentage"] = round(data["value"] / data["value"].sum() * 100)
-
-    plot = figure(
-        sizing_mode="scale_width",
-        title=title,
-        toolbar_location=None,
-        tools="hover",
-        tooltips=f"@{descriptor}: $@value{{,}} (@percentage%)",
-        x_range=(-0.5, 1.0),
-    )
-
-    plot.wedge(
-        x=0,
-        y=1,
-        radius=0.4,
-        start_angle=cumsum("angle", include_zero=True),
-        end_angle=cumsum("angle"),
-        line_color="white",
-        fill_color="color",
-        legend_field=descriptor,
-        source=data,
-    )
-
-    # Adjust plot settings
-    plot.axis.axis_label = None
-    plot.axis.visible = False
-    plot.grid.grid_line_color = None
-    plot.title.text_font_size = "1rem"
-    plot.border_fill_alpha = 0
-    plot.background_fill_alpha = 0
-    plot.legend.border_line_alpha = 0
-    plot.legend.background_fill_alpha = 0.5
-
-    script, div = components(plot)
-    return script, div
-
-
-def produce_bar_chart(
-    data_dict: dict[str, int], descriptor: str, title: str
-) -> tuple[str, str]:
-    """Produce a bar chart"""
-    x = list(data_dict.keys())
-    dollars = list(data_dict.values())
-    colors = ["#09A029", "#9B0C0C"] if len(x) == 2 else Viridis6
-    source = ColumnDataSource(data=dict(x=x, dollars=dollars, color=colors))
-    plot = figure(
-        sizing_mode="scale_width",
-        title=title,
-        toolbar_location=None,
-        tools="hover",
-        tooltips=f"@{descriptor}: $@dollars{{,}}",
-        x_range=x,
-    )
-    plot.vbar(
-        x="x",
-        top="dollars",
-        width=0.9,
-        source=source,
-        line_color="white",
-        color="color",
-    )
-
-    # Adjust plot settings
-    plot.yaxis[0].formatter = NumeralTickFormatter(format="$0,0")
-    plot.title.text_font_size = "1rem"
-    plot.axis.major_label_text_font_size = "0.8rem"
-    plot.border_fill_alpha = 0
-    plot.background_fill_alpha = 0
-    plot.background_fill_alpha = 0
-    plot.xgrid.visible = False
-    plot.ygrid.visible = False
-
-    script, div = components(plot)
-    return script, div
-
-
 def inject_advice(positive: bool):
     """Inject an advice section above charts"""
     advice_str = "<br><div class='container advice'><p>"
@@ -205,20 +110,7 @@ investing and growing your net worth, check out the
     return advice_str
 
 
-def combine_charts(*charts: tuple[str, str], positive: bool) -> str:
-    """Combine all chart data"""
-    html = '<div class="row">'
-    for i, (script, div) in enumerate(charts, start=1):
-        if i % 2 == 1 and i != 1:
-            html += '<div class="row">'
-        html += f'<div class="col-lg-6">{script}{div}</div>'
-        if i % 2 == 0 or i == len(charts):
-            html += "</div>"
-    html += inject_advice(positive)
-    return html
-
-
-def prepare_all_budget_graphs(budget: Budget) -> str:
+def prepare_all_budget_charts(budget: Budget) -> str:
     """Prepare all budget graphs"""
     view_period = budget.period
     categories_data = prepare_budget_categories_data(budget)
@@ -226,33 +118,27 @@ def prepare_all_budget_graphs(budget: Budget) -> str:
     income_data = prepare_budget_items_data(budget, income=True)
     income_v_expense_data = prepare_income_vs_expenses_data(budget)
     if all((categories_data, items_data, income_data, income_v_expense_data)):
-        categories_script, categories_div = produce_pie_chart(
+        categories_chart = produce_pie_chart(
             categories_data,
-            "Category",
             f"Budget Spent by Category ({TIME_PERIOD_CONVERTER[view_period]})",
         )
-        items_script, items_div = produce_pie_chart(
+        items_chart = produce_pie_chart(
             items_data,
-            "Item",
             f"Budget Spent by Item ({TIME_PERIOD_CONVERTER[view_period]})",
         )
-        income_script, income_div = produce_pie_chart(
+        income_chart = produce_pie_chart(
             income_data,
-            "Item",
             f"Income by Item ({TIME_PERIOD_CONVERTER[view_period]})",
         )
-        ive_script, ive_div = produce_bar_chart(
+        ive_chart = produce_bar_chart(
             income_v_expense_data,
-            "x",
             f"Income vs Expenses ({TIME_PERIOD_CONVERTER[view_period]})",
+            colors=["#003300", "#7f1a22"],
         )
         positive = income_v_expense_data["Income"] > income_v_expense_data["Expenses"]
-        return combine_charts(
-            (categories_script, categories_div),
-            (items_script, items_div),
-            (income_script, income_div),
-            (ive_script, ive_div),
-            positive=positive,
+        combined_charts = combine_charts(
+            categories_chart, items_chart, income_chart, ive_chart
         )
+        return combined_charts + inject_advice(positive)
     else:
         return "<h2>Graphs unavailable</h2>"

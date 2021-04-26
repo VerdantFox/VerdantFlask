@@ -1,0 +1,142 @@
+<form id="budget-form" name="budget-form" method="GET">
+    <div class="row calc-border">
+      <div class="col-lg-6 card-body bgc-1">
+        <div class="row">
+          <div class="form-group col-sm-6">
+            {{ form.principal.label }}
+            {{ form.principal(class='form-control', inputmode="decimal", type="number", step="1", min="1", max="10000000000000") }}
+            {% for error in form.principal.errors %}
+            <p class="error">{{ error }}</p>
+            {% endfor %}
+          </div>
+          <div class="col-sm-6">
+            {{ form.interest_rate.label }}
+            <div class="input-group">
+              {{ form.interest_rate(class='form-control', inputmode="decimal", type="number", step=".001", min="0", max="100") }}
+              <div class="input-group-append">
+                <span class="input-group-text">%</span>
+              </div>
+              {% for error in form.interest_rate.errors %}
+              <p class="error">{{ error }}</p>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-sm-6">
+            {{ form.period.label }}
+            {{ form.period(class='form-control', inputmode="decimal", type="number", step="1", min="0", max="600") }}
+            {% for error in form.period.errors %}
+            <p class="error">{{ error }}</p>
+            {% endfor %}
+          </div>
+          <div class="form-group col-sm-6">
+            <label for="period_type" class="d-none d-sm-block" aria-label="Loan period type">&nbsp;</label>
+            {{ form.period_type(class='form-control') }}
+            {% for error in form.period_type.errors %}
+            <p class="error">{{ error }}</p>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-sm-4">
+            {{ form.extra_monthly.label }}
+            {{ form.extra_monthly(class='form-control', inputmode="decimal", type="number", step=".01", min="0", max="10000000000000") }}
+            {% for error in form.extra_monthly.errors %}
+            <p class="error">{{ error }}</p>
+            {% endfor %}
+          </div>
+          <div class="form-group col-sm-4">
+            {{ form.extra_yearly.label }}
+            {{ form.extra_yearly(class='form-control', inputmode="decimal", type="number", step=".01", min="0", max="10000000000000") }}
+            {% for error in form.extra_yearly.errors %}
+            <p class="error">{{ error }}</p>
+            {% endfor %}
+          </div>
+          <div class="form-group col-sm-4">
+            {{ form.extra_yearly_month.label }}
+            {{ form.extra_yearly_month(class='form-control') }}
+            {% for error in form.extra_yearly_month.errors %}
+            <p class="error">{{ error }}</p>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-sm-6">
+            {{ form.start_date.label }}
+            {{ form.start_date(class='form-control', inputmode="decimal", type="date") }}
+            {% for error in form.start_date.errors %}
+            <p class="error">{{ error }}</p>
+            {% endfor %}
+          </div>
+          <div class="form-group col-sm-6">
+            <label for="submit">&nbsp;</label>
+            <button id="submit" class="form-control btn btn-green">
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 card-body pane-2">
+        <p class="text-center payment-header1">Minimum monthly payment</p>
+        <p class="text-center min-payment">{{ calc.str_money(calc.min_payment) if calc else "" }}</p>
+        {% if calc.extra_monthly %}
+        <hr class="no-spacing">
+        <p class="text-center payment-header2">Monthly payment after monthly extra</p>
+        <p class="text-center actual-payment">{{ calc.str_money(calc.payment_with_extra) }}</p>
+        {% endif %}
+        <br>
+        <p class="principle-and-interst">Total Principal Paid <span class="float-right totals">{{ calc.str_money(calc.principal, False) if calc else "" }}</span></p>
+        <p class="principle-and-interst">Total Interest Paid <span class="float-right totals">{{ calc.str_money(calc.total_interest, False) if calc else "" }}</span></p>
+        <hr class="no-spacing">
+        <p class="principle-and-interst">Total loan cost <span class="float-right totals">{{ calc.str_money(calc.total_cost, False) if calc else "" }}</span></p>
+        <br>
+        <p class="text-center payoff-date-label">Estimated payoff date</p>
+        <p class="text-center payoff-date">{{ calc.payoff_date if calc else "" }}</p>
+      </div>
+    </div>
+    <div class="row calc-border">
+      <div class="col-12">
+        <div data-toggle="collapse" data-target="#graphs-Collapse" aria-expanded="true" aria-controls="graphs-Collapse" class="cursor-pointer bottom-border">
+          <h2 class="pad-left-sm">Summary Charts <i class="fas fa-caret-down"></i></h2>
+        </div>
+        {% set graphs = calc.graphs_html if calc else "" %}
+        {% include "finance/graphs.html" %}
+      </div>
+    </div>
+    <div class="row calc-border">
+      <div class="col-12 no-pad">
+        <div data-toggle="collapse" data-target="#amortization-Collapse" aria-expanded="false" aria-controls="budgetSummary-Collapse" class="cursor-pointer">
+          <h2 class="pad-left">Amortization Schedule <i class="fas fa-caret-down"></i></h2>
+        </div>
+        <div id="amortization-Collapse" class="collapse">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">Payment Date</th>
+                  <th scope="col">Payment</th>
+                  <th scope="col">Principal</th>
+                  <th scope="col">Interest</th>
+                  <th scope="col">Total Interest</th>
+                  <th scope="col">Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for (payment_date, payment, principal, interest, total_interest, remaining_principal) in calc.amortization_schedule if calc %}
+                <tr>
+                  <td>{{ payment_date.strftime("%b %Y") }}</td>
+                  <td>{{ calc.str_money(payment) if calc else "" }}</td>
+                  <td>{{ calc.str_money(principal) if calc else "" }}</td>
+                  <td>{{ calc.str_money(interest) if calc else "" }}</td>
+                  <td>{{ calc.str_money(total_interest) if calc else "" }}</td>
+                  <td>{{ calc.str_money(remaining_principal) if calc else "" }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+</form>

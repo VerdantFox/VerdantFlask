@@ -1,0 +1,68 @@
+.calc-border {
+  border: 1px solid #b0b8a7;
+}
+.pane-2 {
+  background-color: #fafceb;
+}
+.payment-header1 {
+  font-size: 1.3rem;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.min-payment {
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  font-size: 2.5rem;
+  font-weight: 800;
+}
+.payment-header2 {
+  font-size: 1.1rem;
+  margin-top: 10px;
+  margin-bottom: 3px;
+}
+.actual-payment {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.principle-and-interst {
+  font-size: 1.2rem;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.totals {
+  font-weight: 600;
+}
+.no-spacing {
+  margin: 0;
+  padding: 0;
+}
+.payoff-date-label {
+  font-size: 1.3rem;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.payoff-date {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.no-pad {
+  padding: 0;
+}
+.pad-left {
+  padding-left: 20px;
+}
+.pad-left-sm {
+  padding-left: 8px;
+}
+.chart {
+  padding: 10px;
+}
+.bottom-border {
+  border-bottom: 1px solid gainsboro;
+}

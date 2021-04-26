@@ -1,8 +1,8 @@
-"""test_budget_graphs: test the finance.budget_graphs.py functions not hit by functional tests"""
+"""test_budget_charts: test the finance.budget_charts.py functions not hit by functional tests"""
 import pytest
 from bson.objectid import ObjectId
 
-from src.routes.finance import budget_graphs
+from src.routes.finance import budget_charts
 from src.routes.finance.models import Budget
 
 BUDGET_VARIED = {
@@ -29,7 +29,7 @@ def prep_budget(inner_budget, name="Some Budget", period=12, author=ObjectId()):
 def test_prepare_budget_items_data():
     """Test the prepare_budget_items_data function"""
     budget = prep_budget(BUDGET_VARIED)
-    item_data = budget_graphs.prepare_budget_items_data(budget)
+    item_data = budget_charts.prepare_budget_items_data(budget)
     assert item_data == {
         "item_lg": 1000,
         "item_lg (category_neg2)": 2166,
@@ -40,8 +40,8 @@ def test_prepare_budget_items_data():
 @pytest.mark.parametrize("positive", (True, False))
 def test_inject_advice(positive, monkeypatch):
     """Test the inject_advice_function"""
-    monkeypatch.setattr(budget_graphs, "url_for", lambda x: None)
-    advice = budget_graphs.inject_advice(positive)
+    monkeypatch.setattr(budget_charts, "url_for", lambda x: None)
+    advice = budget_charts.inject_advice(positive)
     if positive:
         assert "It looks like your income is greater than your spending." in advice
     else:

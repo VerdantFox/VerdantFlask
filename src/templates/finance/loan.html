@@ -1,5 +1,8 @@
 {% extends "core/base.html" %}
 {% set active_page = "loan" %}
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/finance/calculators.css') }}">
+{% endblock css %}
 
 {% block title %}
   Verdant Fox | Finance
@@ -19,5 +22,21 @@
 <br>
 <div class="container">
   <h1>Loan Calculator</h1>
+  <p>
+    Use this loan calculator to see how your loan changes based on changing
+    conditions. You can adjust the initial loan amount, the loan period,
+    the interest rate and additional payments made on top of the monthly minimum.
+  </p>
+  <p>
+    See how changes to these categories change how much interest you pay
+    over the course of the loan, how they affect your monthly payments,
+    and how they affect your estimated payoff date.
+    View your amortization schedule and charts reflecting principal and interest
+    paid at various points over the course of the loan. This calculator can
+    be used for school loan, mortgage, auto and any other fixed loan types.
+  </p>
+  <div class="loan-inner">
+    {% include "finance/loan_inner.html" %}
+  </div>
 </div>
 {% endblock content %}

@@ -4,7 +4,7 @@ from flask import Blueprint, redirect, render_template, request, session, url_fo
 from flask_login import login_required
 from werkzeug.wrappers import Response
 
-from . import budget_graphs, budget_helpers
+from . import budget_charts, budget_helpers, loan_calculator
 from .forms import BudgetForm
 
 finance = Blueprint("finance", __name__)
@@ -28,7 +28,7 @@ def budget_page() -> str:
         budget=budget,
         saved_budgets=budget_helpers.get_user_budgets_limited(),
         form=BudgetForm(),
-        graphs=budget_graphs.prepare_all_budget_graphs(budget),
+        graphs=budget_charts.prepare_all_budget_charts(budget),
     )
 
 
@@ -37,7 +37,7 @@ def update_current_budget() -> str:
     """Stash the currently opened budget in the session and return graphs"""
     budget = budget_helpers.set_budget_from_post()
     session["current_budget"] = budget.to_json()
-    return budget_graphs.prepare_all_budget_graphs(budget)
+    return budget_charts.prepare_all_budget_charts(budget)
 
 
 @finance.route("/budget/new", methods=["GET"])
@@ -71,7 +71,7 @@ def copy_budget() -> str:
         saved_budgets=budget_helpers.get_user_budgets_limited(),
         form=form,
         refresh_js=True,
-        graphs=budget_graphs.prepare_all_budget_graphs(budget),
+        graphs=budget_charts.prepare_all_budget_charts(budget),
     )
 
 
@@ -105,7 +105,7 @@ def retrieve_budget(budget_id: str) -> str:
         saved_budgets=budget_helpers.get_user_budgets_limited(),
         form=form,
         refresh_js=True,
-        graphs=budget_graphs.prepare_all_budget_graphs(budget),
+        graphs=budget_charts.prepare_all_budget_charts(budget),
     )
 
 
@@ -139,7 +139,7 @@ def share_budget(budget_id: str) -> Union[str, Response]:
         "finance/budget_share.html",
         budget=budget,
         is_share=True,
-        graphs=budget_graphs.prepare_all_budget_graphs(budget),
+        graphs=budget_charts.prepare_all_budget_charts(budget),
     )
 
 
@@ -149,7 +149,16 @@ def share_budget(budget_id: str) -> Union[str, Response]:
 @finance.route("/loan", methods=["GET"])
 def loan() -> str:
     """Sub application for loan calculating"""
-    return render_template("finance/loan.html")
+    form = loan_calculator.fill_loan_form_from_request()
+    calc = None
+    if form.validate():
+        calc = loan_calculator.LoanCalculator(form)
+        calc.calculate()
+    return render_template(
+        "finance/loan.html",
+        form=form,
+        calc=calc,
+    )
 
 
 # --------------------------------------------------------------------------
