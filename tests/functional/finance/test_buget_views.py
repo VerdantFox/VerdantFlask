@@ -1,4 +1,4 @@
-"""test_budget_views_budget_page: test budget_page view"""
+"""test_budget_views_budget_page: test all budget related views"""
 import json
 
 from tests.conftest import get_and_decode, post_and_decode

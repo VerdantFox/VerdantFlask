@@ -115,7 +115,7 @@ class LoanCalculator:
                 month_payment = self.round_money(month_payment + self.extra_yearly)
             month_payment = self.round_money(month_payment)
             month_principal = self.round_money(month_payment - month_interest)
-            if month_principal <= 0:
+            if month_principal <= 0:  # pragma: no cover
                 raise RuntimeError("Improper minimum payment, principal not shrinking.")
             remaining_principal -= month_principal
             if remaining_principal <= 0:

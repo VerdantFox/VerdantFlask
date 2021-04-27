@@ -75,18 +75,26 @@ def get_image_path(image):
     )
 
 
-def get_and_decode(client, url, status_code=200):
+def get_and_decode(client, url, query_string=None, status_code=200, write_file=False):
     """GET a url, assert its status code and return decoded data"""
-    response = client.get(url, follow_redirects=True)
+    response = client.get(url, query_string=query_string, follow_redirects=True)
     assert response.status_code == status_code
-    return response.data.decode()
+    data = response.data.decode()
+    if write_file:
+        with open("tmp/html.html", "w") as out_file:
+            out_file.write(data)
+    return data
 
 
-def post_and_decode(client, url, data, status_code=200):
+def post_and_decode(client, url, data, status_code=200, write_file=False):
     """POST to a url, assert its status code and return decoded data"""
     response = client.post(url, data=data, follow_redirects=True)
     assert response.status_code == status_code
-    return response.data.decode()
+    data = response.data.decode()
+    if write_file:
+        with open("tmp/html.html", "w") as out_file:
+            out_file.write(data)
+    return data
 
 
 # ---------------------------------------------------------------------------

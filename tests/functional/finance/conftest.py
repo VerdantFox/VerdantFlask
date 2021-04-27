@@ -108,15 +108,20 @@ def retrieve_budget(client, budget, status_code=200):
         "budget_json": "{}",
     }
     return post_and_decode(
-        client, f"/finance/budget/retrieve/{budget.id}", form_data, status_code
+        client,
+        f"/finance/budget/retrieve/{budget.id}",
+        form_data,
+        status_code=status_code,
     )
 
 
 def update_budget(client, form_data, status_code=200):
     """Call update_budget view on a budget"""
-    return post_and_decode(client, "/finance/budget/update", form_data, status_code)
+    return post_and_decode(
+        client, "/finance/budget/update", form_data, status_code=status_code
+    )
 
 
 def get_budget(client, status_code=200):
     """Call get_budget"""
-    return get_and_decode(client, "/finance/budget", status_code)
+    return get_and_decode(client, "/finance/budget", status_code=status_code)

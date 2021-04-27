@@ -35,8 +35,23 @@
     paid at various points over the course of the loan. This calculator can
     be used for school loan, mortgage, auto and any other fixed loan types.
   </p>
+  <p>
+    If you are in the middle of your loan, you can set the "Loan amount"
+    to your current outstanding loan balance, and the "Loan period" to however
+    many months (number of payments) are left on the loan.
+  </p>
+  <p>
+    For the "Summary Charts" section, hover over charts (or touch them if
+    you're on a mobile device) to see details about that part of the chart.
+    The "Summary Charts" and "Amortization Scheudle" sections are collapsable
+    if you click (or touch) those section headers.
+  </p>
   <div class="loan-inner">
     {% include "finance/loan_inner.html" %}
   </div>
 </div>
 {% endblock content %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/finance/loan.js') }}"></script>
+{% endblock scripts %}

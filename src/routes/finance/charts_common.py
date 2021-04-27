@@ -86,7 +86,7 @@ def produce_bar_chart(
     )
 
     # Adjust plot settings
-    adjust_plot_settings(plot)
+    adjust_plot_settings(plot, False)
     plot.yaxis[0].formatter = NumeralTickFormatter(format="$0,0")
     plot.xgrid.visible = False
     plot.ygrid.visible = False
