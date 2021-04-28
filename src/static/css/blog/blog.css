@@ -1,0 +1,420 @@
+.container-blog {
+  max-width: 100%;
+}
+
+.blog-view {
+  font-size: 1.1rem;
+}
+
+.blog-view img {
+  max-height: 600px;
+  max-width: 100%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.blog-view p {
+  text-align: justify;
+}
+
+.blog-list-title {
+  font-size: 2rem;
+  font-weight: 500;
+}
+.blog-view .blog-list-stats {
+  font-size: 1rem;
+}
+.blog-view h1 {
+  font-size: 2rem;
+}
+.blog-view h2 {
+  font-size: 1.8rem;
+}
+.blog-view h3 {
+  font-size: 1.6rem;
+}
+.blog-view h4 {
+  font-size: 1.4rem;
+}
+.blog-view h5 {
+  font-size: 1.3rem;
+}
+.blog-view h6 {
+  font-size: 1.2rem;
+}
+.blog-view hr {
+  background-color: #006600;
+}
+.primary-comment-padding {
+  padding-left: 7rem;
+}
+.comment-padding {
+  padding-left: 4.1rem;
+}
+.reply-padding {
+  padding-left: 3.3rem;
+}
+.blog-view h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  padding-top: 1rem;
+}
+.blog-view a {
+  font-weight: 600;
+}
+
+.blog-view code {
+  padding: 0.2em 0.4em;
+  margin: 0;
+  border-radius: 6px;
+  font-size: 85%;
+  background-color: #d9d9d9;
+  color: #333333;
+}
+.toc {
+  background-color: #ebe8be;
+  border: 2px solid #347a2a;
+  margin: 2rem 0 2rem 0;
+  border-radius: 1rem;
+  padding: 1rem 1rem 0 1rem;
+}
+
+/* Code Highlights
+
+Using custom "one dark pro" style theme
+
+Example how to generate Monokai theme
+pygmentize -S monokai -f html -a .highlight > styles.css
+*/
+
+/* CSS I added to fix margins and add color for some text */
+.highlight {
+  padding: 10px 20px;
+  margin: 10px 0;
+}
+.highlight code {
+  background-color: #272822;
+  color: #f8f8f2;
+  font-size: 100%;
+}
+
+.highlight .hll {
+  background-color: #49483e;
+}
+.highlight {
+  background: #272822;
+  color: #f8f8f2;
+}
+/* Comment */
+.highlight .c {
+  color: #bfbfbf;
+  font-style: italic;
+}
+/* Error */
+.highlight .err {
+  color: #ffb3db;
+  background-color: #1e0010;
+}
+/* Keyword */
+.highlight .k {
+  color: #cc83e2;
+  font-weight: bold;
+}
+/* Literal */
+.highlight .l {
+  color: #ae81ff;
+}
+/* Name */
+.highlight .n {
+  color: #f8f8f2;
+}
+/*  Operator */
+.highlight .o {
+  color: #7ac7d1;
+  font-weight: bold;
+}
+/* Punctuation */
+.highlight .p {
+  color: #f8f8f2;
+}
+/* Comment.Hashbang */
+.highlight .ch {
+  color: #75715e;
+}
+/* Comment.Multiline */
+.highlight .cm {
+  color: #bfbfbf;
+  font-style: italic;
+}
+/* Comment.Preproc */
+.highlight .cp {
+  color: #bfbfbf;
+  font-weight: bold;
+}
+/* Comment.PreprocFile */
+.highlight .cpf {
+  color: #bfbfbf;
+}
+/* Comment.Single */
+.highlight .c1 {
+  color: #bfbfbf;
+  font-style: italic;
+}
+/* Comment.Special */
+.highlight .cs {
+  color: #bfbfbf;
+  font-weight: bold;
+  font-style: italic;
+}
+/* Generic.Deleted */
+.highlight .gd {
+  color: #000;
+  background-color: #fdd;
+}
+/* Generic.Emph */
+.highlight .ge {
+  font-style: italic;
+}
+/* Generic.Error */
+.highlight .gr {
+  color: #ff6666;
+}
+/* Generic.Heading */
+.highlight .gh {
+  color: #5b6370;
+}
+/* Generic.Inserted */
+.highlight .gi {
+  color: #a6e22e;
+  background-color: #dfd;
+}
+/* Generic.Output */
+.highlight .go {
+  color: #bfbfbf;
+}
+/* Generic.Prompt */
+.highlight .gp {
+  color: #bfbfbf;
+}
+/* Generic.Strong */
+.highlight .gs {
+  font-weight: bold;
+}
+/* Generic.Subheading */
+.highlight .gu {
+  color: #bfbfbf;
+}
+/* Generic.Traceback */
+.highlight .gt {
+  color: #ff6666;
+}
+/* Keyword.Constant */
+.highlight .kc {
+  color: #e2964a;
+  font-weight: bold;
+}
+/* Keyword.Declaration */
+.highlight .kd {
+  color: #cc83e2;
+  font-weight: bold;
+}
+/* Name.Namespace */
+.highlight .kn {
+  color: #cc83e2;
+}
+/* Keyword.Pseudo */
+.highlight .kp {
+  font-weight: bold;
+}
+/* Keyword.Reserved */
+.highlight .kr {
+  font-weight: bold;
+}
+/* Keyword.Type */
+.highlight .kt {
+  color: #ff6666;
+  font-weight: bold;
+}
+/* Literal.Date */
+.highlight .ld {
+  color: #e6db74;
+}
+/* Literal.Number */
+.highlight .m {
+  color: #e2964a;
+}
+/* Literal.String */
+.highlight .s {
+  color: #bfd17a;
+}
+/* Name.Attribute */
+.highlight .na {
+  color: #e2964a;
+}
+/* Name.Builtin */
+.highlight .nb {
+  color: #7ac7d1;
+}
+/* Name.Class */
+.highlight .nc {
+  color: #ffd966;
+  font-weight: bold;
+}
+/* Name.Decorator */
+.highlight .nd {
+  color: #80b3ff;
+}
+/* Name.Constant */
+.highlight .no {
+  color: #80b3ff;
+}
+/* Name.Entity */
+.highlight .ni {
+  color: #e2964a;
+}
+/* Name.Exception */
+.highlight .ne {
+  color: #ff6666;
+  font-weight: bold;
+}
+/* Name.Function */
+.highlight .nf {
+  color: #80b3ff;
+  font-weight: bold;
+}
+/* Name.Label */
+.highlight .nl {
+  color: #f8f8f2;
+}
+/* Name.Namespace */
+.highlight .nn {
+  color: #f8f8f2;
+}
+/* Name.Other */
+.highlight .nx {
+  color: #f8f8f2;
+}
+/* Name.Tag */
+.highlight .nt {
+  color: #ff6666;
+}
+/* Name.Variable */
+.highlight .nv {
+  color: #ff6666;
+}
+/* Operator.Word */
+.highlight .ow {
+  font-weight: bold;
+}
+/* Name.Property */
+.highlight .py {
+  color: #f8f8f2;
+}
+/* Text.Whitespace */
+.highlight .w {
+  color: #bbb;
+}
+/* Literal.Number.Bin */
+.highlight .mb {
+  color: #e2964a;
+}
+/* Literal.Number.Float */
+.highlight .mf {
+  color: #e2964a;
+}
+/* Literal.Number.Hex */
+.highlight .mh {
+  color: #e2964a;
+}
+/* Literal.Number.Integer */
+.highlight .mi {
+  color: #e2964a;
+}
+/* Literal.Number.Oct */
+.highlight .mo {
+  color: #e2964a;
+}
+/* Literal.String.Affix */
+.highlight .sa {
+  color: #bfd17a;
+}
+/* Literal.String.Backtick */
+.highlight .sb {
+  color: #bfd17a;
+}
+/* Literal.String.Char */
+.highlight .sc {
+  color: #bfd17a;
+}
+/* Literal.String.Delimiter */
+.highlight .dl {
+  color: #e6db74;
+}
+/* Literal.String.Doc */
+.highlight .sd {
+  color: #bfd17a;
+}
+/* Literal.String.Double */
+.highlight .s2 {
+  color: #bfd17a;
+}
+/* Literal.String.Escape */
+.highlight .se {
+  color: #bfd17a;
+}
+/* Literal.String.Heredoc */
+.highlight .sh {
+  color: #bfd17a;
+}
+/* Literal.String.Interpol */
+.highlight .si {
+  color: #bfd17a;
+}
+/* Literal.String.Other */
+.highlight .sx {
+  color: #bfd17a;
+}
+/* Literal.String.Regex */
+.highlight .sr {
+  color: #00ff40;
+}
+/* Literal.String.Single */
+.highlight .s1 {
+  color: #bfd17a;
+}
+/* Literal.String.Symbol */
+.highlight .ss {
+  color: #990073;
+}
+/* Name.Builtin.Pseudo */
+.highlight .bp {
+  color: #ffd966;
+}
+/* Name.Function.Magic */
+.highlight .fm {
+  color: #a6e22e;
+}
+/* Name.Variable.Class */
+.highlight .vc {
+  color: #80b3ff;
+}
+/* Name.Variable.Global */
+.highlight .vg {
+  color: #80b3ff;
+}
+/* Name.Variable.Instance */
+.highlight .vi {
+  color: #80b3ff;
+}
+/* Name.Variable.Magic */
+.highlight .vm {
+  color: #ff6666;
+}
+/* Literal.Number.Integer.Long */
+.highlight .il {
+  color: #80b3ff;
+}
