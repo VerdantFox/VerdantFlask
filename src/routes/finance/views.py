@@ -167,7 +167,7 @@ def loan() -> str:
 @finance.route("/compound_interest", methods=["GET"])
 def compound_interest() -> str:
     """Sub application for compound interest calculating"""
-    return render_template("finance/compound_interest.html")
+    return render_template("finance/interest.html")
 
 
 # --------------------------------------------------------------------------

@@ -380,7 +380,7 @@ pygmentize -S monokai -f html -a .highlight > styles.css
 }
 /* Literal.String.Regex */
 .highlight .sr {
-  color: #00ff40;
+  color: #bfd17a;
 }
 /* Literal.String.Single */
 .highlight .s1 {
@@ -396,7 +396,7 @@ pygmentize -S monokai -f html -a .highlight > styles.css
 }
 /* Name.Function.Magic */
 .highlight .fm {
-  color: #a6e22e;
+  color: #7ac7d1;
 }
 /* Name.Variable.Class */
 .highlight .vc {

@@ -2,7 +2,7 @@
 <nav id="main-navbar" class="navbar sticky-top navbar-expand-lg navbar-dark bgc-4">
   <div class="container">
     <!-- Brand -->
-    <a id="home-link" class="navbar-brand" href="{{ url_for('core.index') }}">Verdant Fox!</a>
+    <a id="home-link" class="navbar-brand" href="{% if request.url_rule.endpoint == 'core.index' %}#header{% else %}{{ url_for('core.index') }}{% endif %}">Verdant Fox!</a>
     <!-- Hamburger -->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
       <i class="fas fa-bars c-1"></i>
