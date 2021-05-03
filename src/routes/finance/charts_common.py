@@ -14,7 +14,10 @@ ChartHTML = tuple[str, str]
 
 
 def produce_pie_chart(
-    data_dict: dict[str, int], title: str, colors: Optional[list[str]] = None
+    data_dict: dict[str, int],
+    title: str,
+    colors: Optional[list[str]] = None,
+    sort=False,
 ) -> ChartHTML:
     """Produce a pie chart div, given data"""
     if not colors:
@@ -23,8 +26,9 @@ def produce_pie_chart(
         pd.Series(data_dict)
         .reset_index(name="value")
         .rename(columns={"index": "index"})
-        .sort_values(by="value", ascending=False)
     )
+    if sort:
+        data.sort_values(by="value", ascending=False, inplace=True)
     data["angle"] = data["value"] / data["value"].sum() * 2 * pi
     data["color"] = colors
     data["percentage"] = round(data["value"] / data["value"].sum() * 100)
@@ -218,6 +222,56 @@ def produce_multi_bar_chart(
             legend_label=legend_label,
             name=legend_label,
         )
+
+    # Adjust plot settings
+    adjust_plot_settings(plot)
+    plot.yaxis[0].formatter = NumeralTickFormatter(format="$0,0")
+    plot.xgrid.visible = False
+    plot.ygrid.visible = False
+    if len(data["Years"]) > 6:
+        plot.xaxis.major_label_orientation = "vertical"
+
+    return components(plot)  # script, div
+
+
+def produce_stacked_bar_chart(
+    data: dict[str, list[Union[str, int]]],
+    x_label: str,
+    legend_labels: list[str],
+    title: str,
+    colors: Optional[list[str]] = None,
+):
+    """Produce a stacked bar chart"""
+    if not colors:
+        colors = viridis(len(legend_labels))
+        assert isinstance(colors, list)
+    source = ColumnDataSource(data=data)
+    hover = HoverTool(
+        tooltips=[
+            ("Year", "@Years"),
+            ("Total", "$@Payment{,}"),
+            ("Principal", "$@Principal{,}"),
+            ("Interest", "$@Interest{,}"),
+        ],
+    )
+
+    plot = figure(
+        sizing_mode="scale_width",
+        title=title,
+        toolbar_location=None,
+        tools=[hover],
+        # tools="hover",
+        # tooltips="@Years $name: $@$name{,}",
+        x_range=data[x_label],
+    )
+    plot.vbar_stack(
+        legend_labels,
+        x="Years",
+        width=0.9,
+        source=source,
+        color=colors,
+        legend_label=legend_labels,
+    )
 
     # Adjust plot settings
     adjust_plot_settings(plot)

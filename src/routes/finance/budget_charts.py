@@ -121,14 +121,17 @@ def prepare_all_budget_charts(budget: Budget) -> str:
         categories_chart = produce_pie_chart(
             categories_data,
             f"Budget Spent by Category ({TIME_PERIOD_CONVERTER[view_period]})",
+            sort=True,
         )
         items_chart = produce_pie_chart(
             items_data,
             f"Budget Spent by Item ({TIME_PERIOD_CONVERTER[view_period]})",
+            sort=True,
         )
         income_chart = produce_pie_chart(
             income_data,
             f"Income by Item ({TIME_PERIOD_CONVERTER[view_period]})",
+            sort=True,
         )
         ive_chart = produce_bar_chart(
             income_v_expense_data,

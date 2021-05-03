@@ -1,4 +1,4 @@
-"""calculator_graphs: bokeh graphs for calculators"""
+"""loan_graphs: bokeh graphs for loans"""
 from typing import Any
 
 from dateutil.relativedelta import relativedelta
@@ -6,8 +6,8 @@ from dateutil.relativedelta import relativedelta
 from .charts_common import (
     combine_charts,
     produce_line_chart,
-    produce_multi_bar_chart,
     produce_pie_chart,
+    produce_stacked_bar_chart,
     produce_stacked_line_chart,
 )
 
@@ -85,11 +85,12 @@ def produce_loan_graphs(calc):
         title="Payments over time",
         colors=["#a8222d", "#261fab"],
     )
-    per_year_chart = produce_multi_bar_chart(
+    per_year_chart = produce_stacked_bar_chart(
         data=chart_data["per year"],
         x_label="Years",
-        legend_labels=["Principal", "Interest", "Payment"],
+        legend_labels=["Interest", "Principal"],
         title="Amount paid per year",
-        colors=["#261fab", "#a8222d", "#006622"],
+        colors=["#a8222d", "#261fab"],
     )
+
     return combine_charts(pie_chart, per_year_chart, per_period_stack_chart, amo_chart)

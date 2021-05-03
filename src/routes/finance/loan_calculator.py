@@ -1,16 +1,16 @@
-"""loan_helpers: helper functions for loans view"""
-import math
-
+"""loan_calculator: class for calculating loan information"""
 from dateutil.relativedelta import relativedelta
 
 from .forms import LoanForm, convert_and_populate_form, convert_dt
+from .helpers import Calculator
 from .loan_charts import produce_loan_graphs
 
 
-class LoanCalculator:
+class LoanCalculator(Calculator):
     """Class for performing loan calculation functions"""
 
     def __init__(self, form):
+        super().__init__()
         self.form = form
 
         # Form attributes
@@ -51,22 +51,6 @@ class LoanCalculator:
         self.calculate_payment_with_extra()
         self.calculate_amortization_schedule()
         self.graphs_html = produce_loan_graphs(self)
-
-    def str_money(self, amount, cents=True):
-        """String format's money"""
-        money = self.round_money(amount, cents)
-        if cents:
-            return f"${money:,.2f}"
-        else:
-            return f"${money:,.0f}"
-
-    @staticmethod
-    def round_money(amount, cents=True):
-        """Ceiling money, with cents if cents=True"""
-        if cents:
-            return math.ceil(amount * 100) / 100
-        else:
-            return math.ceil(amount)
 
     def calculate_minimum_payment(self):
         """Calculate minimum payment from form input
@@ -146,7 +130,7 @@ class LoanCalculator:
         self.payment_per_year = [self.round_money(val) for val in self.payment_per_year]
 
 
-def fill_loan_form_from_request():
+def fill_form_from_request():
     """Fills loan form from request args"""
     conversions = {
         "principal": int,

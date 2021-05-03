@@ -43,7 +43,7 @@
   <p>
     For the "Summary Charts" section, hover over charts (or touch them if
     you're on a mobile device) to see details about that part of the chart.
-    The "Summary Charts" and "Amortization Scheudle" sections are collapsable
+    The "Summary Charts" and "Amortization Schedule" sections are collapsable
     if you click (or touch) those section headers.
   </p>
   <div class="loan-inner">
@@ -53,5 +53,5 @@
 {% endblock content %}
 
 {% block scripts %}
-  <script src="{{ url_for('static', filename='js/finance/loan.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/finance/calculators.js') }}"></script>
 {% endblock scripts %}

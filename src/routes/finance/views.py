@@ -4,7 +4,7 @@ from flask import Blueprint, redirect, render_template, request, session, url_fo
 from flask_login import login_required
 from werkzeug.wrappers import Response
 
-from . import budget_charts, budget_helpers, loan_calculator
+from . import budget_charts, budget_helpers, interest_calculator, loan_calculator
 from .forms import BudgetForm
 
 finance = Blueprint("finance", __name__)
@@ -149,25 +149,28 @@ def share_budget(budget_id: str) -> Union[str, Response]:
 @finance.route("/loan", methods=["GET"])
 def loan() -> str:
     """Sub application for loan calculating"""
-    form = loan_calculator.fill_loan_form_from_request()
+    form = loan_calculator.fill_form_from_request()
     calc = None
     if form.validate():
         calc = loan_calculator.LoanCalculator(form)
         calc.calculate()
-    return render_template(
-        "finance/loan.html",
-        form=form,
-        calc=calc,
-    )
+    return render_template("finance/loan.html", form=form, calc=calc)
 
 
 # --------------------------------------------------------------------------
 # Compound Interest views
 # --------------------------------------------------------------------------
-@finance.route("/compound_interest", methods=["GET"])
+@finance.route("/interest", methods=["GET"])
 def compound_interest() -> str:
     """Sub application for compound interest calculating"""
-    return render_template("finance/interest.html")
+    form = interest_calculator.fill_form_from_request()
+    if not form.contributions.data:
+        form.contributions.data = "Deposists"
+    calc = None
+    if form.validate():
+        calc = interest_calculator.InterestCalculator(form)
+        calc.calculate()
+    return render_template("finance/interest.html", form=form, calc=calc)
 
 
 # --------------------------------------------------------------------------

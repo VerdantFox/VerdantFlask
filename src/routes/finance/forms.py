@@ -82,6 +82,41 @@ class LoanForm(FlaskForm):
     start_date = DateTimeField("Start date", format="%Y-%m-%d", default=(TOMORROW))
 
 
+COMOUND_PERIODS = {
+    365: "Daily",
+    52: "Weekly",
+    12: "Monthly",
+    4: "Quarterly",
+    2: "Biannually",
+    1: "Annually",
+}
+
+
+class InterestForm(FlaskForm):
+    initial = FloatField(
+        "Initial investment", validators=[NumberRange(min=0)], default=5_000
+    )
+    nbr_of_years = IntegerField(
+        "Number of years", validators=[NumberRange(min=0, max=100)], default=10
+    )
+    apy = FloatField("Estimated APY", validators=[NumberRange(min=0)], default=8.0)
+    compounding_period = SelectField(
+        "Compounding",
+        choices=[(key, val) for key, val in COMOUND_PERIODS.items()],
+        default=365,
+    )
+    apy_variance = FloatField(
+        "APY variance", validators=[NumberRange(min=0)], default=3.0
+    )
+    contributions = SelectField(
+        "Contributions",
+        choices=[("Deposits", "Deposits"), ("Withdrawls", "Withdrawls")],
+        default="Deposits",
+    )
+    monthly = FloatField("Monthly", validators=[NumberRange(min=0)], default=0)
+    yearly = FloatField("Yearly", validators=[NumberRange(min=0)], default=0)
+
+
 # --------------------------------------------------------------------------
 # Helpers
 # --------------------------------------------------------------------------
@@ -100,6 +135,8 @@ class ArgConverter:
     def convert(self, key, conversion):
         """Convert request dict item"""
         value = request.args.get(key)
+        if value is None:
+            return
         try:
             self.args[key] = conversion(value)
         except (TypeError, ValueError):
