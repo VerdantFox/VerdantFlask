@@ -62,17 +62,21 @@ class LoanForm(FlaskForm):
         "Loan amount", validators=[NumberRange(min=0)], default=5_000
     )
     interest_rate = FloatField(
-        "Interest rate per year", validators=[NumberRange(min=0)], default=4.5
+        "Interest rate per year", validators=[NumberRange(min=0, max=100)], default=4.5
     )
     period = IntegerField(
         "Loan period", validators=[NumberRange(min=0, max=600)], default=5
     )
     period_type = SelectField("In terms of", choices=LOAN_PERIODS, default=12)
     extra_monthly = FloatField(
-        "Extra monthly payment", validators=[NumberRange(min=0)], default=0
+        "Extra monthly payment",
+        validators=[NumberRange(min=0, max=10000000000000)],
+        default=0,
     )
     extra_yearly = FloatField(
-        "Extra Yearly payment", validators=[NumberRange(min=0)], default=0
+        "Extra Yearly payment",
+        validators=[NumberRange(min=0, max=10000000000000)],
+        default=0,
     )
     extra_yearly_month = SelectField(
         "Occuring every",
@@ -93,28 +97,36 @@ COMOUND_PERIODS = {
 
 
 class InterestForm(FlaskForm):
-    initial = FloatField(
-        "Initial investment", validators=[NumberRange(min=0)], default=5_000
+    initial = IntegerField(
+        "Initial investment",
+        validators=[NumberRange(min=0, max=10000000000000)],
+        default=5_000,
     )
     nbr_of_years = IntegerField(
         "Number of years", validators=[NumberRange(min=0, max=100)], default=10
     )
-    apy = FloatField("Estimated APY", validators=[NumberRange(min=0)], default=8.0)
+    apy = FloatField(
+        "Estimated APY", validators=[NumberRange(min=0, max=1000000)], default=8.0
+    )
     compounding_period = SelectField(
         "Compounding",
         choices=[(key, val) for key, val in COMOUND_PERIODS.items()],
         default=365,
     )
     apy_variance = FloatField(
-        "APY variance", validators=[NumberRange(min=0)], default=3.0
+        "APY variance", validators=[NumberRange(min=0, max=100000)], default=4.0
     )
     contributions = SelectField(
         "Contributions",
         choices=[("Deposits", "Deposits"), ("Withdrawls", "Withdrawls")],
         default="Deposits",
     )
-    monthly = FloatField("Monthly", validators=[NumberRange(min=0)], default=0)
-    yearly = FloatField("Yearly", validators=[NumberRange(min=0)], default=0)
+    monthly_contrib = IntegerField(
+        "Monthly", validators=[NumberRange(min=0, max=10000000000)], default=100
+    )
+    yearly_contrib = IntegerField(
+        "Yearly", validators=[NumberRange(min=0, max=10000000000000)], default=0
+    )
 
 
 # --------------------------------------------------------------------------

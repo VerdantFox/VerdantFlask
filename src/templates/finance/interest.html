@@ -2,8 +2,12 @@
 {% set active_page = "compound_interest" %}
 
 {% block title %}
-  Verdant Fox | Finance
+  Verdant Fox | Interest
 {% endblock title %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/finance/calculators.css') }}">
+{% endblock css %}
 
 {% block breadcrumb %}
   <li class="breadcrumb-item"><a href="{{ url_for('core.index') }}">Home</a></li>
@@ -35,6 +39,9 @@
     interest on interest, which over time leads to exponential growth.
   </p>
   <p>
+    This calculator assumes deposits/withdrawls are made on the first day of the
+    term. ie. monthly contributions are made on the first day of the month,
+    and additional annual contributions are made on the first day of the year.
     For the "Summary Charts" section, hover over charts (or touch them if
     you're on a mobile device) to see details about that part of the chart.
     The "Summary Charts" and "Interest Tables" sections are collapsable

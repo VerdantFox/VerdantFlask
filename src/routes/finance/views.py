@@ -164,8 +164,6 @@ def loan() -> str:
 def compound_interest() -> str:
     """Sub application for compound interest calculating"""
     form = interest_calculator.fill_form_from_request()
-    if not form.contributions.data:
-        form.contributions.data = "Deposists"
     calc = None
     if form.validate():
         calc = interest_calculator.InterestCalculator(form)

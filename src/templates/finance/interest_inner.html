@@ -4,14 +4,24 @@
       <div class="row">
         <div class="form-group col-sm-6">
           {{ form.initial.label }}
-          {{ form.initial(class='form-control', inputmode="decimal", type="number", step="1", min="1", max="10000000000000") }}
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">$</span>
+            </div>
+            {{ form.initial(class='form-control', inputmode="numeric", type="number", step="1", min="1", max="10000000000000") }}
+          </div>
           {% for error in form.initial.errors %}
           <p class="error">{{ error }}</p>
           {% endfor %}
         </div>
         <div class="form-group col-sm-6">
           {{ form.nbr_of_years.label }}
-          {{ form.nbr_of_years(class='form-control', inputmode="decimal", type="number", step="1", min="0", max="600") }}
+          <div class="input-group">
+            {{ form.nbr_of_years(class='form-control', inputmode="numeric", type="number", step="1", min="0", max="600") }}
+            <div class="input-group-append">
+              <span class="input-group-text">years</span>
+            </div>
+          </div>
           {% for error in form.nbr_of_years.errors %}
           <p class="error">{{ error }}</p>
           {% endfor %}
@@ -21,7 +31,7 @@
         <div class="col-sm-4">
           {{ form.apy.label }}
           <div class="input-group">
-            {{ form.apy(class='form-control', inputmode="decimal", type="number", step=".001", min="0", max="100") }}
+            {{ form.apy(class='form-control', inputmode="decimal", type="number", step=".001", min="0", max="1000000") }}
             <div class="input-group-append">
               <span class="input-group-text">%</span>
             </div>
@@ -40,7 +50,7 @@
         <div class="col-sm-4">
           {{ form.apy_variance.label }}
           <div class="input-group">
-            {{ form.apy_variance(class='form-control', inputmode="decimal", type="number", step=".001", min="0", max="100") }}
+            {{ form.apy_variance(class='form-control', inputmode="decimal", type="number", step=".001", min="0", max="100000") }}
             <div class="input-group-append">
               <span class="input-group-text">%</span>
             </div>
@@ -59,16 +69,26 @@
           {% endfor %}
         </div>
         <div class="form-group col-sm-4">
-          {{ form.monthly.label }}
-          {{ form.monthly(class='form-control', inputmode="decimal", type="number", step=".01", min="0", max="10000000000") }}
-          {% for error in form.monthly.errors %}
+          {{ form.monthly_contrib.label }}
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">$</span>
+            </div>
+            {{ form.monthly_contrib(class='form-control', inputmode="numeric", type="number", step="1", min="0", max="10000000000") }}
+          </div>
+          {% for error in form.monthly_contrib.errors %}
           <p class="error">{{ error }}</p>
           {% endfor %}
         </div>
         <div class="form-group col-sm-4">
-          {{ form.yearly.label }}
-          {{ form.yearly(class='form-control', inputmode="decimal", type="number", step=".01", min="0", max="10000000000000") }}
-          {% for error in form.yearly.errors %}
+          {{ form.yearly_contrib.label }}
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">$</span>
+            </div>
+            {{ form.yearly_contrib(class='form-control', inputmode="numeric", type="number", step="1", min="0", max="10000000000000") }}
+          </div>
+          {% for error in form.yearly_contrib.errors %}
           <p class="error">{{ error }}</p>
           {% endfor %}
         </div>
@@ -84,26 +104,18 @@
     </div>
 
     <div class="col-lg-6 card-body pane-2">
-      {#
-      <p class="text-center payment-header1">Minimum monthly payment</p>
-      <p class="text-center min-payment">{{ calc.str_money(calc.min_payment) if calc else "" }}</p>
-      {% if calc.extra_monthly %}
-      <hr class="no-spacing">
-      <p class="text-center payment-header2">Monthly payment after monthly extra</p>
-      <p class="text-center actual-payment">{{ calc.str_money(calc.payment_with_extra) }}</p>
-      {% endif %}
-      <br>
-      <p class="principle-and-interst">Total Principal Paid <span class="float-right totals">{{ calc.str_money(calc.principal, False) if calc else "" }}</span></p>
-      <p class="principle-and-interst">Total Interest Paid <span class="float-right totals">{{ calc.str_money(calc.total_interest, False) if calc else "" }}</span></p>
-      <hr class="no-spacing">
-      <p class="principle-and-interst">Total loan cost <span class="float-right totals">{{ calc.str_money(calc.total_cost, False) if calc else "" }}</span></p>
-      <br>
-      <p class="text-center payoff-date-label">Estimated payoff date</p>
-      <p class="text-center payoff-date">{{ calc.payoff_date if calc else "" }}</p>
-    #}
+      <p class="text-center header1">Future balance</p>
+      <p class="text-center header-val1">{{ calc.str_money(calc.total_balance, False) if calc else "" }}</p>
+      <p class="text-center header2">Total interest earned</p>
+      <p class="text-center header-val2">{{ calc.str_money(calc.total_interest, False) }}</p>
+      <p class="text-center header2">Doubling time (not considering contributions)</p>
+      <p class="text-center header-val2">{{ "{:,.1f}".format(calc.doubling_period) }} years</p>
+      <hr>
+      <p class="principle-and-interst">Initial Balance <span class="float-right totals">{{ calc.str_money(calc.initial, False) if calc else "" }}</span></p>
+      <p class="principle-and-interst">Total deposits <span class="float-right totals">{{ calc.str_money(calc.total_deposits, False) if calc else "" }}</span></p>
     </div>
-
   </div>
+
   <div class="row calc-border">
     <div class="col-12">
       <div id="graphs-collapse-toggle" data-toggle="collapse" data-target="#graphs-Collapse" aria-expanded="true" aria-controls="graphs-Collapse" class="cursor-pointer bottom-border">
@@ -113,34 +125,33 @@
       {% include "finance/graphs.html" %}
     </div>
   </div>
-  {#
   <div class="row calc-border">
     <div class="col-12 no-pad">
       <div id="table-collapse-toggle" data-toggle="collapse" data-target="#table-Collapse" aria-expanded="false" aria-controls="budgetSummary-Collapse" class="cursor-pointer">
-        <h2 class="pad-left">Amortization Schedule <i id="table-caret-down" hidden class="fas fa-caret-down"></i><i id="table-caret-right" class="fas fa-caret-right"></i></h2>
+        <h2 class="pad-left">Breakdown by Year <i id="table-caret-down" hidden class="fas fa-caret-down"></i><i id="table-caret-right" class="fas fa-caret-right"></i></h2>
       </div>
       <div id="table-Collapse" class="collapse">
         <div class="table-responsive">
           <table class="table table-striped">
             <thead>
               <tr>
-                <th scope="col">Payment Date</th>
-                <th scope="col">Payment</th>
-                <th scope="col">Principal</th>
-                <th scope="col">Interest</th>
-                <th scope="col">Total Interest</th>
-                <th scope="col">Balance</th>
+                <th scope="col" class="text-right">Year</th>
+                <th scope="col" class="text-right">Deposits</th>
+                <th scope="col" class="text-right">Interest</th>
+                <th scope="col" class="text-right">Total Deposits</th>
+                <th scope="col" class="text-right">Total Interest</th>
+                <th scope="col" class="text-right">Balance</th>
               </tr>
             </thead>
             <tbody>
-              {% for (payment_date, payment, principal, interest, total_interest, remaining_principal) in calc.table_schedule if calc %}
+              {% for annual in calc.breakdown if calc %}
               <tr>
-                <td>{{ payment_date.strftime("%b %Y") }}</td>
-                <td>{{ calc.str_money(payment) if calc else "" }}</td>
-                <td>{{ calc.str_money(principal) if calc else "" }}</td>
-                <td>{{ calc.str_money(interest) if calc else "" }}</td>
-                <td>{{ calc.str_money(total_interest) if calc else "" }}</td>
-                <td>{{ calc.str_money(remaining_principal) if calc else "" }}</td>
+                <td class="text-right">{{ annual["year"] }}</td>
+                <td class="text-right">{{ calc.str_money(annual["deposits"], False) }}</td>
+                <td class="text-right">{{ calc.str_money(annual["interest"], False) }}</td>
+                <td class="text-right">{{ calc.str_money(annual["total deposits"], False) }}</td>
+                <td class="text-right">{{ calc.str_money(annual["total interest"], False) }}</td>
+                <td class="text-right">{{ calc.str_money(annual["balance"], False) }}</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -149,5 +160,4 @@
       </div>
     </div>
   </div>
-  #}
 </form>

@@ -129,7 +129,12 @@
             <span class="budget-item-label">{{ item }}</span>
           </div>
           <div class="col">
-            <input class="form-control input-val" inputmode="decimal" type="number" value="{{ budget.budget[category][item]['value'] if budget.budget[category][item]['value'] else '' }}">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">$</span>
+              </div>
+              <input class="form-control input-val" inputmode="decimal" type="number" value="{{ budget.budget[category][item]['value'] if budget.budget[category][item]['value'] else '' }}">
+            </div>
           </div>
           <div class="col">
             <select class="form-control input-timeperiod">
